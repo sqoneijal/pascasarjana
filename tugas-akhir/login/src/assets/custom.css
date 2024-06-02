@@ -1,0 +1,7 @@
+body {
+   background-image: url("https://preview.keenthemes.com/metronic8/demo1/assets/media/auth/bg4.jpg");
+}
+
+[data-bs-theme="dark"] body {
+   background-image: url("https://preview.keenthemes.com//metronic8/demo1/assets/media/auth/bg4-dark.jpg");
+}
