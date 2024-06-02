@@ -1,0 +1,16 @@
+cdn/media/*
+!cdn/media/avatar-placeholder.png
+!cdn/media/bg-gagal-login.jpg
+!cdn/media/favicon-uin.png
+!cdn/media/logo-uin-dark.png
+!cdn/media/logo-uin-dark.svg
+!cdn/media/logo-uin-small.png
+!cdn/media/logo-uin.png
+!cdn/media/logo-uin.svg
+cdn/bundle/*
+tugas-akhir/login/vendor/*
+tugas-akhir/login/writable/cache/*
+tugas-akhir/login/writable/debugbar/*
+tugas-akhir/login/writable/logs/*
+tugas-akhir/login/writable/session/*
+tugas-akhir/login/writable/uploads/*

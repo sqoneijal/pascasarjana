@@ -1,0 +1,115 @@
+services:
+   pps-db:
+      image: postgres:alpine
+      container_name: pps-db
+      ports:
+         - 8009:5432
+      environment:
+         POSTGRES_USER: postgres
+         POSTGRES_PASSWORD: KQYsG4Hi201ajyEzOSGzr4MVfw==
+         POSTGRES_DB: tugas_akhir
+      volumes:
+         - tugas-akhir-pasca-db-data:/var/lib/postgresql/data
+      networks:
+         - pps-network
+      restart: unless-stopped
+
+   pps-db-master:
+      container_name: pps-db-master
+      image: bitnami/postgresql:latest
+      environment:
+         - POSTGRESQL_PGAUDIT_LOG=READ,WRITE
+         - POSTGRESQL_LOG_HOSTNAME=true
+         - POSTGRESQL_REPLICATION_MODE=master
+         - POSTGRESQL_REPLICATION_USER=replicator
+         - POSTGRESQL_REPLICATION_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
+         - POSTGRESQL_USERNAME=postgres
+         - POSTGRESQL_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
+         - ALLOW_EMPTY_PASSWORD=yes
+         - POSTGRESQL_INITSCRIPTS_DIR=/docker-entrypoint-initdb.d
+      ports:
+         - "1000:5432"
+      volumes:
+         - pps-db-master:/var/lib/postgresql/data
+      networks:
+         - pps-network
+
+   pps-db-slave1:
+      container_name: pps-db-slave1
+      image: bitnami/postgresql:latest
+      environment:
+         - POSTGRESQL_USERNAME=postgres
+         - POSTGRESQL_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
+         - POSTGRESQL_MASTER_HOST=pps-db-master
+         - POSTGRESQL_PGAUDIT_LOG=READ,WRITE
+         - POSTGRESQL_LOG_HOSTNAME=true
+         - POSTGRESQL_REPLICATION_MODE=slave
+         - POSTGRESQL_REPLICATION_USER=replicator
+         - POSTGRESQL_REPLICATION_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
+         - POSTGRESQL_MASTER_PORT_NUMBER=5432
+      ports:
+         - "1001:5432"
+      volumes:
+         - pps-db-slave1:/var/lib/postgresql/data
+      networks:
+         - pps-network
+
+   pps-pgpool:
+      image: bitnami/pgpool:latest
+      container_name: pps-pgpool
+      environment:
+         - PGPOOL_BACKEND_NODES=0:pps-db-master:5432,1:pps-db-slave1:5432
+         - PGPOOL_SR_CHECK_USER=replicator
+         - PGPOOL_SR_CHECK_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
+         - PGPOOL_POSTGRES_USERNAME=postgres
+         - PGPOOL_POSTGRES_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
+         - PGPOOL_ADMIN_USERNAME=admin
+         - PGPOOL_ADMIN_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
+      ports:
+         - "1999:5432"
+      networks:
+         - pps-network
+
+   pps-redis:
+      image: redis:alpine
+      container_name: pps-redis
+      ports:
+         - 8010:6379
+      networks:
+         - pps-network
+      restart: unless-stopped
+
+   pps-cdn:
+      container_name: pps-cdn
+      build:
+         context: ./cdn
+         dockerfile: ./Dockerfile
+      ports:
+         - 8012:80
+      volumes:
+         - ./cdn:/var/www/html
+      networks:
+         - pps-network
+      restart: unless-stopped
+
+   pps-login:
+      container_name: pps-login
+      build:
+         context: ./tugas-akhir/login
+         dockerfile: ./Dockerfile
+      ports:
+         - 8013:80
+      volumes:
+         - ./tugas-akhir/login:/var/www/html
+      networks:
+         - pps-network
+      restart: unless-stopped
+
+networks:
+   pps-network:
+      external: true
+
+volumes:
+   pps-db-master:
+   pps-db-slave1:
+   tugas-akhir-pasca-db-data:
