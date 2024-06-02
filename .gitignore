@@ -15,3 +15,10 @@ tugas-akhir/login/writable/logs/*
 tugas-akhir/login/writable/session/*
 tugas-akhir/login/writable/uploads/*
 tugas-akhir/login/node_modules
+tugas-akhir/akademik/vendor/*
+tugas-akhir/akademik/writable/cache/*
+tugas-akhir/akademik/writable/debugbar/*
+tugas-akhir/akademik/writable/logs/*
+tugas-akhir/akademik/writable/session/*
+tugas-akhir/akademik/writable/uploads/*
+tugas-akhir/akademik/node_modules
