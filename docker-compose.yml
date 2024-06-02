@@ -105,6 +105,32 @@ services:
          - pps-network
       restart: unless-stopped
 
+   pps-akademik:
+      container_name: pps-akademik
+      build:
+         context: ./tugas-akhir/akademik
+         dockerfile: ./Dockerfile
+      ports:
+         - 8015:80
+      volumes:
+         - ./tugas-akhir/akademik:/var/www/html
+      networks:
+         - pps-network
+      restart: unless-stopped
+
+   pps-mahasiswa:
+      container_name: pps-mahasiswa
+      build:
+         context: ./tugas-akhir/mahasiswa
+         dockerfile: ./Dockerfile
+      ports:
+         - 8011:80
+      volumes:
+         - ./tugas-akhir/mahasiswa:/var/www/html
+      networks:
+         - pps-network
+      restart: unless-stopped
+
 networks:
    pps-network:
       external: true
