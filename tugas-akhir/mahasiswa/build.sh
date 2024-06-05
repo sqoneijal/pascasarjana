@@ -9,6 +9,7 @@ cp ../../cdn/bundle/tugas-akhir/mahasiswa/App.js ../../cdn/bundle/tugas-akhir/ma
 cp ../../cdn/bundle/tugas-akhir/mahasiswa/App.css ../../cdn/bundle/tugas-akhir/mahasiswa/app.$hash_css.css
 
 cp app/Common.php.sample app/Common.php
+echo "" >> app/Common.php
 echo "define('HASH_JS', '$hash_js');" >> app/Common.php
 echo "define('HASH_CSS', '$hash_css');" >> app/Common.php
 
