@@ -1,19 +1,4 @@
 services:
-   pps-db:
-      image: postgres:alpine
-      container_name: pps-db
-      ports:
-         - 8009:5432
-      environment:
-         POSTGRES_USER: postgres
-         POSTGRES_PASSWORD: KQYsG4Hi201ajyEzOSGzr4MVfw==
-         POSTGRES_DB: tugas_akhir
-      volumes:
-         - tugas-akhir-pasca-db-data:/var/lib/postgresql/data
-      networks:
-         - pps-network
-      restart: unless-stopped
-
    pps-db-master:
       container_name: pps-db-master
       image: bitnami/postgresql:latest
@@ -26,11 +11,10 @@ services:
          - POSTGRESQL_USERNAME=postgres
          - POSTGRESQL_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
          - ALLOW_EMPTY_PASSWORD=yes
-         - POSTGRESQL_INITSCRIPTS_DIR=/docker-entrypoint-initdb.d
       ports:
          - "1000:5432"
       volumes:
-         - pps-db-master:/var/lib/postgresql/data
+         - ./pgdata/master:/bitnami/postgresql
       networks:
          - pps-network
 
@@ -50,7 +34,7 @@ services:
       ports:
          - "1001:5432"
       volumes:
-         - pps-db-slave1:/var/lib/postgresql/data
+         - ./pgdata/slave1:/bitnami/postgresql
       networks:
          - pps-network
 
@@ -65,6 +49,9 @@ services:
          - PGPOOL_POSTGRES_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
          - PGPOOL_ADMIN_USERNAME=admin
          - PGPOOL_ADMIN_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
+         - ALLOW_EMPTY_PASSWORD=yes
+      volumes:
+         - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       ports:
          - "1999:5432"
       networks:
@@ -138,4 +125,4 @@ networks:
 volumes:
    pps-db-master:
    pps-db-slave1:
-   tugas-akhir-pasca-db-data:
+   # tugas-akhir-pasca-db-data:

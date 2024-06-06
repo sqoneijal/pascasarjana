@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Models\Dashboard as Model;
+
+class Dashboard extends BaseController
+{
+
+   public function index()
+   {
+      $this->data = [
+         'title' => 'Dashboard'
+      ];
+
+      $this->template($this->data);
+   }
+
+   public function initPage(): object
+   {
+      $model = new Model();
+      $content = $model->initPage();
+      return $this->respond($content);
+   }
+}

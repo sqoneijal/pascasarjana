@@ -1,0 +1,63 @@
+[
+   { "label": "Dashboard", "icon": "ki-outline ki-element-11 fs-2", "link": "/", "sub": false },
+   {
+      "label": "Verifikasi",
+      "icon": "ki-outline ki-verify fs-2",
+      "link": "verifikasi",
+      "sub": true,
+      "child": [
+         {
+            "label": "Proposal",
+            "link": "/verifikasi/proposal",
+            "sub": false
+         },
+         {
+            "label": "Perbaikan",
+            "link": "/verifikasi/perbaikan",
+            "sub": false
+         },
+         {
+            "label": "Diterima",
+            "link": "/verifikasi/diterima",
+            "sub": false
+         }
+      ]
+   },
+   {
+      "label": "Seminar",
+      "icon": "ki-outline ki-calendar-tick fs-2",
+      "link": "seminar",
+      "sub": true,
+      "child": [
+         {
+            "label": "Proposal",
+            "link": "/seminar/proposal",
+            "sub": false
+         },
+         {
+            "label": "Penelitian",
+            "link": "/seminar/penelitian",
+            "sub": false
+         }
+      ]
+   },
+   { "label": "Sidang", "icon": "ki-outline ki-brifecase-tick fs-2", "link": "/sidang", "sub": false },
+   {
+      "label": "Pengaturan",
+      "icon": "ki-outline ki-wrench fs-2",
+      "link": "pengaturan",
+      "sub": true,
+      "child": [
+         {
+            "label": "Lampiran",
+            "link": "/pengaturan/lampiran",
+            "sub": false
+         },
+         {
+            "label": "Periode",
+            "link": "/pengaturan/periode",
+            "sub": false
+         }
+      ]
+   }
+]
