@@ -35,7 +35,7 @@ class Filters extends BaseFilters
       'forcehttps'    => ForceHTTPS::class,
       'pagecache'     => PageCache::class,
       'performance'   => PerformanceMetrics::class,
-      'IsLogin'       => PerformanceMetrics::class,
+      'IsLogin'       => IsLogin::class,
    ];
 
    /**
@@ -54,7 +54,7 @@ class Filters extends BaseFilters
    public array $required = [
       'before' => [
          'forcehttps', // Force Global Secure Requests
-         'pagecache',  // Web Page Caching
+         'pagecache',  // Web Page Caching,
       ],
       'after' => [
          'pagecache',   // Web Page Caching
@@ -77,7 +77,7 @@ class Filters extends BaseFilters
       ],
       'after' => [
          // 'honeypot',
-         // 'secureheaders',
+         'secureheaders',
       ],
    ];
 

@@ -31,7 +31,7 @@ class IsLogin implements FilterInterface
       $role = $session->get('role');
       $isLogin = $session->get('isLogin');
 
-      if (!$id || !$role || !$isLogin) {
+      if (!$id && !$role && !$isLogin) {
          return redirect()->to(LOGIN_PAGE);
       }
    }

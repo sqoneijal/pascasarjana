@@ -118,6 +118,19 @@ services:
          - pps-network
       restart: unless-stopped
 
+   pps-admin:
+      container_name: pps-admin
+      build:
+         context: ./tugas-akhir/admin
+         dockerfile: ./Dockerfile
+      ports:
+         - 8014:80
+      volumes:
+         - ./tugas-akhir/admin:/var/www/html
+      networks:
+         - pps-network
+      restart: unless-stopped
+
 networks:
    pps-network:
       external: true

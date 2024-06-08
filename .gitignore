@@ -29,4 +29,11 @@ tugas-akhir/mahasiswa/writable/logs/*
 tugas-akhir/mahasiswa/writable/session/*
 tugas-akhir/mahasiswa/writable/uploads/*
 tugas-akhir/mahasiswa/node_modules
+tugas-akhir/admin/vendor/*
+tugas-akhir/admin/writable/cache/*
+tugas-akhir/admin/writable/debugbar/*
+tugas-akhir/admin/writable/logs/*
+tugas-akhir/admin/writable/session/*
+tugas-akhir/admin/writable/uploads/*
+tugas-akhir/admin/node_modules
 pgdata
