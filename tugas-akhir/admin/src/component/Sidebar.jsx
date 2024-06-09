@@ -1,14 +1,15 @@
 import lozad from "lozad";
 import React, { useLayoutEffect, useState } from "react";
-import { Dropdown } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
-import { position, filter as setFilter, setModule } from "~/redux";
+import { position, filter as setFilter, setModule, showButton } from "~/redux";
 import navigation from "./navigation.json";
 
 const Sidebar = () => {
+   const { init } = useSelector((e) => e.redux);
    const location = useLocation();
    const dispatch = useDispatch();
 
@@ -28,6 +29,7 @@ const Sidebar = () => {
       dispatch(setModule({}));
       dispatch(setFilter({}));
       dispatch(position([]));
+      dispatch(showButton(false));
    };
 
    useLayoutEffect(() => {
@@ -103,6 +105,28 @@ const Sidebar = () => {
             </div>
          </div>
          <div className="app-sidebar-menu overflow-hidden flex-column-fluid">
+            <div className="aside-toolbar flex-column-auto ms-5 me-5">
+               <div className="aside-user d-flex align-items-sm-center justify-content-center py-5">
+                  <Link to={"/profile"} className="symbol symbol-50px">
+                     <img src={h.cdn(`media/${h.parse("avatar", init)}`)} alt={h.parse("nama", init)} />
+                  </Link>
+                  <div className="aside-user-info flex-row-fluid flex-wrap ms-5">
+                     <div className="d-flex">
+                        <Link to="/profile" className="flex-grow-1 me-2">
+                           <span className="text-gray-800 text-hover-primary fs-6 fw-bold">{h.parse("nama", init)}</span>
+                           <span className="text-gray-600 fw-semibold d-block fs-8 mb-1">{h.userRole(h.parse("role", init))}</span>
+                        </Link>
+                        <div className="me-n2">
+                           <OverlayTrigger overlay={<Tooltip>Logout</Tooltip>} placement="right-end">
+                              <a href="/login/logout" className="btn btn-icon btn-sm btn-active-color-primary mt-n2 fw-bold">
+                                 <i className="ki-outline ki-exit-left text-muted fs-1" />
+                              </a>
+                           </OverlayTrigger>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
             <div id="kt_app_sidebar_menu_wrapper" className="app-sidebar-wrapper">
                <div id="kt_app_sidebar_menu_scroll" className="scroll-y my-5 mx-3" style={{ height: window.innerHeight }}>
                   <div className="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_app_sidebar_menu">

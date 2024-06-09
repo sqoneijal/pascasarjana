@@ -165,3 +165,17 @@ function dashboard(RouteCollection $routes): void
       $routes->get('initpage', 'Dashboard::initPage');
    });
 }
+
+pengguna($routes);
+function pengguna(RouteCollection $routes): void
+{
+   $routes->group('pengguna', ['filter' => 'IsLogin'], function ($routes) {
+      $routes->get('/', 'Pengguna::index');
+
+      $routes->post('getdata', 'Pengguna::getData');
+      $routes->post('submit', 'Pengguna::submit');
+      $routes->post('hapus', 'Pengguna::hapus');
+      $routes->post('caridosen', 'Pengguna::cariDosen');
+      $routes->post('carimahasiswa', 'Pengguna::cariMahasiswa');
+   });
+}

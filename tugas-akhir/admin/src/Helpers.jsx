@@ -11,6 +11,18 @@ import toastr from "toastr";
 import { uid } from "uid/secure";
 import wNumb from "wnumb";
 
+export const userRole = (key) => {
+   const array = [
+      { value: 1, label: "Administrator" },
+      { value: 2, label: "Akademik" },
+      { value: 3, label: "Dosen" },
+      { value: 4, label: "Mahasiswa" },
+   ];
+
+   const role = array.find((item) => item.value === key);
+   return role ? role.label : null;
+};
+
 export const getFile = (filename, folder = "") => {
    const { hostname, protocol } = window.location;
 
@@ -820,16 +832,6 @@ export const confirmDelete = async ({ ...content }) => {
       },
    });
    return res.isConfirmed ? hapus(content.url, content.id, content.custom) : { data: { status: false, msg_response: "Data batal dihapus." } };
-};
-
-export const userRole = (key) => {
-   const config = {
-      1: "Administrator",
-      2: "Akademik",
-      3: "Dosen",
-   };
-
-   return parse(key, config);
 };
 
 export const renderStatusTesis = (key, lists) => {

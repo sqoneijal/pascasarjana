@@ -59,5 +59,6 @@
             "sub": false
          }
       ]
-   }
+   },
+   { "label": "Pengguna", "icon": "ki-outline ki-profile-user fs-2", "link": "/pengguna", "sub": false }
 ]
