@@ -64,7 +64,7 @@ const Lists = () => {
 
          if (!data.status) return;
 
-         dispatch(setModule({ ...module, lampiranUpload: { ...lampiranUpload, ...data.content } }));
+         dispatch(setModule({ ...module, lampiranUpload: { ...lampiranUpload, [h.parse("id", row)]: data.fileName } }));
       });
       fetch.finally(() => {
          setUploadProgres({});

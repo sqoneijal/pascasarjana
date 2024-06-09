@@ -16,6 +16,12 @@ class Home extends BaseController
       $this->template($this->data);
    }
 
+   public function updateJudulProposal(): void
+   {
+      $model = new Model();
+      $model->updateJudulProposal($this->post);
+   }
+
    public function getDetailMunaqasyah(): object
    {
       $model = new Model();

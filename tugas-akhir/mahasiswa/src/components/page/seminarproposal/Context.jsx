@@ -155,32 +155,34 @@ const Context = () => {
                               })}
                            </Card.Footer>
                         )}
-                     {jumlahUploadLampiran >= 8 && [7].includes(h.parse("status", init)) && (
-                        <Card.Footer>
-                           {h.buttons(`Saya Sudah Menyelesaikan Seminar Proposal`, isLoadingButton, {
-                              onClick: () => {
-                                 const confirm = h.confirm("Apakah benar anda telah melakukan seminar proposal?");
-                                 confirm.then((res) => {
-                                    if (!res.isConfirmed) return;
-                                    updateStatusTugasAkhir(8);
-                                 });
-                              },
-                           })}
-                        </Card.Footer>
-                     )}
-                     {jumlahUploadLampiran >= 8 && [9].includes(h.parse("status", init)) && (
-                        <Card.Footer>
-                           {h.buttons(`Tandai Sudah Memperbaiki Seminar Proposal`, isLoadingButton, {
-                              onClick: () => {
-                                 const confirm = h.confirm("Apakah anda yakin telah memperbaiki proposal?");
-                                 confirm.then((res) => {
-                                    if (!res.isConfirmed) return;
-                                    updateStatusTugasAkhir(10);
-                                 });
-                              },
-                           })}
-                        </Card.Footer>
-                     )}
+                     {jumlahUploadLampiran >= syarat.filter((e) => h.parse("syarat", e) === 1 && h.parse("wajib", e) === "t").length &&
+                        [7].includes(h.parse("status", init)) && (
+                           <Card.Footer>
+                              {h.buttons(`Saya Sudah Menyelesaikan Seminar Proposal`, isLoadingButton, {
+                                 onClick: () => {
+                                    const confirm = h.confirm("Apakah benar anda telah melakukan seminar proposal?");
+                                    confirm.then((res) => {
+                                       if (!res.isConfirmed) return;
+                                       updateStatusTugasAkhir(8);
+                                    });
+                                 },
+                              })}
+                           </Card.Footer>
+                        )}
+                     {jumlahUploadLampiran >= syarat.filter((e) => h.parse("syarat", e) === 1 && h.parse("wajib", e) === "t").length &&
+                        [9].includes(h.parse("status", init)) && (
+                           <Card.Footer>
+                              {h.buttons(`Tandai Sudah Memperbaiki Seminar Proposal`, isLoadingButton, {
+                                 onClick: () => {
+                                    const confirm = h.confirm("Apakah anda yakin telah memperbaiki proposal?");
+                                    confirm.then((res) => {
+                                       if (!res.isConfirmed) return;
+                                       updateStatusTugasAkhir(10);
+                                    });
+                                 },
+                              })}
+                           </Card.Footer>
+                        )}
                   </Card>
                </div>
             </div>

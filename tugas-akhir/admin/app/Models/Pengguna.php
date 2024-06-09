@@ -7,6 +7,23 @@ use CodeIgniter\Database\RawSql;
 class Pengguna extends Common
 {
 
+   public function getIDProdiPasca(): string
+   {
+      $table = $this->db->table('tb_prodi');
+      $table->select('id_feeder');
+      $table->where(new RawSql('id_feeder is not null'));
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $row) {
+         $response[] = "'" . $row['id_feeder'] . "'";
+      }
+      return implode(',', $response);
+   }
+
    public function hapus(array $post): array
    {
       try {

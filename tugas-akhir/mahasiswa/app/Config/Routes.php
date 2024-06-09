@@ -30,6 +30,7 @@ function dashboard(RouteCollection $routes): void
    $routes->post('getdetailseminarpenelitian', 'Home::getDetailSeminarPenelitian');
    $routes->post('uploadlampiranpenelitian', 'Home::uploadLampiranPenelitian');
    $routes->post('getdetailmunaqasyah', 'Home::getDetailMunaqasyah');
+   $routes->post('updatejudulproposal', 'Home::updateJudulProposal');
 }
 
 $routes->group('login', function ($routes) {

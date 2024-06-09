@@ -26,8 +26,10 @@ class Pengguna extends BaseController
       if ($getToken['status']) {
          $q = $this->post['query'];
 
+         $idProdi = $model->getIDProdiPasca();
+
          $act = $model->feederAction($getToken['token'], 'GetListMahasiswa', [
-            'filter' => "trim(lower(nama_mahasiswa)) like '%" . trim(strtolower($q)) . "%' or trim(lower(nim)) like '%" . trim(strtolower($q)) . "%'"
+            'filter' => "id_prodi in (" . $idProdi . ") and trim(lower(nama_mahasiswa)) like '%" . trim(strtolower($q)) . "%' or trim(lower(nim)) like '%" . trim(strtolower($q)) . "%'"
          ]);
 
          if ($act['status']) {

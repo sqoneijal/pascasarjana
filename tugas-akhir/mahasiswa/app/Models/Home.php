@@ -8,6 +8,18 @@ use CodeIgniter\Database\RawSql;
 class Home extends Common
 {
 
+   public function updateJudulProposal(array $post): void
+   {
+      $data[$post['field']] = $post['judul'];
+
+      $table = $this->db->table('tb_status_tugas_akhir');
+      $table->where('nim', $post['nim']);
+      $table->where('id_periode', function ($table) {
+         return $table->select('id')->from('tb_periode')->where('status', true);
+      });
+      $table->update($data);
+   }
+
    public function getDetailMunaqasyah(string $nim): array
    {
       return [
