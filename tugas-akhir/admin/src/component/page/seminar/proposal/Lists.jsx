@@ -1,9 +1,8 @@
 import React, { useLayoutEffect } from "react";
-import { Card, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
-import Filter from "./Filter";
 
 let datatable;
 
@@ -49,25 +48,20 @@ const Lists = () => {
    }, []);
 
    return (
-      <Card className="shadow-sm card-bordered">
-         <Card.Body>
-            <Filter />
-            <Table responsive hover id="datatable" className="align-middle table-row-dashed fs-6" size="sm">
-               <thead>
-                  <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                     <th style={{ width: "10%" }}>nim</th>
-                     <th style={{ width: "20%" }}>nama</th>
-                     <th style={{ width: "10%" }} className="text-center">
-                        angkatan
-                     </th>
-                     <th>program studi</th>
-                     <th>status</th>
-                  </tr>
-               </thead>
-               <tbody className="text-gray-600 fw-semibold" />
-            </Table>
-         </Card.Body>
-      </Card>
+      <Table responsive hover id="datatable" className="align-middle table-row-dashed fs-6" size="sm">
+         <thead>
+            <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+               <th style={{ width: "10%" }}>nim</th>
+               <th style={{ width: "20%" }}>nama</th>
+               <th style={{ width: "10%" }} className="text-center">
+                  angkatan
+               </th>
+               <th>program studi</th>
+               <th>status</th>
+            </tr>
+         </thead>
+         <tbody className="text-gray-600 fw-semibold" />
+      </Table>
    );
 };
 export default Lists;

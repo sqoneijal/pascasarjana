@@ -19,12 +19,12 @@ const Filter = () => {
                <Col>
                   {h.form_select(
                      "Program Studi",
-                     "kode_prodi",
+                     "id_prodi",
                      {
-                        onChange: (e) => dispatch(applyFilter({ url: "/getdata", data: { ...filter, kode_prodi: e.target.value } })),
-                        value: h.parse("kode_prodi", filter),
+                        onChange: (e) => dispatch(applyFilter({ url: "/getdata", data: { ...filter, id_prodi: e.target.value } })),
+                        value: h.parse("id_prodi", filter),
                      },
-                     daftarProdi.map((row) => ({ value: h.parse("kode", row), label: h.parse("nama", row) }))
+                     daftarProdi.map((row) => ({ value: h.parse("id_feeder", row), label: h.parse("nama", row) }))
                   )}
                </Col>
                <Col md={2} sm={12}>
