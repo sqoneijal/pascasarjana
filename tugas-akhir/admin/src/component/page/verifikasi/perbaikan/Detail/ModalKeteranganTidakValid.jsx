@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Modal } from "react-bootstrap";
+import { ButtonGroup, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
 
-const ModalKeteranganTidakValid = () => {
+const ModalKeteranganTidakValid = ({ handleChangeLampiranStatus }) => {
    const { module } = useSelector((e) => e.redux);
-   const { openModalTidakValid, keyCatatan, statusApproveLampiran } = module;
+   const { openModalTidakValid, detailLampiran } = module;
    const dispatch = useDispatch();
 
    // object
@@ -14,49 +14,15 @@ const ModalKeteranganTidakValid = () => {
    const [errors, setErrors] = useState({});
 
    const clearProps = () => {
-      dispatch(setModule({ ...module, openModalTidakValid: false, keyCatatan: "" }));
+      dispatch(setModule({ ...module, openModalTidakValid: false, detailLampiran: {} }));
       setInput({});
       setErrors({});
    };
 
-   const handleChangeValidStatus = (target, status, catatan = null) => {
-      const formData = {
-         id_lampiran: h.parse("id_lampiran", statusApproveLampiran),
-         id: h.parse("id", statusApproveLampiran),
-         field: target.name,
-         status,
-         checked: target.checked,
-         catatan,
-      };
-
-      const fetch = h.post(`/submitchangevalidstatus`, formData);
-      fetch.then((res) => {
-         if (typeof res === "undefined") return;
-
-         const { data } = res;
-         if (typeof data.code !== "undefined" && h.parse("code", data) !== 200) {
-            h.notification(false, h.parse("message", data));
-            return;
-         }
-
-         h.notification(data.status, data.msg_response);
-
-         if (!data.status) return;
-
-         dispatch(setModule({ ...module, ...data.content, openModalTidakValid: false, keyCatatan: "" }));
-      });
-   };
-
    const submit = () => {
       if (h.parse("catatan", input)) {
-         handleChangeValidStatus(
-            {
-               name: keyCatatan,
-               checked: true,
-            },
-            "not_valid",
-            h.parse("catatan", input)
-         );
+         handleChangeLampiranStatus(h.parse("id_lampiran_upload", detailLampiran), "tidak_valid", h.parse("catatan", input));
+         clearProps();
       } else {
          setErrors({ catatan: "Catatan tidak boleh kosong." });
       }
@@ -68,7 +34,7 @@ const ModalKeteranganTidakValid = () => {
             <Modal.Title>Catatan Kenapa Tidak Valid</Modal.Title>
          </Modal.Header>
          <Modal.Body>
-            <h5>{h.keteranganLampiran(keyCatatan)}</h5>
+            <h5>{h.parse("nama", detailLampiran)}</h5>
             {h.form_textarea(
                `Catatan`,
                `catatan`,
@@ -82,13 +48,15 @@ const ModalKeteranganTidakValid = () => {
             )}
          </Modal.Body>
          <Modal.Footer>
-            {h.buttons(`Simpan`, false, {
-               onClick: () => submit(),
-            })}
-            {h.buttons(`Batal`, false, {
-               variant: "danger",
-               onClick: () => clearProps(),
-            })}
+            <ButtonGroup>
+               {h.buttons(`Simpan`, false, {
+                  onClick: () => submit(),
+               })}
+               {h.buttons(`Batal`, false, {
+                  variant: "danger",
+                  onClick: () => clearProps(),
+               })}
+            </ButtonGroup>
          </Modal.Footer>
       </Modal>
    );

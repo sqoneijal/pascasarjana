@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -rf ../../cdn/bundle/tugas-akhir/admin/*
+
 BaseController_path="app/Controllers/BaseController.php"
 BaseController_file=$(mktemp)
 sed 's/protected \$publish = true;/protected \$publish = false;/' "$BaseController_path" > "$BaseController_file"

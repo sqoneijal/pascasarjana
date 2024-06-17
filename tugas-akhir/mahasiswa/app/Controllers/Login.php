@@ -5,6 +5,8 @@ namespace App\Controllers;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Models\Login as Model;
+use Google_Client;
+use Google\Service\Drive;
 
 class Login extends BaseController
 {
@@ -25,6 +27,35 @@ class Login extends BaseController
          }
       } catch (\Exception $e) {
          die('Login gagal, silahkan soba kembali. ' . $e->getMessage());
+      }
+   }
+
+   public function googleAuth()
+   {
+      $google = new Google_Client();
+      $google->setClientId('1082692189858-ujm1c5eojeencvdo9vkc3mot8ekm8tlf.apps.googleusercontent.com');
+      $google->setClientSecret('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');
+      $google->setRedirectUri(site_url('login/googleauth'));
+      $google->addScope(Drive::DRIVE_FILE);
+
+      if (!isset($_GET['code'])) {
+         $auth_url = $google->createAuthUrl();
+         return redirect()->to(filter_var($auth_url, FILTER_SANITIZE_URL));
+      } else {
+         $token = $google->fetchAccessTokenWithAuthCode($_GET['code']);
+         if (isset($token['error'])) {
+            return 'Error fetching access token: ' . htmlspecialchars($token['error']);
+         }
+
+         $google->setAccessToken($token);
+
+         if (isset($token['refresh_token'])) {
+            session()->set('google_refresh_token', $token['refresh_token']);
+         }
+
+         session()->set('google_access_token', $token);
+         session()->set('googleLogin', true);
+         return redirect()->to('/');
       }
    }
 

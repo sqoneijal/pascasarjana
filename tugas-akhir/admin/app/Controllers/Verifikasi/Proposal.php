@@ -18,11 +18,21 @@ class Proposal extends BaseController
       $this->template($this->data);
    }
 
-   public function submitChangeValidStatus(): object
+   public function submitStatusProposal(): object
    {
-      $model = new Model();
-      $data = $model->submitChangeValidStatus($this->post);
-      return $this->respond($data);
+      $response = ['status' => false, 'errors' => []];
+
+      $validation = new Validate();
+      if ($this->validate($validation->submitStatusProposal())) {
+         $model = new Model();
+         $submit = $model->submitStatusProposal($this->post);
+
+         $response = array_merge($submit, ['errors' => []]);
+      } else {
+         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
+         $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
    }
 
    public function initPage(): object
@@ -38,28 +48,18 @@ class Proposal extends BaseController
       return $this->respond($data);
    }
 
+   public function submitStatusLampiran(): object
+   {
+      $model = new Model();
+      $content = $model->submitStatusLampiran($this->post);
+      return $this->respond($content);
+   }
+
    public function getDetail(): object
    {
       $model = new Model();
-      $data = $model->getDetailVerifikasiProposal($this->post['id_status_tugas_akhir']);
+      $data = $model->getDetailStatusTugasAkhir($this->post);
       return $this->respond($data);
-   }
-
-   public function submit(): object
-   {
-      $response = ['status' => false, 'errors' => []];
-
-      $validation = new Validate();
-      if ($this->validate($validation->submit())) {
-         $model = new Model();
-         $submit = $model->submit($this->post);
-
-         $response = array_merge($submit, ['errors' => []]);
-      } else {
-         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
-         $response['errors'] = \Config\Services::validation()->getErrors();
-      }
-      return $this->respond($response);
    }
 
    public function getData(): object

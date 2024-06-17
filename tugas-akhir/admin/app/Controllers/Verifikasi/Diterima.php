@@ -18,23 +18,6 @@ class Diterima extends BaseController
       $this->template($this->data);
    }
 
-   public function submitJadwalSeminar(): object
-   {
-      $response = ['status' => false, 'errors' => []];
-
-      $validation = new Validate();
-      if ($this->validate($validation->submitJadwalSeminar())) {
-         $model = new Model();
-         $submit = $model->submitJadwalSeminar($this->post);
-
-         $response = array_merge($submit, ['errors' => []]);
-      } else {
-         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
-         $response['errors'] = \Config\Services::validation()->getErrors();
-      }
-      return $this->respond($response);
-   }
-
    public function hapusPembimbing(): object
    {
       $response = ['status' => false, 'errors' => [], 'msg_response' => 'Terjadi sesuatu kesalahan.'];
@@ -54,14 +37,39 @@ class Diterima extends BaseController
       return $this->respond($response);
    }
 
-   public function submitTimPembimbing(): object
+   public function cariDosen(): object
+   {
+      $model = new Model();
+      $tokenFeeder = $model->getTokenFeeder();
+
+      $response = ['status' => false, 'msg_response' => 'Terjadi sesuatu kesalahan, silahkan coba lagi.'];
+      if ($tokenFeeder['status']) {
+         $token = $tokenFeeder['token'];
+
+         $action = $model->feederAction($token, 'DetailBiodataDosen', [
+            'filter' => "trim(lower(nama_dosen)) like '%" . trim(strtolower($this->post['query'])) . "%' or trim(lower(nidn)) like '%" . trim(strtolower($this->post['query'])) . "%'"
+         ]);
+
+         if ($action['status']) {
+            $response['status'] = true;
+            $response['content'] = $action['content'];
+         } else {
+            $response['msg_response'] = $action['msg_response'];
+         }
+      } else {
+         $response['msg_response'] = $tokenFeeder['msg_response'];
+      }
+      return $this->respond($response);
+   }
+
+   public function submitPembimbing(): object
    {
       $response = ['status' => false, 'errors' => []];
 
       $validation = new Validate();
-      if ($this->validate($validation->submitTimPembimbing())) {
+      if ($this->validate($validation->submitPembimbing())) {
          $model = new Model();
-         $submit = $model->submitTimPembimbing($this->post);
+         $submit = $model->submitPembimbing($this->post);
 
          $response = array_merge($submit, ['errors' => []]);
       } else {
@@ -71,32 +79,27 @@ class Diterima extends BaseController
       return $this->respond($response);
    }
 
-   public function cariDosen(): object
+   public function submitJadwalSeminar(): object
    {
-      $model = new Model();
+      $response = ['status' => false, 'errors' => []];
 
-      $tokenFeeder = $model->getTokenFeeder();
+      $validation = new Validate();
+      if ($this->validate($validation->submitJadwalSeminar())) {
+         $model = new Model();
+         $submit = $model->submitJadwalSeminar($this->post);
 
-      $response['status'] = $tokenFeeder['status'];
-      $response['msg_response'] = @$tokenFeeder['msg_response'];
-      if ($tokenFeeder['status']) {
-         $query = trim(strtolower($this->post['query']));
-
-         $req = $model->feederAction($tokenFeeder['token'], 'DetailBiodataDosen', [
-            'limit' => 100,
-            'filter' => "trim(lower(nidn)) like '%" . $query . "%' or trim(lower(nama_dosen)) like '%" . $query . "%'"
-         ]);
-
-         $response['content'] = $req['content'];
+         $response = array_merge($submit, ['errors' => []]);
+      } else {
+         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
+         $response['errors'] = \Config\Services::validation()->getErrors();
       }
-
       return $this->respond($response);
    }
 
    public function getDetail(): object
    {
       $model = new Model();
-      $data = $model->getDetailVerifikasiProposal($this->post['id_status_tugas_akhir']);
+      $data = $model->getDetailStatusTugasAkhir($this->post);
       return $this->respond($data);
    }
 

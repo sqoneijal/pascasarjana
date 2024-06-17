@@ -22,17 +22,9 @@ const Lists = () => {
 
       const file = fileInput.files[0];
       const fileType = file.type;
-      const fileSize = file.size;
-      const maxSize = 2 * 1024 * 1024;
 
       if (fileType !== "application/pdf") {
          h.notification(false, "Hanya file PDF yang diizinkan.");
-         fileInput.value = "";
-         return;
-      }
-
-      if (fileSize > maxSize) {
-         h.notification(false, "Ukuran file melebihi batas maksimum 2 MB.");
          fileInput.value = "";
          return;
       }
@@ -62,9 +54,16 @@ const Lists = () => {
 
          h.notification(data.status, data.msg_response);
 
-         if (!data.status) return;
-
-         dispatch(setModule({ ...module, lampiranUpload: { ...lampiranUpload, [h.parse("id", row)]: data.fileName } }));
+         if (data.status) {
+            dispatch(
+               setModule({
+                  ...module,
+                  lampiranUpload: { ...lampiranUpload, [h.parse("id", row)]: { id_google_drive: data.content.id_google_drive } },
+               })
+            );
+         } else {
+            setUploadProgres({});
+         }
       });
       fetch.finally(() => {
          setUploadProgres({});
@@ -97,8 +96,8 @@ const Lists = () => {
    const renderLampiranPermalink = (dataObject, idSyarat) => {
       if (h.parse(idSyarat, dataObject)) {
          return (
-            <a href={h.cdn(`media/${h.parse("nim", init)}/${h.parse("lampiran", dataObject[idSyarat])}`)} target="_blank">
-               lihat
+            <a href={h.getDriveFile(h.parse("id_google_drive", dataObject[idSyarat]))} target="_blank">
+               {h.parse("lampiran", dataObject[idSyarat])}
             </a>
          );
       }
@@ -121,9 +120,7 @@ const Lists = () => {
                         {renderCatatanPerbaikan(lampiranUpload, h.parse("id", row))}
                         {renderStatusApprove(lampiranUpload, h.parse("id", row))}
                      </td>
-                     <td className="text-end" style={{ width: `5%` }}>
-                        {renderLampiranPermalink(lampiranUpload, h.parse("id", row))}
-                     </td>
+                     <td className="text-end">{renderLampiranPermalink(lampiranUpload, h.parse("id", row))}</td>
                      <td className="text-end" style={{ width: `5%` }}>
                         {h.parse(h.parse("id", row), uploadProgres) && `${h.parse(h.parse("id", row), uploadProgres)}%`}
                         {["", 3].includes(h.parse("status", init)) && (

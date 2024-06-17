@@ -8,48 +8,10 @@ use CodeIgniter\Database\RawSql;
 class Perbaikan extends Common
 {
 
-   public function submitChangeValidStatus(array $post): array
+   public function submitStatusProposal(array $post): array
    {
       try {
-         if ($post['status'] === 'valid') {
-            $data[$post['field']] = $post['checked'] === 'false' ? null : true;
-         } elseif ($post['status'] === 'not_valid') {
-            $data[$post['field']] = $post['checked'] === 'true' ? false : null;
-
-            if ($post['checked'] === 'true') {
-               $this->updateKeteranganLampiran($post);
-            }
-         }
-
-         $table = $this->db->table('tb_status_approve_lampiran');
-         $table->where('id', $post['id']);
-         $table->update($data);
-
-         $content = [
-            'statusApproveLampiran' => $this->getDetailStatusApproveLampiran($post['id_lampiran']),
-            'keteranganApproveLampiran' => $this->getDetailKeteranganApproveLampiran($post['id_lampiran']),
-         ];
-
-         return ['status' => true, 'content' => $content, 'msg_response' => 'Data berhasil disimpan.'];
-      } catch (\Exception $e) {
-         return ['status' => false, 'msg_response' => $e->getMessage()];
-      }
-   }
-
-   private function updateKeteranganLampiran(array $post): void
-   {
-      $data[$post['field']] = $post['catatan'];
-
-      $table = $this->db->table('tb_keterangan_approve_lampiran');
-      $table->where('id_lampiran', $post['id_lampiran']);
-      $table->update($data);
-   }
-
-   public function submit(array $post): array
-   {
-      $response = ['status' => false, 'msg_response' => 'Terjadi sesuatu kesalahan.', 'errors' => []];
-      try {
-         $fields = ['status'];
+         $fields = ['keterangan', 'judul_proposal_final'];
          foreach ($fields as $field) {
             if (@$post[$field]) {
                $data[$field] = $post[$field];
@@ -61,16 +23,50 @@ class Perbaikan extends Common
          $data['user_modified'] = $post['user_modified'];
          $data['modified'] = new RawSql('now()');
 
+         if ($post['status'] === 'valid') {
+            $data['status'] = 5;
+         } else {
+            $data['status'] = 3;
+         }
+
          $table = $this->db->table('tb_status_tugas_akhir');
-         $table->where('id', $post['id']);
+         $table->where('nim', $post['nim']);
+         $table->where('id_periode', $post['id_periode']);
          $table->update($data);
 
-         $response['status'] = true;
-         $response['msg_response'] = 'Data berhasil disimpan.';
+         return ['status' => true, 'content' => '', 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
-         $response['msg_response'] = $e->getMessage();
+         return ['status' => false, 'msg_response' => $e->getMessage()];
       }
-      return $response;
+   }
+
+   public function submitStatusLampiran(array $post): array
+   {
+      try {
+         $data['modified'] = new RawSql('now()');
+         $data['user_modified'] = $post['user_modified'];
+
+         if ($post['status'] === 'valid') {
+            $data['valid'] = true;
+         } elseif ($post['status'] === 'tidak_valid') {
+            $data['valid'] = false;
+            $data['keterangan'] = $post['keterangan'];
+         } else {
+            $data['valid'] = null;
+         }
+
+         $table = $this->db->table('tb_lampiran_upload');
+         $table->where('id', $post['id_lampiran_upload']);
+         $table->update($data);
+
+         return [
+            'status' => true,
+            'content' => $this->getLampiranUpload(['nim' => $post['nim'], 'id_periode' => $post['id_periode']]),
+            'msg_response' => 'Data berhasil disimpan.'
+         ];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
    }
 
    public function getData(array $post): array
@@ -100,7 +96,7 @@ class Perbaikan extends Common
    public function countData(array $post): int
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->join('tb_prodi tp', 'tp.kode = tsta.kode_prodi');
+      $table->join('tb_prodi tp', 'tp.id_feeder = tsta.id_prodi');
       $table->whereIn('tsta.status', [3, 4]);
 
       $this->dt_where($table, [
@@ -118,13 +114,13 @@ class Perbaikan extends Common
    private function queryData(array $post): object
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tsta.id, tsta.nim, tsta.nama, tsta.angkatan, concat(tp.jenjang, \' \', tp.nama) as program_studi, tsta.status');
-      $table->join('tb_prodi tp', 'tp.kode = tsta.kode_prodi');
+      $table->select('tsta.id, tsta.nim, tsta.nama, tsta.angkatan, concat(tp.jenjang, \' \', tp.nama) as program_studi, tsta.status, tsta.id_periode');
+      $table->join('tb_prodi tp', 'tp.id_feeder = tsta.id_prodi');
       $table->whereIn('tsta.status', [3, 4]);
 
       $this->dt_where($table, [
          'tsta.id_periode' => @$post['id_periode'],
-         'tsta.kode_prodi' => @$post['kode_prodi'],
+         'tsta.id_prodi' => @$post['id_prodi'],
          'tsta.angkatan' => @$post['angkatan'],
       ]);
 

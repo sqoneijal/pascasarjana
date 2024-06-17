@@ -5,27 +5,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
-
-const ModalKeteranganTidakValid = React.lazy(() => import("./ModalKeteranganTidakValid"));
+import ModalKeteranganTidakValid from "./ModalKeteranganTidakValid";
 
 const Lampiran = () => {
-   const { module } = useSelector((e) => e.redux);
-   const { lampiran, statusApproveLampiran, statusTugasAkhir, keteranganApproveLampiran } = module;
+   const { module, init } = useSelector((e) => e.redux);
+   const { lampiranUpload, detailContent } = module;
+   const { syarat } = init;
    const dispatch = useDispatch();
 
-   const unsetFieldLampiran = ["id", "id_status_tugas_akhir"];
-
-   const handleChangeValidStatus = (target, status, catatan = null) => {
+   const handleChangeLampiranStatus = (id_lampiran_upload, status, keterangan = null) => {
       const formData = {
-         id_lampiran: h.parse("id_lampiran", statusApproveLampiran),
-         id: h.parse("id", statusApproveLampiran),
-         field: target.name,
+         id_lampiran_upload,
          status,
-         checked: target.checked,
-         catatan,
+         user_modified: h.parse("username", init),
+         nim: h.parse("nim", detailContent),
+         id_periode: h.parse("id_periode", detailContent),
+         keterangan,
       };
 
-      const fetch = h.post(`/submitchangevalidstatus`, formData);
+      const fetch = h.post(`/submitstatuslampiran`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 
@@ -39,19 +37,22 @@ const Lampiran = () => {
 
          if (!data.status) return;
 
-         dispatch(setModule({ ...module, ...data.content, openModalTidakValid: false, keyCatatan: "" }));
+         dispatch(setModule({ ...module, openModalTidakValid: false, detailLampiran: {}, lampiranUpload: { ...lampiranUpload, ...data.content } }));
       });
    };
 
-   const renderKeterangan = (field, keteranganApproveLampiran) => {
-      return (
-         h.parse(field, keteranganApproveLampiran) && (
-            <span style={{ display: "block", fontSize: 12, fontStyle: "italic", color: "#f82859" }}>{h.parse(field, keteranganApproveLampiran)}</span>
-         )
-      );
-   };
+   const props = { handleChangeLampiranStatus };
 
-   const props = { handleChangeValidStatus };
+   const renderCatatanTidakValid = (row) => {
+      if (h.parse("valid", row) === "f") {
+         return (
+            <React.Fragment>
+               <br />
+               <span style={{ display: "block", fontSize: 12, fontStyle: "italic", color: "#f82859" }}>{h.parse("keterangan", row)}</span>
+            </React.Fragment>
+         );
+      }
+   };
 
    return (
       <React.Suspense
@@ -79,7 +80,7 @@ const Lampiran = () => {
                      lampiran
                   </th>
                   <th colSpan={2} className="text-center" style={{ width: "10%" }}>
-                     status valid
+                     valid
                   </th>
                </tr>
                <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
@@ -89,6 +90,56 @@ const Lampiran = () => {
             </thead>
             <tbody className="text-gray-600 fw-semibold">
                <Each
+                  of={syarat.filter((e) => h.parse("syarat", e) === 1)}
+                  render={(row) => (
+                     <tr>
+                        <td>
+                           {h.parse("nama", row)}
+                           {renderCatatanTidakValid(lampiranUpload[h.parse("id", row)])}
+                        </td>
+                        <td className="text-end">
+                           <a
+                              href={h.getDriveFile(h.parse("id_google_drive", lampiranUpload[h.parse("id", row)]))}
+                              target="_blank"
+                              className="btn btn-active-icon-primary btn-active-text-primary btn-sm p-0 m-0">
+                              {h.parse("lampiran", lampiranUpload[h.parse("id", row)])}
+                           </a>
+                        </td>
+                        <td className="text-center">
+                           {h.form_check_switch(
+                              null,
+                              h.parse("id", row),
+                              {
+                                 onChange: (e) => handleChangeLampiranStatus(h.parse("id", lampiranUpload[h.parse("id", row)]), "valid"),
+                                 checked: h.parse("valid", lampiranUpload[h.parse("id", row)]) === "t",
+                              },
+                              "success",
+                              "h-20px w-30px"
+                           )}
+                        </td>
+                        <td className="text-center">
+                           {h.form_check_switch(
+                              null,
+                              h.parse("id", row),
+                              {
+                                 onChange: (e) =>
+                                    dispatch(
+                                       setModule({
+                                          ...module,
+                                          openModalTidakValid: true,
+                                          detailLampiran: { ...row, id_lampiran_upload: h.parse("id", lampiranUpload[h.parse("id", row)]) },
+                                       })
+                                    ),
+                                 checked: h.parse("valid", lampiranUpload[h.parse("id", row)]) === "f",
+                              },
+                              "success",
+                              "h-20px w-30px"
+                           )}
+                        </td>
+                     </tr>
+                  )}
+               />
+               {/* <Each
                   of={Object.keys(lampiran)}
                   render={(key) =>
                      !unsetFieldLampiran.includes(key) && (
@@ -135,7 +186,7 @@ const Lampiran = () => {
                         </tr>
                      )
                   }
-               />
+               /> */}
             </tbody>
          </Table>
       </React.Suspense>

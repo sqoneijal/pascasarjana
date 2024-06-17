@@ -6,6 +6,8 @@ import { position, filter as setFilter, setModule } from "~/redux";
 
 const Lists = React.lazy(() => import("./Lists"));
 const Detail = React.lazy(() => import("./detail/Context"));
+const FormsJadwalSeminar = React.lazy(() => import("./detail/FormsJadwalSeminar"));
+const FormsPembimbing = React.lazy(() => import("./detail/FormsPembimbing"));
 
 const Context = () => {
    const { module, filter } = useSelector((e) => e.redux);
@@ -57,6 +59,8 @@ const Context = () => {
                   wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
                />
             }>
+            <FormsJadwalSeminar />
+            <FormsPembimbing />
             <Detail />
             <Lists />
          </React.Suspense>

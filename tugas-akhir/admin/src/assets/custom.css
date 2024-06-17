@@ -61,3 +61,6 @@ a.page-link.first > i.first {
 .badge {
    border-radius: unset !important;
 }
+.btn.btn-active-color-primary {
+   color: var(--bs-text-primary) !important;
+}

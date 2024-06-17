@@ -842,3 +842,7 @@ export const renderStatusTesis = (key, lists) => {
 export const cdn = (filepath) => {
    return process.env.NODE_ENV === "deploy" ? `https://cdn.tesis.ar-raniry.ac.id/${filepath}` : `http://localhost:8012/${filepath}`;
 };
+
+export const getDriveFile = (id) => {
+   return `https://drive.google.com/file/d/${id}/view`;
+};

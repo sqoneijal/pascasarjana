@@ -4,6 +4,9 @@ namespace App\Controllers;
 
 use App\Models\Home as Model;
 use App\Validation\Home as Validate;
+use Google\Client as Google_Client;
+use Google\Service\Drive as Google_Service_Drive;
+use Google\Service\Drive\DriveFile as Google_Service_Drive_DriveFile;
 
 class Home extends BaseController
 {
@@ -98,29 +101,42 @@ class Home extends BaseController
    public function uploadLampiran(): object
    {
       $file = $this->request->getFile('file');
-      $upload_path = WRITEPATH . 'uploads/';
 
       $response = ['status' => false, 'msg_response' => 'Terjadi sesuatu kesalahan. Silahkan coba kembali.'];
       if ($file) {
-         $doUpload = doUpload($file, $upload_path, ['pdf']);
-         if ($doUpload['status']) {
-            $filePath = $upload_path . $doUpload['content'];
-            $cdnUpload = cdnUpload('tugas-akhir', $filePath, $doUpload['content'], $file, $this->post['nim']);
-            if ($cdnUpload['status']) {
+         try {
+            $client = new Google_Client();
+            $client->setAuthConfig(WRITEPATH . 'uploads/google-service-account.json');
+            $client->addScope(Google_Service_Drive::DRIVE);
+
+            $driveService = new Google_Service_Drive($client);
+
+            $driveFile = new Google_Service_Drive_DriveFile();
+            $driveFile->setName($file->getClientName());
+            $driveFile->setParents(['1ugNtsy45yXDq_Y0eOAxso2KJBISOKV2a']);
+
+            $googleFile = $driveService->files->create($driveFile, array(
+               'data' => file_get_contents($file->getTempName()),
+               'mimeType' => $file->getClientMimeType(),
+               'uploadType' => 'multipart'
+            ));
+
+            $response['googleFile'] = $googleFile;
+            if ($googleFile['id']) {
+               $this->post['id_google_drive'] = $googleFile['id'];
+               $this->post['lampiran'] = $googleFile['name'];
+
                $model = new Model();
-               $submit = $model->updateLampiran(array_merge($this->post, ['lampiran' => $cdnUpload['content']]));
+               $model->updateLampiran($this->post);
 
                $response['status'] = true;
-               $response['content'] = $submit;
-               $response['fileName'] = $cdnUpload['content'];
                $response['msg_response'] = 'File lampiran berhasil di upload';
+               $response['content'] = $this->post;
             } else {
-               $response['msg_response'] = $cdnUpload['content'];
+               $response['msg_response'] = 'Gagal upload file, silahkan coba kembali.';
             }
-
-            @unlink($filePath);
-         } else {
-            $response['msg_response'] = $doUpload['content'];
+         } catch (\Exception $e) {
+            return ['status' => false, 'msg_response' => $e->getMessage()];
          }
       }
       return $this->respond($response);

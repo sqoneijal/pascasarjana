@@ -11,6 +11,10 @@ import toastr from "toastr";
 import { uid } from "uid/secure";
 import wNumb from "wnumb";
 
+export const getDriveFile = (id) => {
+   return `https://drive.google.com/file/d/${id}/view`;
+};
+
 export const getFile = (filename, folder = "") => {
    const { hostname, protocol } = window.location;
 
@@ -358,7 +362,7 @@ export const post = async (url, form = [], config = {}, dynamic = false) => {
       const formData = new FormData();
       Object.keys(form).forEach((data) => formData.append(data, form[data]));
 
-      const send = axios.post(dynamic ? url : `${window.location.pathname}${url}`, formData, { ...config, signal: abortSignal(20_000) });
+      const send = axios.post(dynamic ? url : `${window.location.pathname}${url}`, formData, { ...config, signal: abortSignal(50_000) });
       send.then((res) => {
          const { data } = res;
          if (typeof data.code !== "undefined" && parse("code", data) !== 200) {

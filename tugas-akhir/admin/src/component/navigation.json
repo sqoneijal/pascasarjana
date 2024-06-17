@@ -1,7 +1,7 @@
 [
    { "label": "Dashboard", "icon": "ki-outline ki-element-11 fs-2", "link": "/", "sub": false },
    {
-      "label": "Verifikasi",
+      "label": "Verifikasi Proposal",
       "icon": "ki-outline ki-verify fs-2",
       "link": "verifikasi",
       "sub": true,

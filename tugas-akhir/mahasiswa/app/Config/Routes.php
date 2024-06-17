@@ -37,5 +37,6 @@ $routes->group('login', function ($routes) {
    $routes->get('init', 'Login::init');
    $routes->get('logout', 'Login::logout');
    $routes->get('fail', 'Login::perluLoginDulu');
+   $routes->get('googleauth', 'Login::googleAuth');
    $routes->get('(:any)', 'Login::index/$1');
 });

@@ -8,17 +8,19 @@ import StatusTugasAkhir from "./StatusTugasAkhir";
 
 const Context = () => {
    const { module } = useSelector((e) => e.redux);
-   const { openDetail, detailContent, statusApproveLampiran } = module;
+   const { openDetail, detailContent } = module;
    const dispatch = useDispatch();
 
    // bool
    const [isLoading, setIsLoading] = useState(true);
 
-   // string
-   const [jumlahValidasi, setJumlahValidasi] = useState(0);
+   const handleClose = () => {
+      dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
+      setIsLoading(true);
+   };
 
-   const getDetail = (id_status_tugas_akhir) => {
-      const formData = { id_status_tugas_akhir };
+   const getDetail = (nim, id_periode) => {
+      const formData = { nim, id_periode };
 
       setIsLoading(true);
       const fetch = h.post(`/getdetail`, formData);
@@ -39,37 +41,19 @@ const Context = () => {
    };
 
    useLayoutEffect(() => {
-      if (openDetail && h.objLength(detailContent)) getDetail(h.parse("id", detailContent));
+      if (openDetail && h.objLength(detailContent)) getDetail(h.parse("nim", detailContent), h.parse("id_periode", detailContent));
       return () => {};
    }, [openDetail, detailContent]);
-
-   const handleClose = () => {
-      dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
-   };
-
-   useLayoutEffect(() => {
-      if (!isLoading && h.objLength(statusApproveLampiran)) {
-         const unsetField = ["id", "id_lampiran"];
-         let jumlah = 0;
-         Object.keys(statusApproveLampiran).forEach((key) => {
-            if (!unsetField.includes(key) && h.parse(key, statusApproveLampiran) !== "") {
-               jumlah++;
-            }
-         });
-         setJumlahValidasi(jumlah);
-      }
-      return () => {};
-   }, [statusApproveLampiran, isLoading]);
 
    return (
       <React.Fragment>
          {openDetail && <div className="drawer-overlay" />}
-         <div className={`bg-white drawer drawer-start ${openDetail ? "drawer-on" : ""}`} style={{ width: window.innerWidth / 2 }}>
+         <div className={`bg-white drawer drawer-start min-w-75 ${openDetail ? "drawer-on" : ""}`}>
             <Card className="rounded-0 w-100">
                <Card.Header className="pe-5">
                   <div className="card-title">
                      <div className="d-flex justify-content-center flex-column me-3">
-                        <span className="fs-4 fw-bold text-gray-900 text-hover-primary me-1 lh-1">Detail Verifikasi Proposal</span>
+                        <span className="fs-4 fw-bold text-gray-900 text-hover-primary me-1 lh-1">Verifikasi Perbaikan</span>
                      </div>
                   </div>
                   <div className="card-toolbar">
@@ -89,13 +73,11 @@ const Context = () => {
                      </React.Fragment>
                   )}
                </Card.Body>
-               {jumlahValidasi === 8 && (
-                  <Card.Footer className="text-end">
-                     {h.buttons(`Validasi`, false, {
-                        onClick: () => dispatch(setModule({ ...module, openModalConfirmVerifikasi: true })),
-                     })}
-                  </Card.Footer>
-               )}
+               <Card.Footer className="text-end">
+                  {h.buttons(`Validasi`, false, {
+                     onClick: () => dispatch(setModule({ ...module, openModalConfirmVerifikasi: true })),
+                  })}
+               </Card.Footer>
             </Card>
          </div>
       </React.Fragment>

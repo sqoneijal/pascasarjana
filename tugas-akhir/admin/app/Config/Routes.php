@@ -124,10 +124,10 @@ function verifikasiDiterima(RouteCollection $routes): void
 
       $routes->post('getdata', 'Diterima::getData');
       $routes->post('getdetail', 'Diterima::getDetail');
-      $routes->post('caridosen', 'Diterima::cariDosen');
-      $routes->post('submittimpembimbing', 'Diterima::submitTimPembimbing');
-      $routes->post('hapuspembimbing', 'Diterima::hapusPembimbing');
       $routes->post('submitjadwalseminar', 'Diterima::submitJadwalSeminar');
+      $routes->post('submitpembimbing', 'Diterima::submitPembimbing');
+      $routes->post('caridosen', 'Diterima::cariDosen');
+      $routes->post('hapuspembimbing', 'Diterima::hapusPembimbing');
    });
 }
 
@@ -139,8 +139,8 @@ function verifikasiPerbaikan(RouteCollection $routes): void
 
       $routes->post('getdata', 'Perbaikan::getData');
       $routes->post('getdetail', 'Perbaikan::getDetail');
-      $routes->post('submitchangevalidstatus', 'Perbaikan::submitChangeValidStatus');
-      $routes->post('submit', 'Perbaikan::submit');
+      $routes->post('submitstatuslampiran', 'Perbaikan::submitStatusLampiran');
+      $routes->post('submitstatusproposal', 'Perbaikan::submitStatusProposal');
    });
 }
 
@@ -152,8 +152,8 @@ function verifikasiProposal(RouteCollection $routes): void
 
       $routes->post('getdata', 'Proposal::getData');
       $routes->post('getdetail', 'Proposal::getDetail');
-      $routes->post('submitchangevalidstatus', 'Proposal::submitChangeValidStatus');
-      $routes->post('submit', 'Proposal::submit');
+      $routes->post('submitstatuslampiran', 'Proposal::submitStatusLampiran');
+      $routes->post('submitstatusproposal', 'Proposal::submitStatusProposal');
    });
 }
 

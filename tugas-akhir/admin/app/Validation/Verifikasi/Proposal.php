@@ -5,11 +5,11 @@ namespace App\Validation\Verifikasi;
 class Proposal
 {
 
-   public function submit(): array
+   public function submitStatusProposal(): array
    {
       return [
          'status' => [
-            'label' => 'Status verifikasi',
+            'label' => 'Status',
             'rules' => 'required'
          ]
       ];

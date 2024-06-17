@@ -5,11 +5,13 @@ namespace App\Validation\Verifikasi;
 class Perbaikan
 {
 
-   public function submit(): array
+   public function submitStatusProposal(): array
    {
-      return ['status' => [
-         'label' => 'Status verifikasi',
-         'rules' => 'required'
-      ]];
+      return [
+         'status' => [
+            'label' => 'Status',
+            'rules' => 'required'
+         ]
+      ];
    }
 }

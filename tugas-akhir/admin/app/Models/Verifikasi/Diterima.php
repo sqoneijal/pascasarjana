@@ -8,36 +8,102 @@ use CodeIgniter\Database\RawSql;
 class Diterima extends Common
 {
 
-   private function validasiJadwalDanPembimbing(int $id_status_tugas_akhir): bool
+   public function hapusPembimbing(array $post): array
    {
-      $jadwal = $this->db->table('tb_jadwal_seminar');
-      $jadwal->where('id_status_tugas_akhir', $id_status_tugas_akhir);
+      try {
+         $table = $this->db->table('tb_pembimbing_seminar');
+         $table->where('id', $post['id']);
+         $table->delete();
 
-      $jumlahJadwal = $jadwal->countAllResults();
+         $this->checkPembimbingSeminarProposal($post['id_status_tugas_akhir']);
 
-      $pembimbing = $this->db->table('tb_pembimbing_seminar');
-      $pembimbing->where('id_status_tugas_akhir', $id_status_tugas_akhir);
-
-      $jumlahPembimbing = $pembimbing->countAllResults();
-
-      $response = false;
-      $status = 6;
-      if ($jumlahJadwal > 0 && $jumlahPembimbing > 0) {
-         $status = 7;
-         $response = true;
+         return ['status' => true, 'content' => $this->getPembimbingSeminarProposal($post), 'msg_response' => 'Data berhasil dihapus.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
       }
-      $table = $this->db->table('tb_status_tugas_akhir');
-      $table->where('id', $id_status_tugas_akhir);
-      $table->update(['status' => $status]);
-      return $response;
+   }
+
+   public function submitPembimbing(array $post): array
+   {
+      try {
+         $fields = ['id_status_tugas_akhir', 'pembimbing_ke', 'id_kategori_kegiatan', 'nidn', 'nama_dosen'];
+         foreach ($fields as $field) {
+            if (@$post[$field]) {
+               $data[$field] = $post[$field];
+            } else {
+               $data[$field] = null;
+            }
+         }
+
+         $data['user_modified'] = $post['user_modified'];
+         $data['apakah_dosen_uin'] = $post['apakah_dosen_uin'] === 't' ? true : false;
+
+         $table = $this->db->table('tb_pembimbing_seminar');
+         if ($post['pageType'] === 'insert') {
+            $data['uploaded'] = new RawSql('now()');
+
+            $table->ignore(true)->insert($data);
+
+            $this->generateUser($post);
+         } elseif ($post['pageType'] === 'update') {
+            $data['modified'] = new RawSql('now()');
+
+            $table->where('id', $post['id']);
+            $table->update($data);
+         }
+
+         $this->checkPembimbingSeminarProposal($post['id_status_tugas_akhir']);
+
+         return ['status' => true, 'content' => $this->getPembimbingSeminarProposal($post), 'msg_response' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
+   private function checkPembimbingSeminarProposal(int $id_status_tugas_akhir): void
+   {
+      $table = $this->db->table('tb_pembimbing_seminar');
+      $table->where('id_status_tugas_akhir', $id_status_tugas_akhir);
+
+      $found = $table->countAllResults() > 0;
+
+      if ($found) {
+         $this->updateStatusTugasAkhir($id_status_tugas_akhir, 7);
+      } else {
+         $this->updateStatusTugasAkhir($id_status_tugas_akhir, 6);
+      }
+   }
+
+   private function generateUser(array $post): void
+   {
+      $check = $this->checkExistUsers($post['nidn']);
+      if (!$check) {
+         $table = $this->db->table('tb_users');
+         $table->insert([
+            'nama' => $post['nama_dosen'],
+            'username' => $post['nidn'],
+            'role' => '3',
+            'password' => password_hash($post['nidn'], PASSWORD_BCRYPT),
+            'uploaded' => new RawSql('now()'),
+            'user_modified' => $post['user_modified']
+         ]);
+      }
+   }
+
+   private function checkExistUsers(string $nidn): bool
+   {
+      $table = $this->db->table('tb_users');
+      $table->where('username', $nidn);
+
+      return $table->countAllResults() > 0;
    }
 
    public function submitJadwalSeminar(array $post): array
    {
       try {
-         $checkJadwalSebelumnya = $this->checkJadwalSebelumnya($post['id_status_tugas_akhir']);
+         $check = $this->checkJadwalSebelumnya($post['id_status_tugas_akhir']);
 
-         $fields = ['tanggal_seminar', 'jam_seminar'];
+         $fields = ['id_status_tugas_akhir', 'tanggal_seminar', 'jam_seminar'];
          foreach ($fields as $field) {
             if (@$post[$field]) {
                $data[$field] = $post[$field];
@@ -49,21 +115,19 @@ class Diterima extends Common
          $data['user_modified'] = $post['user_modified'];
 
          $table = $this->db->table('tb_jadwal_seminar');
-         if ($checkJadwalSebelumnya) {
+         if ($check) {
             $data['modified'] = new RawSql('now()');
 
             $table->where('id_status_tugas_akhir', $post['id_status_tugas_akhir']);
             $table->update($data);
          } else {
             $data['uploaded'] = new RawSql('now()');
-            $data['id_status_tugas_akhir'] = $post['id_status_tugas_akhir'];
 
             $table->insert($data);
          }
 
-         $this->validasiJadwalDanPembimbing($post['id_status_tugas_akhir']);
-
-         return ['status' => true, 'content' => $this->getDetailJadwalSeminar($post['id_status_tugas_akhir']), 'msg_response' => 'Data berhasil disimpan.'];
+         $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], 6);
+         return ['status' => true, 'content' => $this->getJadwalSeminarProposal($post), 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }
@@ -74,70 +138,7 @@ class Diterima extends Common
       $table = $this->db->table('tb_jadwal_seminar');
       $table->where('id_status_tugas_akhir', $id_status_tugas_akhir);
 
-      $count = $table->countAllResults();
-
-      return $count > 0 ? true : false;
-   }
-
-   public function hapusPembimbing(array $post): array
-   {
-      try {
-         $table = $this->db->table('tb_pembimbing_seminar');
-         $table->where('id', $post['id']);
-         $table->delete();
-         return ['status' => true, 'content' => $this->getDaftarPembimbing($post['id_status_tugas_akhir']), 'msg_response' => 'Data berhasil dihapus.'];
-      } catch (\Exception $e) {
-         return ['status' => false, 'msg_response' => $e->getMessage()];
-      }
-   }
-
-   public function submitTimPembimbing(array $post): array
-   {
-      try {
-         $fields = ['id_status_tugas_akhir', 'pembimbing_ke', 'id_kategori_kegiatan', 'nidn', 'nama_dosen', 'apakah_dosen_uin'];
-         foreach ($fields as $field) {
-            if (@$post[$field]) {
-               $data[$field] = $post[$field];
-            } else {
-               $data[$field] = null;
-            }
-         }
-
-         $data['user_modified'] = $post['user_modified'];
-
-         $table = $this->db->table('tb_pembimbing_seminar');
-         if ($post['pageType'] === 'insert') {
-            $data['uploaded'] = new RawSql('now()');
-
-            $table->ignore(true)->insert($data);
-
-            $this->insertUsers($post);
-         } elseif ($post['pageType'] === 'update') {
-            $data['modified'] = new RawSql('now()');
-
-            $table->where('id', $post['id']);
-            $table->update($data);
-         }
-
-         $this->validasiJadwalDanPembimbing($post['id_status_tugas_akhir']);
-
-         return ['status' => true, 'content' => $this->getDaftarPembimbing($post['id_status_tugas_akhir']), 'msg_response' => 'Data berhasil disimpan.'];
-      } catch (\Exception $e) {
-         return ['status' => false, 'msg_response' => $e->getMessage()];
-      }
-   }
-
-   private function insertUsers(array $post): void
-   {
-      $table = $this->db->table('tb_users');
-      $table->ignore(true)->insert([
-         'nama' => $post['nama_dosen'],
-         'username' => $post['nidn'],
-         'role' => '3',
-         'password' => password_hash($post['nidn'], PASSWORD_BCRYPT),
-         'uploaded' => new RawSql('now()'),
-         'user_modified' => $post['user_modified']
-      ]);
+      return $table->countAllResults() > 0;
    }
 
    public function getData(array $post): array
@@ -167,7 +168,7 @@ class Diterima extends Common
    public function countData(array $post): int
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->join('tb_prodi tp', 'tp.kode = tsta.kode_prodi');
+      $table->join('tb_prodi tp', 'tp.id_feeder = tsta.id_prodi');
       $table->whereIn('tsta.status', [5, 6, 7]);
 
       $this->dt_where($table, [
@@ -185,15 +186,15 @@ class Diterima extends Common
    private function queryData(array $post): object
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tsta.id, tsta.nim, tsta.nama, tsta.angkatan, concat(tp.jenjang, \' \', tp.nama) as program_studi, coalesce(tps.jumlah, 0) as jumlah_pembimbing, coalesce(tjs.jumlah, 0) as jumlah_jadwal_seminar, tsta.status');
-      $table->join('tb_prodi tp', 'tp.kode = tsta.kode_prodi');
+      $table->select('tsta.id as id_status_tugas_akhir, tsta.nim, tsta.nama, tsta.angkatan, concat(tp.jenjang, \' \', tp.nama) as program_studi, coalesce(tps.jumlah, 0) as jumlah_pembimbing, coalesce(tjs.jumlah, 0) as jumlah_jadwal_seminar, tsta.status, tsta.id_periode');
+      $table->join('tb_prodi tp', 'tp.id_feeder = tsta.id_prodi');
       $table->join('(select id_status_tugas_akhir, count(*) as jumlah from tb_pembimbing_seminar group by id_status_tugas_akhir) tps', 'tps.id_status_tugas_akhir = tsta.id', 'left');
       $table->join('(select id_status_tugas_akhir, count(*) as jumlah from tb_jadwal_seminar group by id_status_tugas_akhir) tjs', 'tjs.id_status_tugas_akhir = tsta.id', 'left');
       $table->whereIn('tsta.status', [5, 6, 7]);
 
       $this->dt_where($table, [
          'tsta.id_periode' => $post['id_periode'],
-         'tsta.kode_prodi' => @$post['kode_prodi'],
+         'tsta.id_prodi' => @$post['id_prodi'],
          'tsta.angkatan' => @$post['angkatan'],
       ]);
 

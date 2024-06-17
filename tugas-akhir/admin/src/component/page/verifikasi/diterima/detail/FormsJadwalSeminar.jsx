@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useState } from "react";
 import { ButtonGroup, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
@@ -7,7 +7,7 @@ import { setModule } from "~/redux";
 
 const FormsJadwalSeminar = () => {
    const { module, init } = useSelector((e) => e.redux);
-   const { openFormsJadwalSeminar, detailContent, jadwalSeminar } = module;
+   const { openFormsJadwalSeminar, detailContent, jadwalSeminarProposal } = module;
    const dispatch = useDispatch();
 
    // bool
@@ -17,24 +17,25 @@ const FormsJadwalSeminar = () => {
    const [input, setInput] = useState({});
    const [errors, setErrors] = useState({});
 
-   useLayoutEffect(() => {
-      if (h.objLength(jadwalSeminar)) setInput({ ...jadwalSeminar });
-      return () => {};
-   }, [jadwalSeminar]);
-
    const clearProps = () => {
       setInput({});
       setErrors({});
+      setIsSubmit(false);
    };
 
    const handleClose = () => {
+      dispatch(setModule({ ...module, openFormsJadwalSeminar: false }));
       clearProps();
-      dispatch(setModule({ ...module, openFormsJadwalSeminar: false, pageType: "" }));
    };
 
    const submit = (e) => {
       e.preventDefault();
-      const formData = { user_modified: h.parse("username", init), id_status_tugas_akhir: h.parse("id", detailContent) };
+      const formData = {
+         user_modified: h.parse("username", init),
+         id_status_tugas_akhir: h.parse("id_status_tugas_akhir", detailContent),
+         nim: h.parse("nim", detailContent),
+         id_periode: h.parse("id_periode", detailContent),
+      };
       Object.keys(input).forEach((key) => (formData[key] = input[key]));
 
       setIsSubmit(true);
@@ -52,8 +53,9 @@ const FormsJadwalSeminar = () => {
          h.notification(data.status, data.msg_response);
 
          if (!data.status) return;
+
+         dispatch(setModule({ ...module, openFormsJadwalSeminar: false, jadwalSeminarProposal: { ...data.content } }));
          clearProps();
-         dispatch(setModule({ ...module, openFormsJadwalSeminar: false, jadwalSeminar: data.content }));
          h.dtReload();
       });
       fetch.finally(() => {
@@ -64,7 +66,7 @@ const FormsJadwalSeminar = () => {
    return (
       <React.Fragment>
          {openFormsJadwalSeminar && <div className="drawer-overlay" style={{ zIndex: 999 }} />}
-         <div className={`bg-white drawer drawer-end ${openFormsJadwalSeminar ? "drawer-on" : ""}`} style={{ width: 600, zIndex: 999 }}>
+         <div className={`bg-white drawer drawer-end min-w-25 ${openFormsJadwalSeminar ? "drawer-on" : ""}`} style={{ zIndex: 999 }}>
             <Card className="rounded-0 w-100">
                <Card.Header className="pe-5">
                   <div className="card-title">

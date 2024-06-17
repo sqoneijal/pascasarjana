@@ -430,6 +430,7 @@ class Home extends Common
       $data['lampiran'] = $post['lampiran'];
       $data['nim'] = $post['nim'];
       $data['id_syarat'] = $post['id_syarat'];
+      $data['id_google_drive'] = $post['id_google_drive'];
 
       $check = $this->checkLampiranUploadSebelumnya($post);
 

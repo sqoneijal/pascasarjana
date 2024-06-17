@@ -26,9 +26,29 @@ class Login extends Common
             $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
          }
          $response['periode'] = $this->getPeriodeAktif();
+         $response['syarat'] = $this->getDaftarSyarat();
       }
 
       unset($response['password']);
+      return $response;
+   }
+
+   private function getDaftarSyarat(): array
+   {
+      $table = $this->db->table('tb_mst_syarat');
+      $table->orderBy('id');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
       return $response;
    }
 

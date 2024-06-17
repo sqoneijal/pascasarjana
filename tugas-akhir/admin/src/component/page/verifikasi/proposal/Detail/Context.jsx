@@ -1,43 +1,28 @@
 import React, { useLayoutEffect, useState } from "react";
 import { Card } from "react-bootstrap";
+import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
-import Lampiran from "./Lampiran";
-import StatusTugasAkhir from "./StatusTugasAkhir";
+
+const StatusTugasAkhir = React.lazy(() => import("./StatusTugasAkhir"));
+const Lampiran = React.lazy(() => import("./Lampiran"));
 
 const Context = () => {
    const { module } = useSelector((e) => e.redux);
-   const { openDetail, detailContent, statusApproveLampiran } = module;
+   const { openDetail, detailContent } = module;
    const dispatch = useDispatch();
 
    // bool
    const [isLoading, setIsLoading] = useState(true);
-
-   // string
-   const [jumlahValidasi, setJumlahValidasi] = useState(0);
-
-   useLayoutEffect(() => {
-      if (!isLoading && h.objLength(statusApproveLampiran)) {
-         const unsetField = ["id", "id_lampiran"];
-         let jumlah = 0;
-         Object.keys(statusApproveLampiran).forEach((key) => {
-            if (!unsetField.includes(key) && h.parse(key, statusApproveLampiran) !== "") {
-               jumlah++;
-            }
-         });
-         setJumlahValidasi(jumlah);
-      }
-      return () => {};
-   }, [statusApproveLampiran, isLoading]);
 
    const handleClose = () => {
       dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
       setIsLoading(true);
    };
 
-   const getDetail = (id_status_tugas_akhir) => {
-      const formData = { id_status_tugas_akhir };
+   const getDetail = (nim, id_periode) => {
+      const formData = { nim, id_periode };
 
       setIsLoading(true);
       const fetch = h.post(`/getdetail`, formData);
@@ -58,14 +43,27 @@ const Context = () => {
    };
 
    useLayoutEffect(() => {
-      if (openDetail && h.objLength(detailContent)) getDetail(h.parse("id", detailContent));
+      if (openDetail && h.objLength(detailContent)) getDetail(h.parse("nim", detailContent), h.parse("id_periode", detailContent));
       return () => {};
    }, [openDetail, detailContent]);
 
    return (
-      <React.Fragment>
+      <React.Suspense
+         fallback={
+            <Bars
+               visible={true}
+               color="#4fa94d"
+               radius="9"
+               wrapperStyle={{
+                  alignItems: "center",
+                  display: "flex",
+                  justifyContent: "center",
+               }}
+               wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+            />
+         }>
          {openDetail && <div className="drawer-overlay" />}
-         <div className={`bg-white drawer drawer-start ${openDetail ? "drawer-on" : ""}`} style={{ width: window.innerWidth / 2 }}>
+         <div className={`bg-white drawer drawer-start ${openDetail ? "drawer-on" : ""} min-w-75`}>
             <Card className="rounded-0 w-100">
                <Card.Header className="pe-5">
                   <div className="card-title">
@@ -90,16 +88,14 @@ const Context = () => {
                      </React.Fragment>
                   )}
                </Card.Body>
-               {jumlahValidasi === 8 && (
-                  <Card.Footer className="text-end">
-                     {h.buttons(`Validasi`, false, {
-                        onClick: () => dispatch(setModule({ ...module, openModalConfirmVerifikasi: true })),
-                     })}
-                  </Card.Footer>
-               )}
+               <Card.Footer className="text-end">
+                  {h.buttons(`Validasi`, false, {
+                     onClick: () => dispatch(setModule({ ...module, openModalConfirmVerifikasi: true })),
+                  })}
+               </Card.Footer>
             </Card>
          </div>
-      </React.Fragment>
+      </React.Suspense>
    );
 };
 export default Context;

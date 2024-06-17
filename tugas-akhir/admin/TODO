@@ -5,6 +5,22 @@ pengguna:
    ✔ hapus @done(24-06-08 20:41)
    ✔ filter @done(24-06-08 20:58)
 verifikasi:
+   proposal:
+      ✔ daftar @done(24-06-10 11:51)
+      ✔ filter @done(24-06-10 11:51)
+      ✔ detail @done(24-06-15 21:27)
+   perbaikan:
+      ✔ daftar @done(24-06-16 11:34)
+      ✔ filter @done(24-06-16 11:34)
+      ✔ detail @done(24-06-16 11:34)
+   diterima:
+      ✔ daftar @done(24-06-16 12:46)
+      ✔ filter @done(24-06-16 12:46)
+      detail:
+         ✔ lampiran @done(24-06-16 12:47)
+         ✔ jadwal seminar @done(24-06-16 12:47)
+         ☐ pembimbing seminar
 seminar:
 sidang:
 pengaturan:
+   ☐ upload format permohonan seminar proposal
