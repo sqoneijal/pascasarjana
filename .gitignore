@@ -37,3 +37,10 @@ tugas-akhir/admin/writable/session/*
 tugas-akhir/admin/writable/uploads/*
 tugas-akhir/admin/node_modules
 pgdata
+tugas-akhir/dosen/vendor/*
+tugas-akhir/dosen/writable/cache/*
+tugas-akhir/dosen/writable/debugbar/*
+tugas-akhir/dosen/writable/logs/*
+tugas-akhir/dosen/writable/session/*
+tugas-akhir/dosen/writable/uploads/*
+tugas-akhir/dosen/node_modules
