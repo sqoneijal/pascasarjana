@@ -10,7 +10,8 @@
       "slack": "https://codeigniterchat.slack.com"
    },
    "require": {
-      "php": "^8.1"
+      "php": "^8.1",
+      "firebase/php-jwt": "^6.10"
    },
    "config": {
       "optimize-autoloader": true,

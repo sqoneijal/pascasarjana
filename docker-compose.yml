@@ -131,6 +131,19 @@ services:
          - pps-network
       restart: unless-stopped
 
+   pps-dosen:
+      container_name: pps-dosen
+      build:
+         context: ./tugas-akhir/dosen
+         dockerfile: ./Dockerfile
+      ports:
+         - 8017:80
+      volumes:
+         - ./tugas-akhir/dosen:/var/www/html
+      networks:
+         - pps-network
+      restart: unless-stopped
+
 networks:
    pps-network:
       external: true

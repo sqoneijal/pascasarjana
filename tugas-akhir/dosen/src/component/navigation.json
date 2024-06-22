@@ -1,0 +1,6 @@
+[
+   { "label": "Dashboard", "icon": "ki-outline ki-element-11 fs-2", "link": "/dashboard", "sub": false },
+   { "label": "Seminar Proposal", "icon": "ki-outline ki-element-11 fs-2", "link": "/proposal", "sub": false },
+   { "label": "Seminar Penelitian", "icon": "ki-outline ki-element-11 fs-2", "link": "/penelitian", "sub": false },
+   { "label": "Sidang Munaqasyah", "icon": "ki-outline ki-element-11 fs-2", "link": "/sidangmunaqasyah", "sub": false }
+]

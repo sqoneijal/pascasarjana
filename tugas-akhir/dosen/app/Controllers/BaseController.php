@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use CodeIgniter\API\ResponseTrait;
 
 /**
  * Class BaseController
@@ -21,38 +22,73 @@ use Psr\Log\LoggerInterface;
  */
 abstract class BaseController extends Controller
 {
-    /**
-     * Instance of the main Request object.
-     *
-     * @var CLIRequest|IncomingRequest
-     */
-    protected $request;
 
-    /**
-     * An array of helpers to be loaded automatically upon
-     * class instantiation. These helpers will be available
-     * to all other controllers that extend BaseController.
-     *
-     * @var list<string>
-     */
-    protected $helpers = [];
+   use ResponseTrait;
 
-    /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
-     */
-    // protected $session;
+   /**
+    * Instance of the main Request object.
+    *
+    * @var CLIRequest|IncomingRequest
+    */
+   protected $request;
 
-    /**
-     * @return void
-     */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-    {
-        // Do Not Edit This Line
-        parent::initController($request, $response, $logger);
+   /**
+    * An array of helpers to be loaded automatically upon
+    * class instantiation. These helpers will be available
+    * to all other controllers that extend BaseController.
+    *
+    * @var list<string>
+    */
+   protected $helpers = ['html', 'autoload'];
 
-        // Preload any models, libraries, etc, here.
+   public $data;
+   public $post;
+   public $getVar;
 
-        // E.g.: $this->session = \Config\Services::session();
-    }
+   protected $publish = false;
+
+   /**
+    * @return void
+    */
+   public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+   {
+      // Do Not Edit This Line
+      parent::initController($request, $response, $logger);
+      $this->post = $request->getPost();
+      $this->getVar = $request->getVar();
+   }
+
+   public function template(array $params): void
+   {
+      $params['linkTag'] = $this->generateWebpackCss();
+      $params['scriptTag'] = $this->generateWebpackJs();
+
+      echo View('Template', $params);
+   }
+
+   public function templateBelumLogin(array $params): void
+   {
+      $params['linkTag'] = $this->generateWebpackCss();
+      $params['scriptTag'] = $this->generateWebpackJs();
+
+      echo View('BelumLogin', $params);
+   }
+
+   public function generateWebpackCss(): string
+   {
+      if (!$this->publish) {
+         return link_tag('http://localhost:8081/App.css');
+      } else {
+         return link_tag('bundle/app.' . HASH_CSS . '.css');
+      }
+   }
+
+   public function generateWebpackJs(): string
+   {
+      if (!$this->publish) {
+         return script_tag('http://localhost:8081/App.js');
+      } else {
+         return script_tag(['type' => 'module', 'src' => 'bundle/app.' . HASH_JS . '.js']);
+      }
+   }
 }
