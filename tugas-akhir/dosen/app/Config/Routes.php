@@ -28,5 +28,8 @@ function proposal(RouteCollection $routes): void
 
       $routes->post('getdata', 'Proposal::getData');
       $routes->post('getdetail', 'Proposal::getDetail');
+      $routes->post('submitperbaiki', 'Proposal::submitPerbaiki');
+      $routes->post('submitsudahseminar', 'Proposal::submitSudahSeminar');
+      $routes->post('updatestatustesis', 'Proposal::updateStatusTesis');
    });
 }

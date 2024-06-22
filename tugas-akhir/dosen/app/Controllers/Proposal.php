@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\Proposal as Model;
+use App\Validation\Proposal as Validate;
 
 class Proposal extends BaseController
 {
@@ -14,6 +15,47 @@ class Proposal extends BaseController
       ];
 
       $this->template($this->data);
+   }
+
+   public function updateStatusTesis(): object
+   {
+      $model = new Model();
+      $content = $model->updateStatusTesis($this->post);
+      return $this->respond($content);
+   }
+
+   public function submitSudahSeminar(): object
+   {
+      $response = ['status' => false, 'errors' => []];
+
+      $validation = new Validate();
+      if ($this->validate($validation->submitSudahSeminar())) {
+         $model = new Model();
+         $submit = $model->submitSudahSeminar($this->post);
+
+         $response = array_merge($submit, ['errors' => []]);
+      } else {
+         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
+         $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
+   }
+
+   public function submitPerbaiki(): object
+   {
+      $response = ['status' => false, 'errors' => []];
+
+      $validation = new Validate();
+      if ($this->validate($validation->submitPerbaiki())) {
+         $model = new Model();
+         $submit = $model->submitPerbaiki($this->post);
+
+         $response = array_merge($submit, ['errors' => []]);
+      } else {
+         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
+         $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
    }
 
    public function getDetail(): object

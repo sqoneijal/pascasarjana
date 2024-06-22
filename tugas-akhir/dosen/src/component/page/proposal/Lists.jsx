@@ -35,7 +35,7 @@ const Lists = () => {
          {
             data: null,
             render: (data) => {
-               return h.parse("status", data);
+               return `<span class="text-danger">${h.parse("status_tesis", data)}</span>`;
             },
          },
       ],

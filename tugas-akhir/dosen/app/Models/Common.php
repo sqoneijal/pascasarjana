@@ -17,6 +17,13 @@ class Common extends Model
       $this->db = \Config\Database::connect();
    }
 
+   public function updateStatusTugasAkhir(int $id, int $value): void
+   {
+      $table = $this->db->table('tb_status_tugas_akhir');
+      $table->where('id', $id);
+      $table->update(['status' => $value]);
+   }
+
    public function getDaftarPeriode(): array
    {
       $table = $this->db->table('tb_periode');

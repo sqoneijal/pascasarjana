@@ -6,14 +6,16 @@ import Switch, { Case } from "react-switch-case";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
+import FormsPerbaiki from "./FormsPerbaiki";
+import FormsSudahSeminar from "./FormsSudahSeminar";
 import JadwalSeminar from "./JadwalSeminar";
 import Lampiran from "./Lampiran";
 import StatusTugasAkhir from "./StatusTugasAkhir";
 import TimPembimbing from "./TimPembimbing";
 
 const Context = () => {
-   const { module } = useSelector((e) => e.redux);
-   const { openDetail, detailContent } = module;
+   const { module, init } = useSelector((e) => e.redux);
+   const { openDetail, detailContent, pembimbing } = module;
    const dispatch = useDispatch();
 
    // bool
@@ -63,6 +65,46 @@ const Context = () => {
 
    const submit = (e) => {
       e.preventDefault();
+      const findRow = {};
+      pembimbing.forEach((row) => {
+         if (row.nidn === init.username) {
+            Object.assign(findRow, row);
+         }
+      });
+
+      if (h.parse("pembimbing_ke", findRow) === 1) {
+         dispatch(setModule({ ...module, openFormsSudahSeminar: true }));
+         return;
+      }
+
+      const formData = {
+         nim: h.parse("nim", detailContent),
+         id_periode: h.parse("id_periode", detailContent),
+         nidn: h.parse("username", init),
+         id_status_tugas_akhir: h.parse("id_status_tugas_akhir", detailContent),
+      };
+
+      setIsSubmit(true);
+      const fetch = h.post(`/updatestatustesis`, formData);
+      fetch.then((res) => {
+         if (typeof res === "undefined") return;
+
+         const { data } = res;
+         if (typeof data.code !== "undefined" && h.parse("code", data) !== 200) {
+            h.notification(false, h.parse("message", data));
+            return;
+         }
+
+         h.notification(data.status, data.msg_response);
+
+         if (!data.status) return;
+
+         dispatch(setModule({ ...module, status_tugas_akhir: data.content }));
+         h.dtReload();
+      });
+      fetch.finally(() => {
+         setIsSubmit(false);
+      });
    };
 
    return (
@@ -88,7 +130,9 @@ const Context = () => {
                <Card.Body className="hover-scroll-overlay-y">
                   {!isLoading && (
                      <React.Fragment>
+                        <FormsPerbaiki />
                         <StatusTugasAkhir />
+                        <FormsSudahSeminar />
                         <div className="mb-5 hover-scroll-x mt-5">
                            <div className="d-grid">
                               <ul className="nav nav-tabs flex-nowrap text-nowrap">
@@ -140,7 +184,7 @@ const Context = () => {
                         })}
                         {h.buttons(`Perbaiki`, false, {
                            variant: "danger",
-                           // onClick: () => handleClose(),
+                           onClick: () => dispatch(setModule({ ...module, openFormsPerbaiki: true })),
                         })}
                      </ButtonGroup>
                   </Card.Footer>
