@@ -99,7 +99,7 @@ const Context = () => {
 
          if (!data.status) return;
 
-         dispatch(setModule({ ...module, status_tugas_akhir: data.content }));
+         dispatch(setModule({ ...module, status_tugas_akhir: data.content, openDetail: false, detailContent: {} }));
          h.dtReload();
       });
       fetch.finally(() => {

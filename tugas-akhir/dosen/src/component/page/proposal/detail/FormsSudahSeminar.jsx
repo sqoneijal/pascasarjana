@@ -54,7 +54,7 @@ const FormsSudahSeminar = () => {
 
          if (!data.status) return;
 
-         dispatch(setModule({ ...module, openFormsSudahSeminar: false, status_tugas_akhir: data.content }));
+         dispatch(setModule({ ...module, openFormsSudahSeminar: false, status_tugas_akhir: data.content, openDetail: false, detailContent: {} }));
          clearProps();
          h.dtReload();
       });

@@ -33,3 +33,11 @@ function proposal(RouteCollection $routes): void
       $routes->post('updatestatustesis', 'Proposal::updateStatusTesis');
    });
 }
+
+penelitian($routes);
+function penelitian(RouteCollection $routes): void
+{
+   $routes->group('penelitian', ['filter' => 'IsLogin'], function ($routes) {
+      $routes->get('/', 'Penelitian::index');
+   });
+}
