@@ -29,7 +29,7 @@ const Lists = () => {
          {
             data: null,
             render: (data) => {
-               return h.renderStatusTesis(h.parse("status", data), daftarStatusTesis);
+               return `<span class="text-danger">${h.parse("status_tesis", data)}</span>`;
             },
          },
       ],

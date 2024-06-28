@@ -147,20 +147,21 @@ const FormsPembimbing = () => {
                      }}
                      selected={selectedKategoriKegiatan}
                   />
-                  {h.form_select(
-                     "Apakah Dosen UIN Ar Raniry?",
-                     "apakah_dosen_uin",
-                     {
-                        onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.value })),
-                        value: h.parse("apakah_dosen_uin", input),
-                     },
-                     [
-                        { value: "t", label: "Iya" },
-                        { value: "f", label: "Bukan" },
-                     ],
-                     true,
-                     errors
-                  )}
+                  {pageType === "insert" &&
+                     h.form_select(
+                        "Apakah Dosen UIN Ar Raniry?",
+                        "apakah_dosen_uin",
+                        {
+                           onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.value })),
+                           value: h.parse("apakah_dosen_uin", input),
+                        },
+                        [
+                           { value: "t", label: "Iya" },
+                           { value: "f", label: "Bukan" },
+                        ],
+                        true,
+                        errors
+                     )}
                   <Switch condition={h.parse("apakah_dosen_uin", input)}>
                      <Case value="f">
                         <FormsBukanDosenUIN {...props} />

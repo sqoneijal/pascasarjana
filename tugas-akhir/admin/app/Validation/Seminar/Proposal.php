@@ -5,83 +5,75 @@ namespace App\Validation\Seminar;
 class Proposal
 {
 
-   private function validasiDosen(): callable
+   private function validasiNamaDosen(): callable
    {
       return static function ($value, array $data, ?string &$error = null): bool {
-         if (empty($value) && @$data['apakah_dosen_uin'] === 'true') {
-            $error = 'Dosen tidak boleh kosong.';
-            return false;
+         $status = true;
+         if (strlen($value) < 1) {
+            if (@$data['apakah_dosen_uin'] === 't') {
+               $error = 'Dosen tidak boleh kosong.';
+               $status = false;
+            }
+
+            if (@$data['apakah_dosen_uin'] === 'f') {
+               $error = 'Nama lengkap tidak boleh kosong.';
+               $status = false;
+            }
          }
-         return true;
+         return $status;
       };
    }
 
    private function validasiNIDN(): callable
    {
       return static function ($value, array $data, ?string &$error = null): bool {
-         if ($data['apakah_dosen_uin'] === 'false' && empty($value)) {
-            $error = 'NIK tidak boleh kosong.';
-            return false;
+         $status = true;
+         if (strlen($value) < 1) {
+            if (@$data['apakah_dosen_uin'] === 't') {
+               $error = 'Dosen tidak boleh kosong.';
+               $status = false;
+            }
+
+            if (@$data['apakah_dosen_uin'] === 'f') {
+               $error = 'NIK tidak boleh kosong.';
+               $status = false;
+            }
          }
-         return true;
+         return $status;
       };
    }
 
-   private function validasiNamaDosen(): callable
+   public function submitPembimbing(): array
    {
-      return static function ($value, array $data, ?string &$error = null): bool {
-         if (empty($value) && @$data['apakah_dosen_uin'] === 'false') {
-            $error = 'Nama lengkap tidak boleh kosong.';
-            return false;
-         }
-         return true;
-      };
-   }
-
-   public function submitPembimbingPenelitian(): array
-   {
-      $validasiDosen = $this->validasiDosen();
       $validasiNIDN = $this->validasiNIDN();
       $validasiNamaDosen = $this->validasiNamaDosen();
 
       return [
-         'dosen' => [
-            'label' => 'Dosen',
-            'rules' => [$validasiDosen]
-         ],
-         'nidn' => [
-            'label' => 'NIK',
-            'rules' => [$validasiNIDN]
-         ],
-         'nama_dosen' => [
-            'label' => 'Nama lengkap',
-            'rules' => [$validasiNamaDosen]
+         'pembimbing_ke' => [
+            'label' => 'Pembimbing ke',
+            'rules' => 'required|numeric|greater_than[0]'
          ],
          'id_kategori_kegiatan' => [
             'label' => 'Kategori kegiatan',
             'rules' => 'required|numeric'
          ],
-         'pembimbing_ke' => [
-            'label' => 'Pembimbing ke',
-            'rules' => 'required|numeric|greater_than[0]'
-         ]
-      ];
-   }
-
-   public function hapusPembimbingPenelitian(): array
-   {
-      return [
-         'id' => [
-            'label' => 'ID pembimbing',
-            'rules' => 'required|numeric'
-         ]
+         'apakah_dosen_uin' => [
+            'label' => 'Apakah dosen uin',
+            'rules' => 'required'
+         ],
+         'nidn' => [
+            'rules' => [$validasiNIDN]
+         ],
+         'nama_dosen' => [
+            'rules' => [$validasiNamaDosen]
+         ],
       ];
    }
 
    private function validasiProgramMBKM(): callable
    {
       return static function ($value, array $data, ?string &$error = null): bool {
-         if ($data['kampusMerdeka'] === 'true' && empty($value)) {
+         if ($data['kampusMerdeka'] === 't' && empty($value)) {
             $error = 'Program MBKM tidak boleh kosong.';
             return false;
          }
@@ -115,7 +107,11 @@ class Proposal
             'rules' => 'required|valid_date[Y-m-d]'
          ],
          'judul' => [
-            'label' => 'Judul',
+            'label' => 'Judul penelitian',
+            'rules' => 'required'
+         ],
+         'jenis_anggota' => [
+            'label' => 'Jenis anggota',
             'rules' => 'required'
          ]
       ];

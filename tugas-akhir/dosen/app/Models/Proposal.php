@@ -236,7 +236,7 @@ class Proposal extends Common
       $table->join('tb_pembimbing_seminar tps', 'tps.id_status_tugas_akhir = tsta.id');
       $table->join('tb_prodi tp', 'tp.id_feeder = tsta.id_prodi');
       $table->join('tb_jadwal_seminar tjs', 'tjs.id_status_tugas_akhir = tsta.id');
-      $table->whereIn('tsta.status', [8, 9, 10]);
+      $table->whereIn('tsta.status', [7, 8, 9, 10]);
 
       $this->dt_where($table, [
          'tsta.id_periode' => $post['id_periode'],
@@ -260,7 +260,7 @@ class Proposal extends Common
       $table->join('tb_prodi tp', 'tp.id_feeder = tsta.id_prodi');
       $table->join('tb_jadwal_seminar tjs', 'tjs.id_status_tugas_akhir = tsta.id');
       $table->join('tb_status_tesis tst', 'tst.id = tsta.status', 'left');
-      $table->whereIn('tsta.status', [8, 9, 10]);
+      $table->whereIn('tsta.status', [7, 8, 9, 10]);
 
       $this->dt_where($table, [
          'tsta.id_periode' => $post['id_periode'],

@@ -6,5 +6,5 @@ define('LOGIN_PAGE', 'http://localhost:8013/');
 define('FEEDER_PATHNAME', 'https://neofeeder.ar-raniry.ac.id/ws/live2.php');
 define('FEEDER_USERNAME', '201011');
 define('FEEDER_PASSWORD', '*pddiktiuinar');
-define('HASH_JS', 'dc3a52231898e2af40c30083c5290f77f8f7747b');
-define('HASH_CSS', 'eb5dee4073d5dc84924bb78e1afc40cc4d239353');
+define('HASH_JS', '');
+define('HASH_CSS', '');

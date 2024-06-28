@@ -6,15 +6,13 @@ import * as h from "~/Helpers";
 
 const Lampiran = () => {
    const { module } = useSelector((e) => e.redux);
-   const { lampiran, statusApproveLampiran, statusTugasAkhir, keteranganApproveLampiran } = module;
+   const { syarat, lampiranUpload } = module;
 
-   const unsetFieldLampiran = ["id", "id_status_tugas_akhir"];
-
-   const renderKeterangan = (field, keteranganApproveLampiran) => {
-      return (
-         h.parse(field, keteranganApproveLampiran) && (
-            <span style={{ display: "block", fontSize: 12, fontStyle: "italic", color: "#f82859" }}>{h.parse(field, keteranganApproveLampiran)}</span>
-         )
+   const renderWajib = (status) => {
+      return status === "t" ? (
+         <i className="ki-outline ki-check-square fs-2 fw-bold text-success" />
+      ) : (
+         <i className="ki-outline ki-close-square fs-2 fw-bold text-danger" />
       );
    };
 
@@ -22,66 +20,29 @@ const Lampiran = () => {
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-               <th rowSpan={2} className="align-middle">
-                  keterangan
+               <th>keterangan</th>
+               <th>bukti</th>
+               <th className="text-center" style={{ width: "5%" }}>
+                  wajib?
                </th>
-               <th rowSpan={2} className="align-middle text-center">
-                  lampiran
-               </th>
-               <th colSpan={2} className="text-center" style={{ width: "10%" }}>
-                  status valid
-               </th>
-            </tr>
-            <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-               <th className="text-center">iya</th>
-               <th className="text-center">tidak</th>
             </tr>
          </thead>
          <tbody className="text-gray-600 fw-semibold">
             <Each
-               of={Object.keys(lampiran)}
-               render={(key) =>
-                  !unsetFieldLampiran.includes(key) && (
-                     <tr>
-                        <td>
-                           {h.keteranganLampiran(key)}
-                           {h.parse(key, statusApproveLampiran) === "f" && renderKeterangan(key, keteranganApproveLampiran)}
-                        </td>
-                        <td className="text-center">
-                           <a
-                              href={h.getFile(h.parse(key, lampiran), h.parse("nim", statusTugasAkhir))}
-                              target="_blank"
-                              className="btn btn-active-icon-primary btn-active-text-primary btn-sm p-0 m-0">
-                              Lihat
+               of={syarat}
+               render={(row) => (
+                  <tr>
+                     <td>{h.parse("nama", row)}</td>
+                     <td>
+                        {h.parse(h.parse("id", row), lampiranUpload) && (
+                           <a href={h.getDriveFile(h.parse("id_google_drive", lampiranUpload[h.parse("id", row)]))} target="_blank">
+                              {h.parse("lampiran", lampiranUpload[h.parse("id", row)])}
                            </a>
-                        </td>
-                        <td className="text-center">
-                           {h.form_check_switch(
-                              null,
-                              key,
-                              {
-                                 disabled: true,
-                                 checked: h.parse(key, statusApproveLampiran) === "t",
-                              },
-                              "success",
-                              "h-20px w-30px"
-                           )}
-                        </td>
-                        <td className="text-center">
-                           {h.form_check_switch(
-                              null,
-                              key,
-                              {
-                                 disabled: true,
-                                 checked: h.parse(key, statusApproveLampiran) === "f",
-                              },
-                              "danger",
-                              "h-20px w-30px"
-                           )}
-                        </td>
-                     </tr>
-                  )
-               }
+                        )}
+                     </td>
+                     <td className="text-center">{renderWajib(h.parse("wajib", row))}</td>
+                  </tr>
+               )}
             />
          </tbody>
       </Table>

@@ -21,6 +21,13 @@ verifikasi:
          ✔ jadwal seminar @done(24-06-16 12:47)
          ✔ pembimbing semina @done(24-06-17 20:56)
 seminar:
+   proposal:
+      ✔ daftar @done(24-06-24 12:54)
+      ✔ filter @done(24-06-24 12:54)
+      detail:
+         ✔ lampiran @done(24-06-28 12:25)
+         ✔ sk penelitian @done(24-06-28 12:25)
+         ✔ tim pembimbing @done(24-06-28 12:25)
 sidang:
 pengaturan:
    ☐ upload format permohonan seminar proposal

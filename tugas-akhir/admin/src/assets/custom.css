@@ -63,4 +63,5 @@ a.page-link.first > i.first {
 }
 .btn.btn-active-color-primary {
    color: var(--bs-text-primary) !important;
+   background-color: var(--bs-light) !important;
 }

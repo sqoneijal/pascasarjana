@@ -18,60 +18,51 @@ class Proposal extends BaseController
       $this->template($this->data);
    }
 
+   public function hapusPembimbing(): object
+   {
+      $model = new Model();
+      $content = $model->hapusPembimbing($this->post);
+      return $this->respond($content);
+   }
+
    public function cariDosen(): object
    {
       $model = new Model();
-
       $tokenFeeder = $model->getTokenFeeder();
 
-      $response['status'] = $tokenFeeder['status'];
-      $response['msg_response'] = @$tokenFeeder['msg_response'];
+      $response = ['status' => false, 'msg_response' => 'Terjadi sesuatu kesalahan, silahkan coba lagi.'];
       if ($tokenFeeder['status']) {
-         $query = trim(strtolower($this->post['query']));
+         $token = $tokenFeeder['token'];
 
-         $req = $model->feederAction($tokenFeeder['token'], 'DetailBiodataDosen', [
-            'limit' => 100,
-            'filter' => "trim(lower(nidn)) like '%" . $query . "%' or trim(lower(nama_dosen)) like '%" . $query . "%'"
+         $action = $model->feederAction($token, 'DetailBiodataDosen', [
+            'filter' => "trim(lower(nama_dosen)) like '%" . trim(strtolower($this->post['query'])) . "%' or trim(lower(nidn)) like '%" . trim(strtolower($this->post['query'])) . "%'"
          ]);
 
-         $response['content'] = $req['content'];
+         if ($action['status']) {
+            $response['status'] = true;
+            $response['content'] = $action['content'];
+         } else {
+            $response['msg_response'] = $action['msg_response'];
+         }
+      } else {
+         $response['msg_response'] = $tokenFeeder['msg_response'];
       }
-
       return $this->respond($response);
    }
 
-   public function submitPembimbingPenelitian(): object
+   public function submitPembimbing(): object
    {
       $response = ['status' => false, 'errors' => []];
 
       $validation = new Validate();
-      if ($this->validate($validation->submitPembimbingPenelitian())) {
+      if ($this->validate($validation->submitPembimbing())) {
          $model = new Model();
-         $submit = $model->submitPembimbingPenelitian($this->post);
+         $submit = $model->submitPembimbing($this->post);
 
          $response = array_merge($submit, ['errors' => []]);
       } else {
          $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
          $response['errors'] = \Config\Services::validation()->getErrors();
-      }
-      return $this->respond($response);
-   }
-
-   public function hapusPembimbingPenelitian(): object
-   {
-      $response = ['status' => false, 'errors' => [], 'msg_response' => 'Terjadi sesuatu kesalahan.'];
-
-      $validation = new Validate();
-      if ($this->validate($validation->hapusPembimbingPenelitian())) {
-         $model = new Model();
-         $submit = $model->hapusPembimbingPenelitian($this->post);
-
-         $response = array_merge($submit, ['errors' => []]);
-      } else {
-         $errors = \Config\Services::validation()->getErrors();
-         foreach ($errors as $key) {
-            $response['msg_response'] = $key;
-         }
       }
       return $this->respond($response);
    }
@@ -96,7 +87,7 @@ class Proposal extends BaseController
    public function getDetail(): object
    {
       $model = new Model();
-      $content = $model->getDetailVerifikasiProposal($this->post['id_status_tugas_akhir']);
+      $content = $model->getDetail($this->post);
       return $this->respond($content);
    }
 
@@ -110,7 +101,6 @@ class Proposal extends BaseController
          'daftarAngkatan' => $model->getDaftarAngkatan(),
          'daftarJenisAktivitas' => $model->getDaftarJenisAktivitas(),
          'daftarKategoriKegiatan' => $model->getDaftarKategoriKegiatan(),
-         'daftarStatusTesis' => $model->getDaftarStatusTesis(),
       ];
       return $this->respond($content);
    }

@@ -19,6 +19,53 @@ class Common extends Model
       $this->curl = \Config\Services::curlrequest();
    }
 
+   public function getPembimbingPenelitian(array $post): array
+   {
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->select('tpp.id, tpp.id_penelitian, tpp.apakah_dosen_uin, tpp.pembimbing_ke, tpp.id_kategori_kegiatan, tpp.nidn, tpp.nama_dosen, tpp.seminar_penelitian, tpp.boleh_seminar, tpp.boleh_sidang, tkk.nama as kategori_kegiatan');
+      $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
+      $table->join('tb_pembimbing_penelitian tpp', 'tpp.id_penelitian = tp.id');
+      $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tpp.id_kategori_kegiatan');
+      $table->where('tsta.nim', $post['nim']);
+      $table->where('tsta.id_periode', $post['id_periode']);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
+   public function getSKPenelitian(array $post): array
+   {
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->select('tp.id, tp.id_status_tugas_akhir, tp.id_periode, tp.judul, tp.nomor_sk_tugas, tp.tanggal_sk_tugas, tp.id_jenis_aktivitas, tmja.nama as jenis_aktivitas, tmja.untuk_kampus_merdeka, tp.keterangan, tp.tanggal_mulai, tp.tanggal_akhir, tp.program_mbkm, tp.jenis_anggota');
+      $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
+      $table->join('tb_mst_jenis_aktivitas tmja', 'tmja.id = tp.id_jenis_aktivitas');
+      $table->where('tsta.nim', $post['nim']);
+      $table->where('tsta.id_periode', $post['id_periode']);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
    public function updateStatusTugasAkhir(int $id, int $value): void
    {
       $table = $this->db->table('tb_status_tugas_akhir');
@@ -101,7 +148,7 @@ class Common extends Model
       return $response;
    }
 
-   private function getStatusTugasAkhir(array $post): array
+   public function getStatusTugasAkhir(array $post): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
       $table->select('tsta.id, tsta.nim, tsta.id_periode, concat(tp.tahun_ajaran, tp.id_semester) as semester, tsta.kode_prodi, tsta.nama, tsta.angkatan, tsta.nidn_penasehat, tsta.email, tsta.hp, tsta.status, tst.keterangan as keterangan_status, tsta.id_prodi, concat(tp2.jenjang, \' \', tp2.nama) as program_studi, tsta.judul_proposal_1, tsta.judul_proposal_2, tsta.judul_proposal_3, tsta.judul_proposal_final');

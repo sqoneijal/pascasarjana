@@ -99,10 +99,10 @@ function seminarProposal(RouteCollection $routes): void
 
       $routes->post('getdata', 'Proposal::getData');
       $routes->post('getdetail', 'Proposal::getDetail');
-      $routes->post('submitpenetapansk', 'Proposal::submitPenetapanSK');
-      $routes->post('hapuspembimbing', 'Proposal::hapusPembimbingPenelitian');
-      $routes->post('submitpembimbing', 'Proposal::submitPembimbingPenelitian');
+      $routes->post('submitpenetpansk', 'Proposal::submitPenetapanSK');
+      $routes->post('submitpembimbing', 'Proposal::submitPembimbing');
       $routes->post('caridosen', 'Proposal::cariDosen');
+      $routes->post('hapuspembimbing', 'Proposal::hapusPembimbing');
    });
 }
 
