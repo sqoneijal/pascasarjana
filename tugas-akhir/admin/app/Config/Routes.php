@@ -61,7 +61,7 @@ function pengaturanLampiran(RouteCollection $routes): void
 {
    $routes->group('lampiran', function ($routes) {
       $routes->get('/', 'Lampiran::index');
-      $routes->get('initpage', 'Lampiran::initPage');
+      $routes->get('getdata', 'Lampiran::getData');
 
       $routes->post('submit', 'Lampiran::submit');
    });

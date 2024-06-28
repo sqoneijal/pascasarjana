@@ -1,10 +1,11 @@
 import React, { useLayoutEffect, useState } from "react";
+import { Card } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
-import { position, setModule } from "~/redux";
+import { setModule } from "~/redux";
 
-const Forms = React.lazy(() => import("./Forms"));
+const Lists = React.lazy(() => import("./Lists"));
 
 const Context = () => {
    const { module } = useSelector((e) => e.redux);
@@ -13,8 +14,8 @@ const Context = () => {
    // bool
    const [isLoading, setIsLoading] = useState(true);
 
-   const initPage = () => {
-      const fetch = h.get(`/initpage`);
+   const getData = () => {
+      const fetch = h.get(`/getdata`);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 
@@ -33,8 +34,7 @@ const Context = () => {
    };
 
    useLayoutEffect(() => {
-      dispatch(position(["Pengaturan", document.title]));
-      initPage();
+      getData();
       return () => {};
    }, []);
 
@@ -54,7 +54,11 @@ const Context = () => {
                   wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
                />
             }>
-            <Forms />
+            <Card className="shadow-sm card-bordered">
+               <Card.Body>
+                  <Lists />
+               </Card.Body>
+            </Card>
          </React.Suspense>
       )
    );
