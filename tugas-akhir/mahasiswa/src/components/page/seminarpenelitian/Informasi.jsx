@@ -7,7 +7,7 @@ const Informasi = () => {
 
    return (
       <React.Fragment>
-         {[14].includes() && (
+         {[14].includes(h.parse("status", init)) && (
             <div className="alert alert-dismissible bg-light-primary d-flex flex-column flex-sm-row p-5 mb-10">
                <i className="ki-outline ki-notification-bing fs-2hx text-primary me-4 mb-5 mb-sm-0" />
                <div className="d-flex flex-column pe-0 pe-sm-10">

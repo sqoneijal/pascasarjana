@@ -131,7 +131,7 @@ const Context = () => {
                      </Card.Body>
                      {jumlahUploadLampiran >= 7 && [13].includes(h.parse("status", init)) && (
                         <Card.Footer>
-                           {h.buttons(`Daftar Seminar Proposal`, isLoadingButton, {
+                           {h.buttons(`Daftar Seminar Hasil Penelitian`, isLoadingButton, {
                               onClick: () => (isLoadingButton ? null : updateStatusTugasAkhir(14)),
                            })}
                         </Card.Footer>

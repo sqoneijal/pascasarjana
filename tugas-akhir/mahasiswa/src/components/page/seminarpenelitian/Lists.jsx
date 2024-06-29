@@ -20,23 +20,6 @@ const Lists = () => {
          return;
       }
 
-      const file = fileInput.files[0];
-      const fileType = file.type;
-      const fileSize = file.size;
-      const maxSize = 2 * 1024 * 1024;
-
-      if (fileType !== "application/pdf") {
-         h.notification(false, "Hanya file PDF yang diizinkan.");
-         fileInput.value = "";
-         return;
-      }
-
-      if (fileSize > maxSize) {
-         h.notification(false, "Ukuran file melebihi batas maksimum 2 MB.");
-         fileInput.value = "";
-         return;
-      }
-
       const config = {
          onUploadProgress(progressEvent) {
             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -66,7 +49,7 @@ const Lists = () => {
 
          if (!data.status) return;
 
-         dispatch(setModule({ ...module, lampiranUpload: { ...data.content } }));
+         dispatch(setModule({ ...module, lampiranUpload: { ...lampiranUpload, [id_syarat]: data.post } }));
       });
       fetch.finally(() => {
          setUploadProgres({});
@@ -76,22 +59,10 @@ const Lists = () => {
    const renderLampiran = (lampiranUpload, idSyarat) => {
       if (h.parse(idSyarat, lampiranUpload)) {
          return (
-            <a href={h.cdn(`media/${h.parse("nim", init)}/${h.parse("lampiran", lampiranUpload[idSyarat])}`)} target="_blank">
-               lihat
+            <a href={h.getDriveFile(h.parse("id_google_drive", lampiranUpload[idSyarat]))} target="_blank">
+               {h.parse("lampiran", lampiranUpload[idSyarat])}
             </a>
          );
-      }
-   };
-
-   const renderStatusApprove = (dataObject, idSyarat) => {
-      if (h.parse(idSyarat, dataObject)) {
-         if (h.parse("valid", dataObject[idSyarat]) === "") {
-            return <i className="ki-outline ki-archive fs-4 fw-bold text-end float-end text-warning" />;
-         } else if (h.parse("valid", dataObject[idSyarat]) === "t") {
-            return <i className="ki-outline ki-like fs-4 fw-bold text-end float-end text-success" />;
-         } else if (h.parse("valid", dataObject[idSyarat]) === "f") {
-            return <i className="ki-outline ki-dislike fs-4 fw-bold text-end float-end text-danger" />;
-         }
       }
    };
 
@@ -101,6 +72,19 @@ const Lists = () => {
             <React.Fragment>
                <br />
                <span style={{ fontStyle: "italic", color: "red", fontSize: 12 }}>{h.parse("keterangan", dataObject[idSyarat])}</span>
+            </React.Fragment>
+         );
+      }
+   };
+
+   const renderDownloadTemplate = (data) => {
+      if (h.parse("ada_lampiran", data) === "t" && h.parse("id_google_drive", data)) {
+         return (
+            <React.Fragment>
+               <br />
+               <a href={h.getDriveFile(h.parse("id_google_drive", data))} target="_blank">
+                  Download Template
+               </a>
             </React.Fragment>
          );
       }
@@ -118,14 +102,12 @@ const Lists = () => {
                of={syarat.filter((e) => h.parse("syarat", e) === 2)}
                render={(row) => (
                   <tr>
-                     <td>
+                     <td className="text-middle">
                         {h.parse("nama", row)}
                         {renderCatatanPerbaikan(lampiranUpload, h.parse("id", row))}
-                        {renderStatusApprove(lampiranUpload, h.parse("id", row))}
+                        {renderDownloadTemplate(row)}
                      </td>
-                     <td className="text-end" style={{ width: `5%` }}>
-                        {renderLampiran(lampiranUpload, h.parse("id", row))}
-                     </td>
+                     <td className="text-end text-middle">{renderLampiran(lampiranUpload, h.parse("id", row))}</td>
                      <td className="text-end" style={{ width: `5%` }}>
                         {h.parse(h.parse("id", row), uploadProgres) && `${h.parse(h.parse("id", row), uploadProgres)}%`}
                         {[13].includes(h.parse("status", init)) && (

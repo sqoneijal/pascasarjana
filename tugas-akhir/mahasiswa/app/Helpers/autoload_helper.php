@@ -1,6 +1,46 @@
 <?php
 
 use CodeIgniter\Files\File;
+use Google\Service\Drive\DriveFile as Google_Service_Drive_DriveFile;
+
+function cariFolderGoogleDrive($service, $folderName, $parentId = null)
+{
+   $query = "name = '$folderName' and mimeType = 'application/vnd.google-apps.folder' and trashed = false";
+
+   if ($parentId) {
+      $query .= " and '$parentId' in parents";
+   }
+
+   $response = $service->files->listFiles(array(
+      'q' => $query,
+      'spaces' => 'drive',
+      'fields' => 'files(id, name)'
+   ));
+
+   if (count($response->files) > 0) {
+      return $response->files[0]->id; // Mengambil ID dari folder pertama yang ditemukan
+   } else {
+      return null;
+   }
+}
+
+function buatFolderGoogleDrive($service, $folderName, $parentId = null)
+{
+   $fileMetadata = new Google_Service_Drive_DriveFile(array(
+      'name' => $folderName,
+      'mimeType' => 'application/vnd.google-apps.folder'
+   ));
+
+   if ($parentId) {
+      $fileMetadata->setParents(array($parentId));
+   }
+
+   $folder = $service->files->create($fileMetadata, array(
+      'fields' => 'id'
+   ));
+
+   return $folder->id;
+}
 
 function arrLength($content = [])
 {

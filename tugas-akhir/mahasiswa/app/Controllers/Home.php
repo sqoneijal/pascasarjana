@@ -105,6 +105,8 @@ class Home extends BaseController
       $response = ['status' => false, 'msg_response' => 'Terjadi sesuatu kesalahan. Silahkan coba kembali.'];
       if ($file) {
          try {
+            $parentId = '1ugNtsy45yXDq_Y0eOAxso2KJBISOKV2a';
+
             $client = new Google_Client();
             $client->setAuthConfig(WRITEPATH . 'uploads/google-service-account.json');
             $client->addScope(Google_Service_Drive::DRIVE);
@@ -112,8 +114,15 @@ class Home extends BaseController
             $driveService = new Google_Service_Drive($client);
 
             $driveFile = new Google_Service_Drive_DriveFile();
+            $folderId = cariFolderGoogleDrive($driveService, $this->post['nim'], $parentId);
+
+            if ($folderId === null) {
+               $folderId = buatFolderGoogleDrive($driveService, $this->post['nim'], $parentId);
+            }
+
+
             $driveFile->setName($file->getClientName());
-            $driveFile->setParents(['1ugNtsy45yXDq_Y0eOAxso2KJBISOKV2a']);
+            $driveFile->setParents([$folderId]);
 
             $googleFile = $driveService->files->create($driveFile, array(
                'data' => file_get_contents($file->getTempName()),
@@ -127,11 +136,12 @@ class Home extends BaseController
                $this->post['lampiran'] = $googleFile['name'];
 
                $model = new Model();
-               $model->updateLampiran($this->post);
+               $content = $model->updateLampiran($this->post);
 
                $response['status'] = true;
                $response['msg_response'] = 'File lampiran berhasil di upload';
-               $response['content'] = $this->post;
+               $response['content'] = $content;
+               $response['post'] = $this->post;
             } else {
                $response['msg_response'] = 'Gagal upload file, silahkan coba kembali.';
             }
