@@ -39,5 +39,9 @@ function penelitian(RouteCollection $routes): void
 {
    $routes->group('penelitian', ['filter' => 'IsLogin'], function ($routes) {
       $routes->get('/', 'Penelitian::index');
+
+      $routes->post('getdata', 'Penelitian::getData');
+      $routes->post('getdetail', 'Penelitian::getDetail');
+      $routes->post('submit', 'Penelitian::submit');
    });
 }

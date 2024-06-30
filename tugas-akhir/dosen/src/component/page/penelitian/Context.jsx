@@ -3,6 +3,7 @@ import { Card } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 
 const Lists = React.lazy(() => import("./Lists"));
+const Detail = React.lazy(() => import("./detail/Context"));
 
 const Context = () => {
    return (
@@ -23,6 +24,7 @@ const Context = () => {
          <Card className="shadow-sm card-bordered">
             <Card.Body>
                <Lists />
+               <Detail />
             </Card.Body>
          </Card>
       </React.Suspense>

@@ -17,6 +17,45 @@ class Common extends Model
       $this->db = \Config\Database::connect();
    }
 
+   public function getLampiranUploadMahasiswa(string $nim): array
+   {
+      $table = $this->db->table('tb_lampiran_upload');
+      $table->where('nim', $nim);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $row) {
+         $response[$row['id_syarat']] = $row;
+      }
+      return $response;
+   }
+
+   public function getDetailStatusTugasAkhir(string $nim, int $id_periode): array
+   {
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->select('tsta.id as id_status_tugas_akhir, tsta.nim, tsta.nama, tsta.id_periode, tsta.nim, tsta.angkatan, tsta.email, tsta.hp, tsta.status, tsta.judul_proposal_1, tsta.judul_proposal_2, tsta.judul_proposal_3, tsta.judul_proposal_final, tsta.keterangan, concat(tp.jenjang, \' \', tp.nama) as program_studi, concat(tp2.tahun_ajaran, tp2.id_semester) as semester');
+      $table->join('tb_prodi tp', 'tp.id_feeder = tsta.id_prodi');
+      $table->join('tb_periode tp2', 'tp2.id = tsta.id_periode');
+      $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', $id_periode);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
    public function updateStatusTugasAkhir(int $id, int $value): void
    {
       $table = $this->db->table('tb_status_tugas_akhir');

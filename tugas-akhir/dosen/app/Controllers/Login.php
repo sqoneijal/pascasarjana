@@ -40,4 +40,14 @@ class Login extends BaseController
          'periode' => $model->getDaftarPeriode()
       ]));
    }
+
+   public function logout()
+   {
+      $session = \Config\Services::session();
+
+      $session->remove('IsLogin');
+      $session->destroy();
+
+      return redirect()->to(LOGIN_URL);
+   }
 }
