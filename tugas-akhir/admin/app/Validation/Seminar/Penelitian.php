@@ -5,75 +5,28 @@ namespace App\Validation\Seminar;
 class Penelitian
 {
 
-   public function hapusPenguji(): array
-   {
-      return [
-         'id' => [
-            'label' => 'ID penguji',
-            'rules' => 'required|numeric'
-         ],
-      ];
-   }
-
-   private function validasiDosen(): callable
-   {
-      return static function ($value, array $data, ?string &$error = null): bool {
-         if (empty($value) && @$data['apakah_dosen_uin'] === 'true') {
-            $error = 'Dosen tidak boleh kosong.';
-            return false;
-         }
-         return true;
-      };
-   }
-
-   private function validasiNIDN(): callable
-   {
-      return static function ($value, array $data, ?string &$error = null): bool {
-         if ($data['apakah_dosen_uin'] === 'false' && empty($value)) {
-            $error = 'NIK tidak boleh kosong.';
-            return false;
-         }
-         return true;
-      };
-   }
-
-   private function validasiNamaDosen(): callable
-   {
-      return static function ($value, array $data, ?string &$error = null): bool {
-         if (empty($value) && @$data['apakah_dosen_uin'] === 'false') {
-            $error = 'Nama lengkap tidak boleh kosong.';
-            return false;
-         }
-         return true;
-      };
-   }
-
    public function submitPenguji(): array
    {
-      $validasiDosen = $this->validasiDosen();
-      $validasiNIDN = $this->validasiNIDN();
-      $validasiNamaDosen = $this->validasiNamaDosen();
-
       return [
-         'dosen' => [
-            'label' => 'Dosen',
-            'rules' => [$validasiDosen]
-         ],
          'nidn' => [
-            'label' => 'NIK',
-            'rules' => [$validasiNIDN]
+            'label' => 'NIDN/NIK',
+            'rules' => 'required|numeric'
          ],
          'nama_dosen' => [
-            'label' => 'Nama lengkap',
-            'rules' => [$validasiNamaDosen]
+            'label' => 'Nama dosen',
+            'rules' => 'required'
+         ],
+         'penguji_ke' => [
+            'label' => 'Penuji ke',
+            'rules' => 'required|numeric'
+         ],
+         'apakah_dosen_uin' => [
+            'label' => 'Apakah dosen UIN',
+            'rules' => 'required|in_list[t,f]'
          ],
          'id_kategori_kegiatan' => [
             'label' => 'Kategori kegiatan',
             'rules' => 'required|numeric'
-         ],
-         'penguji_ke' => [
-            'label' => 'Penguji ke',
-            'rules' => 'required|numeric|greater_than[0]'
          ]
       ];
    }
@@ -82,11 +35,21 @@ class Penelitian
    {
       return [
          'tanggal_seminar' => [
-            'label' => 'Tanggal seminar',
-            'rules' => 'required|valid_date[Y-m-d]'
+            'rules' => 'required|valid_date[Y-m-d]',
+            'label' => 'Tanggal seminar'
          ],
          'jam_seminar' => [
-            'label' => 'Jam seminar',
+            'rules' => 'required',
+            'label' => 'Jam seminar'
+         ]
+      ];
+   }
+
+   public function submitTidakValidLampiran(): array
+   {
+      return [
+         'catatan' => [
+            'label' => 'Catatan tidak valid',
             'rules' => 'required'
          ]
       ];

@@ -1,19 +1,20 @@
 import React, { useLayoutEffect, useState } from "react";
-import { ButtonGroup, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
-import Switch, { Case, Default } from "react-switch-case";
+import Switch, { Case } from "react-switch-case";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
-
-const StatusTugasAkhir = React.lazy(() => import("./StatusTugasAkhir"));
-const Lampiran = React.lazy(() => import("./Lampiran"));
-const JadwalDanPembimbing = React.lazy(() => import("./JadwalDanPembimbing"));
-const SKPenelitian = React.lazy(() => import("./SKPenelitian"));
-const JadwalSeminarPenelitian = React.lazy(() => import("./JadwalSeminarPenelitian"));
-const ModalJadwalSeminarPenelitian = React.lazy(() => import("./ModalJadwalSeminarPenelitian"));
-const FormsPenguji = React.lazy(() => import("./FormsPenguji"));
+import FormsJadwalSeminar from "./FormsJadwalSeminar";
+import FormsLampiranTidakValid from "./FormsLampiranTidakValid";
+import FormsPenguji from "./FormsPenguji";
+import Identitas from "./Identitas";
+import JadwalSeminar from "./JadwalSeminar";
+import Lampiran from "./Lampiran";
+import SKPenelitian from "./SKPenelitian";
+import TimPembimbing from "./TimPembimbing";
+import TimPenguji from "./TimPenguji";
 
 const Context = () => {
    const { module } = useSelector((e) => e.redux);
@@ -26,8 +27,14 @@ const Context = () => {
    // string
    const [tabActive, setTabActive] = useState(1);
 
-   const getDetail = (id_status_tugas_akhir) => {
-      const formData = { id_status_tugas_akhir };
+   const handleClose = () => {
+      dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
+      setIsLoading(true);
+      setTabActive(1);
+   };
+
+   const getDetail = (nim, id_periode) => {
+      const formData = { nim, id_periode };
 
       setIsLoading(true);
       const fetch = h.post(`/getdetail`, formData);
@@ -47,48 +54,28 @@ const Context = () => {
       });
    };
 
-   const handleClose = () => {
-      dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
-      setIsLoading(true);
-      setTabActive(1);
-   };
-
    useLayoutEffect(() => {
-      if (openDetail && h.objLength(detailContent)) getDetail(h.parse("id", detailContent));
+      if (openDetail && h.objLength(detailContent)) getDetail(h.parse("nim", detailContent), h.parse("id_periode", detailContent));
       return () => {};
    }, [openDetail, detailContent]);
 
    const tabMenus = [
-      { label: "Lampiran", value: 1 },
-      { label: "Jadwal dan Pembimbing Seminar Proposal", value: 2 },
-      { label: "SK Penelitian", value: 3 },
-      { label: "Jadwal dan Tim Penguji Penelitian", value: 4 },
+      { value: 1, label: "Lampiran" },
+      { value: 2, label: "SK Penelitian" },
+      { value: 3, label: "Tim Pembimbing" },
+      { value: 4, label: "Jadwal Seminar Hasil Penelitian" },
+      { value: 5, label: "Tim Penguji" },
    ];
 
    return (
-      <React.Suspense
-         fallback={
-            <Bars
-               visible={true}
-               color="#4fa94d"
-               radius="9"
-               wrapperStyle={{
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
-               }}
-               wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
-            />
-         }>
-         <ModalJadwalSeminarPenelitian />
-         <FormsPenguji />
+      <React.Fragment>
          {openDetail && <div className="drawer-overlay" />}
-         <div className={`bg-white drawer drawer-start ${openDetail ? "drawer-on" : ""}`} style={{ width: `80%` }}>
+         <div className={`bg-white drawer drawer-start min-w-75 ${openDetail ? "drawer-on" : ""}`}>
             <Card className="rounded-0 w-100">
                <Card.Header className="pe-5">
                   <div className="card-title">
                      <div className="d-flex justify-content-center flex-column me-3">
-                        <span className="fs-4 fw-bold text-gray-900 text-hover-primary me-1 lh-1">Detail Penelitian</span>
+                        <span className="fs-4 fw-bold text-gray-900 text-hover-primary me-1 lh-1">Detail Seminar Hasil Penelitian</span>
                      </div>
                   </div>
                   <div className="card-toolbar">
@@ -101,43 +88,57 @@ const Context = () => {
                   </div>
                </Card.Header>
                <Card.Body className="hover-scroll-overlay-y">
-                  {!isLoading && (
+                  {isLoading ? (
+                     <Bars height="80" width="80" color="#4fa94d" ariaLabel="bars-loading" visible={true} />
+                  ) : (
                      <React.Fragment>
-                        <StatusTugasAkhir />
-                        <ul className="nav nav-tabs nav-line-tabs mb-5 fs-6 mt-5">
-                           <Each
-                              of={tabMenus}
-                              render={(row) => (
-                                 <li className="nav-item">
-                                    <a
-                                       className={`nav-link ${tabActive === h.parse("value", row) ? "active" : ""}`}
-                                       data-bs-toggle="tab"
-                                       href="#"
-                                       onClick={(e) => {
-                                          e.preventDefault();
-                                          setTabActive(h.parse("value", row));
-                                       }}>
-                                       {h.parse("label", row)}
-                                    </a>
-                                 </li>
-                              )}
-                           />
-                        </ul>
+                        <Identitas />
+                        <div className="mb-5 hover-scroll-x mt-5">
+                           <div className="d-grid">
+                              <ul className="nav nav-tabs flex-nowrap text-nowrap">
+                                 <Each
+                                    of={tabMenus}
+                                    render={(row) => (
+                                       <li className="nav-item">
+                                          <a
+                                             className={`nav-link btn btn-color-gray-600 fw-bold rounded-bottom-0 ${
+                                                tabActive === h.parse("value", row) ? "btn-active-light btn-active-color-primary" : ""
+                                             }`}
+                                             data-bs-toggle="tab"
+                                             href="#"
+                                             onClick={(e) => {
+                                                e.preventDefault();
+                                                setTabActive(h.parse("value", row));
+                                             }}>
+                                             {h.parse("label", row)}
+                                          </a>
+                                       </li>
+                                    )}
+                                 />
+                              </ul>
+                           </div>
+                        </div>
                         <div className="tab-content">
                            <div className="tab-pane fade show active" role="tabpanel">
                               <Switch condition={tabActive}>
-                                 <Case value={2}>
-                                    <JadwalDanPembimbing />
+                                 <Case value={1}>
+                                    <FormsLampiranTidakValid />
+                                    <Lampiran />
                                  </Case>
-                                 <Case value={3}>
+                                 <Case value={2}>
                                     <SKPenelitian />
                                  </Case>
-                                 <Case value={4}>
-                                    <JadwalSeminarPenelitian />
+                                 <Case value={3}>
+                                    <TimPembimbing />
                                  </Case>
-                                 <Default>
-                                    <Lampiran />
-                                 </Default>
+                                 <Case value={4}>
+                                    <JadwalSeminar />
+                                    <FormsJadwalSeminar />
+                                 </Case>
+                                 <Case value={5}>
+                                    <TimPenguji />
+                                    <FormsPenguji />
+                                 </Case>
                               </Switch>
                            </div>
                         </div>
@@ -146,22 +147,21 @@ const Context = () => {
                </Card.Body>
                {tabActive === 4 && (
                   <Card.Footer className="text-end">
-                     <ButtonGroup>
-                        {[15, 16, 17].includes(h.parse("status", detailContent)) &&
-                           h.buttons(`Penentuan Jadwal`, false, {
-                              variant: "success",
-                              onClick: () => dispatch(setModule({ ...module, openModalJadwalSeminarPenelitian: true })),
-                           })}
-                        {[16, 17].includes(h.parse("status", detailContent)) &&
-                           h.buttons(`Tambah Tim Penguji`, false, {
-                              onClick: () => dispatch(setModule({ ...module, openFormsPengujiPenelitian: true, pageType: "insert" })),
-                           })}
-                     </ButtonGroup>
+                     {h.buttons(`Perbaharui Jadwal Seminar Hasil Penelitian`, false, {
+                        onClick: () => dispatch(setModule({ ...module, openFormsJadwalSeminar: true })),
+                     })}
+                  </Card.Footer>
+               )}
+               {tabActive === 5 && (
+                  <Card.Footer className="text-end">
+                     {h.buttons(`Tambah Tim Penguji`, false, {
+                        onClick: () => dispatch(setModule({ ...module, openFormsPenguji: true, pageType: "insert" })),
+                     })}
                   </Card.Footer>
                )}
             </Card>
          </div>
-      </React.Suspense>
+      </React.Fragment>
    );
 };
 export default Context;

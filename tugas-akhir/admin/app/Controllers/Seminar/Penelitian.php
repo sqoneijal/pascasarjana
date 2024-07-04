@@ -20,41 +20,9 @@ class Penelitian extends BaseController
 
    public function hapusPenguji(): object
    {
-      $response = ['status' => false, 'errors' => []];
-
-      $validation = new Validate();
-      if ($this->validate($validation->hapusPenguji())) {
-         $model = new Model();
-         $submit = $model->hapusPenguji($this->post);
-
-         $response = array_merge($submit, ['errors' => []]);
-      } else {
-         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
-         $response['errors'] = \Config\Services::validation()->getErrors();
-      }
-      return $this->respond($response);
-   }
-
-   public function cariDosen(): object
-   {
       $model = new Model();
-
-      $tokenFeeder = $model->getTokenFeeder();
-
-      $response['status'] = $tokenFeeder['status'];
-      $response['msg_response'] = @$tokenFeeder['msg_response'];
-      if ($tokenFeeder['status']) {
-         $query = trim(strtolower($this->post['query']));
-
-         $req = $model->feederAction($tokenFeeder['token'], 'DetailBiodataDosen', [
-            'limit' => 100,
-            'filter' => "trim(lower(nidn)) like '%" . $query . "%' or trim(lower(nama_dosen)) like '%" . $query . "%'"
-         ]);
-
-         $response['content'] = $req['content'];
-      }
-
-      return $this->respond($response);
+      $content = $model->hapusPenguji($this->post);
+      return $this->respond($content);
    }
 
    public function submitPenguji(): object
@@ -70,6 +38,31 @@ class Penelitian extends BaseController
       } else {
          $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
          $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
+   }
+
+   public function cariDosen(): object
+   {
+      $model = new Model();
+      $tokenFeeder = $model->getTokenFeeder();
+
+      $response = ['status' => false, 'msg_response' => 'Terjadi sesuatu kesalahan, silahkan coba lagi.'];
+      if ($tokenFeeder['status']) {
+         $token = $tokenFeeder['token'];
+
+         $action = $model->feederAction($token, 'DetailBiodataDosen', [
+            'filter' => "trim(lower(nama_dosen)) like '%" . trim(strtolower($this->post['query'])) . "%' or trim(lower(nidn)) like '%" . trim(strtolower($this->post['query'])) . "%'"
+         ]);
+
+         if ($action['status']) {
+            $response['status'] = true;
+            $response['content'] = $action['content'];
+         } else {
+            $response['msg_response'] = $action['msg_response'];
+         }
+      } else {
+         $response['msg_response'] = $tokenFeeder['msg_response'];
       }
       return $this->respond($response);
    }
@@ -91,10 +84,34 @@ class Penelitian extends BaseController
       return $this->respond($response);
    }
 
+   public function submitTidakValidLampiran(): object
+   {
+      $response = ['status' => false, 'errors' => []];
+
+      $validation = new Validate();
+      if ($this->validate($validation->submitTidakValidLampiran())) {
+         $model = new Model();
+         $submit = $model->submitTidakValidLampiran($this->post);
+
+         $response = array_merge($submit, ['errors' => []]);
+      } else {
+         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
+         $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
+   }
+
+   public function submitValidLampiran(): object
+   {
+      $model = new Model();
+      $content = $model->submitValidLampiran($this->post);
+      return $this->respond($content);
+   }
+
    public function getDetail(): object
    {
       $model = new Model();
-      $content = $model->getDetailVerifikasiProposal($this->post['id_status_tugas_akhir']);
+      $content = $model->getDetail($this->post);
       return $this->respond($content);
    }
 

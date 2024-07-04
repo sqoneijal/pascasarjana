@@ -45,7 +45,7 @@ abstract class BaseController extends Controller
    public $post;
    public $getVar;
 
-   protected $publish = true;
+   protected $publish = false;
 
    /**
     * @return void
@@ -70,7 +70,7 @@ abstract class BaseController extends Controller
    public function generateWebpackCss(): string
    {
       if (!$this->publish) {
-         return link_tag('http://localhost:8081/App.css');
+         return '<link href="http://localhost:8081/App.css" rel="stylesheet" type="text/css" nonce="' . NONCE . '" />';
       } else {
          return link_tag(CDN_PATH . 'bundle/tugas-akhir/admin/app.' . HASH_CSS . '.css');
       }
@@ -79,7 +79,7 @@ abstract class BaseController extends Controller
    public function generateWebpackJs(): string
    {
       if (!$this->publish) {
-         return script_tag('http://localhost:8081/App.js');
+         return '<script src="http://localhost:8081/App.js" nonce="' . NONCE . '"></script>';
       } else {
          return script_tag(['type' => 'module', 'src' => CDN_PATH . 'bundle/tugas-akhir/admin/app.' . HASH_JS . '.js']);
       }

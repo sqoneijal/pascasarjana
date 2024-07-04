@@ -1,87 +1,134 @@
 import React from "react";
 import { Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
+import { setModule } from "~/redux";
 
 const Lampiran = () => {
-   const { module } = useSelector((e) => e.redux);
-   const { lampiran, statusApproveLampiran, statusTugasAkhir, keteranganApproveLampiran } = module;
+   const { module, init } = useSelector((e) => e.redux);
+   const { syarat, lampiran, detailContent } = module;
+   const dispatch = useDispatch();
 
-   const unsetFieldLampiran = ["id", "id_status_tugas_akhir"];
-
-   const renderKeterangan = (field, keteranganApproveLampiran) => {
-      return (
-         h.parse(field, keteranganApproveLampiran) && (
-            <span style={{ display: "block", fontSize: 12, fontStyle: "italic", color: "#f82859" }}>{h.parse(field, keteranganApproveLampiran)}</span>
-         )
+   const renderWajib = (row) => {
+      return h.parse("wajib", row) === "t" ? (
+         <i className="ki-outline ki-check-square fs-2 fw-bold text-success" />
+      ) : (
+         <i className="ki-outline ki-close-square fs-2 fw-bold text-danger" />
       );
+   };
+
+   const renderLampiran = (lampiran, row) => {
+      if (h.parse(h.parse("id", row), lampiran)) {
+         return (
+            <button
+               onClick={(e) => {
+                  e.preventDefault();
+                  window.open(h.getDriveFile(h.parse("id_google_drive", lampiran[h.parse("id", row)])), "_blank");
+               }}>
+               {h.parse("lampiran", lampiran[h.parse("id", row)])}
+            </button>
+         );
+      }
+   };
+
+   const handleChangeValidStatus = (target) => {
+      const formData = {
+         user_modified: h.parse("username", init),
+         id: target.name,
+         nim: h.parse("nim", detailContent),
+         id_periode: h.parse("id_periode", detailContent),
+      };
+
+      const fetch = h.post(`/submitvalidlampiran`, formData);
+      fetch.then((res) => {
+         if (typeof res === "undefined") return;
+
+         const { data } = res;
+         if (typeof data.code !== "undefined" && h.parse("code", data) !== 200) {
+            h.notification(false, h.parse("message", data));
+            return;
+         }
+
+         h.notification(data.status, data.msg_response);
+
+         if (!data.status) return;
+         dispatch(setModule({ ...module, lampiran: { ...lampiran, ...data.content } }));
+      });
+   };
+
+   const handleChangeTidakValidStatus = (data) => {
+      dispatch(setModule({ ...module, openFormsTidakValidLampiran: true, detailLampiran: data }));
+   };
+
+   const renderCatatan = (row) => {
+      if (h.parse("valid", row) === "f" && h.parse("keterangan", row)) {
+         return (
+            <React.Fragment>
+               <br />
+               <span className="text-danger" style={{ fontStyle: "italic" }}>
+                  {h.parse("keterangan", row)}
+               </span>
+            </React.Fragment>
+         );
+      }
    };
 
    return (
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-               <th rowSpan={2} className="align-middle">
-                  keterangan
+               <th rowSpan={2}>keterangan</th>
+               <th rowSpan={2}>bukti</th>
+               <th className="text-center" rowSpan={2}>
+                  wajib
                </th>
-               <th rowSpan={2} className="align-middle text-center">
-                  lampiran
-               </th>
-               <th colSpan={2} className="text-center" style={{ width: "10%" }}>
-                  status valid
+               <th className="text-center" colSpan={2}>
+                  status
                </th>
             </tr>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-               <th className="text-center">iya</th>
+               <th className="text-center">valid</th>
                <th className="text-center">tidak</th>
             </tr>
          </thead>
          <tbody className="text-gray-600 fw-semibold">
             <Each
-               of={Object.keys(lampiran)}
-               render={(key) =>
-                  !unsetFieldLampiran.includes(key) && (
-                     <tr>
-                        <td>
-                           {h.keteranganLampiran(key)}
-                           {h.parse(key, statusApproveLampiran) === "f" && renderKeterangan(key, keteranganApproveLampiran)}
-                        </td>
-                        <td className="text-center">
-                           <a
-                              href={h.getFile(h.parse(key, lampiran), h.parse("nim", statusTugasAkhir))}
-                              target="_blank"
-                              className="btn btn-active-icon-primary btn-active-text-primary btn-sm p-0 m-0">
-                              Lihat
-                           </a>
-                        </td>
-                        <td className="text-center">
-                           {h.form_check_switch(
-                              null,
-                              key,
-                              {
-                                 disabled: true,
-                                 checked: h.parse(key, statusApproveLampiran) === "t",
-                              },
-                              "success",
-                              "h-20px w-30px"
-                           )}
-                        </td>
-                        <td className="text-center">
-                           {h.form_check_switch(
-                              null,
-                              key,
-                              {
-                                 disabled: true,
-                                 checked: h.parse(key, statusApproveLampiran) === "f",
-                              },
-                              "danger",
-                              "h-20px w-30px"
-                           )}
-                        </td>
-                     </tr>
-                  )
-               }
+               of={syarat}
+               render={(row) => (
+                  <tr>
+                     <td>
+                        {h.parse("nama", row)}
+                        {renderCatatan(lampiran[h.parse("id", row)])}
+                     </td>
+                     <td>{renderLampiran(lampiran, row)}</td>
+                     <td className="text-center">{renderWajib(row)}</td>
+                     <td className="text-center">
+                        {h.form_check_switch(
+                           null,
+                           h.parse("id", lampiran[h.parse("id", row)]),
+                           {
+                              onChange: (e) => handleChangeValidStatus(e.target),
+                              checked: h.parse("valid", lampiran[h.parse("id", row)]) === "t",
+                           },
+                           "success",
+                           "h-20px w-30px"
+                        )}
+                     </td>
+                     <td className="text-center">
+                        {h.form_check_switch(
+                           null,
+                           h.parse("id", lampiran[h.parse("id", row)]),
+                           {
+                              onChange: (e) => handleChangeTidakValidStatus(lampiran[h.parse("id", row)]),
+                              checked: h.parse("valid", lampiran[h.parse("id", row)]) === "f",
+                           },
+                           "danger",
+                           "h-20px w-30px"
+                        )}
+                     </td>
+                  </tr>
+               )}
             />
          </tbody>
       </Table>

@@ -28,6 +28,17 @@ seminar:
          ✔ lampiran @done(24-06-28 12:25)
          ✔ sk penelitian @done(24-06-28 12:25)
          ✔ tim pembimbing @done(24-06-28 12:25)
+   penelitian:
+      ✔ daftar @done(24-06-30 15:46)
+      ✔ filter @done(24-06-30 15:46)
+      detail:
+         ✔ identitas @done(24-06-30 21:33)
+         ✔ syarat @done(24-06-30 21:33)
+         ✔ lampiran @done(24-06-30 21:33)
+         ✔ sk penelitian @done(24-07-04 15:40)
+         ✔ tim pembimbing @done(24-07-04 15:40)
+         ✔ tim penguji @done(24-07-04 15:40)
+         ✔ jadwal seminar hasil penelitian @done(24-07-04 15:40)
 sidang:
 pengaturan:
    ✔ upload @done(24-06-28 13:39)

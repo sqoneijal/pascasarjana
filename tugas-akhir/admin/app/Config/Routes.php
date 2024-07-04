@@ -84,9 +84,11 @@ function seminarPenelitian(RouteCollection $routes): void
 
       $routes->post('getdata', 'Penelitian::getData');
       $routes->post('getdetail', 'Penelitian::getDetail');
+      $routes->post('submitvalidlampiran', 'Penelitian::submitValidLampiran');
+      $routes->post('submittidakvalidlampiran', 'Penelitian::submitTidakValidLampiran');
       $routes->post('submitjadwalseminar', 'Penelitian::submitJadwalSeminar');
-      $routes->post('submitpenguji', 'Penelitian::submitPenguji');
       $routes->post('caridosen', 'Penelitian::cariDosen');
+      $routes->post('submitpenguji', 'Penelitian::submitPenguji');
       $routes->post('hapuspenguji', 'Penelitian::hapusPenguji');
    });
 }

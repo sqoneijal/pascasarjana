@@ -3,49 +3,44 @@ import { Col, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import * as h from "~/Helpers";
 
-const DaftarPembimbingPenelitian = React.lazy(() => import("./DaftarPembimbingPenelitian"));
-
 const SKPenelitian = () => {
    const { module } = useSelector((e) => e.redux);
-   const { penelitian } = module;
+   const { sk_penelitian } = module;
 
-   const mbkm = {
-      1: "Flagship",
-      2: "Mandiri",
+   const jenisAnggota = (key) => {
+      const obj = {
+         P: "Personal",
+         K: "Kelompok",
+      };
+      return h.parse(key, obj);
    };
 
-   const kampusMerdeka = (key) => {
-      return key === "t" ? " (Kampus Merdeka)" : "";
+   const programMBKM = (key) => {
+      const obj = {
+         F: "Flagship",
+         M: "Mandiri",
+      };
+      return h.parse(key, obj);
    };
 
    return (
       <React.Fragment>
          <Row>
-            <Col md={3} sm={12}>
-               {h.detail_label("Semester", h.periode(h.parse("semester", penelitian)))}
-            </Col>
-            <Col>
-               {h.detail_label(
-                  "Jenis Aktivitas",
-                  `${h.parse("jenis_aktivitas", penelitian)}${kampusMerdeka(h.parse("untuk_kampus_merdeka", penelitian))}`
-               )}
-            </Col>
-            {h.parse("untuk_kampus_merdeka", penelitian) === "t" && (
-               <Col md={2} sm={12}>
-                  {h.detail_label("Program MBKM", mbkm[h.parse("program_mbkm", penelitian)])}
-               </Col>
-            )}
+            <Col>{h.detail_label("Nomor SK Tugas", h.parse("nomor_sk_tugas", sk_penelitian))}</Col>
+            <Col>{h.detail_label("Tanggal SK Tugas", h.parse("tanggal_sk_tugas", sk_penelitian, "date"))}</Col>
+            <Col>{h.detail_label("Jenis Anggota", jenisAnggota(h.parse("jenis_anggota", sk_penelitian)))}</Col>
+            <Col>{h.detail_label("Program MBKM", programMBKM(h.parse("program_mbkm", sk_penelitian)))}</Col>
          </Row>
          <Row>
-            <Col>{h.detail_label("Nomor SK Tugas", h.parse("nomor_sk_tugas", penelitian))}</Col>
-            <Col>{h.detail_label("Tanggal SK Tugas", h.parse("tanggal_sk_tugas", penelitian, "date"))}</Col>
-            <Col>{h.detail_label("Tanggal Mulai", h.parse("tanggal_mulai", penelitian, "date"))}</Col>
-            <Col>{h.detail_label("Tanggal Akhir", h.parse("tanggal_akhir", penelitian, "date"))}</Col>
+            <Col md={3} sm={12}>
+               {h.detail_label("Jenis Aktivitas", h.parse("jenis_aktivitas", sk_penelitian))}
+            </Col>
+            <Col>{h.detail_label("Judul Penelitian", h.parse("judul", sk_penelitian))}</Col>
          </Row>
-         {h.detail_label("Judul", h.parse("judul", penelitian))}
-         {h.detail_label("Keterangan", h.parse("keterangan", penelitian))}
-         {h.detail_label("Lokasi", h.parse("lokasi", penelitian))}
-         <DaftarPembimbingPenelitian />
+         <Row>
+            <Col>{h.detail_label("Lokasi Penelitian", h.parse("lokasi", sk_penelitian))}</Col>
+            <Col>{h.detail_label("Keterangan", h.parse("keterangan", sk_penelitian))}</Col>
+         </Row>
       </React.Fragment>
    );
 };

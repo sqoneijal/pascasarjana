@@ -46,7 +46,7 @@ class Common extends Model
    public function getSKPenelitian(array $post): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tp.id, tp.id_status_tugas_akhir, tp.id_periode, tp.judul, tp.nomor_sk_tugas, tp.tanggal_sk_tugas, tp.id_jenis_aktivitas, tmja.nama as jenis_aktivitas, tmja.untuk_kampus_merdeka, tp.keterangan, tp.tanggal_mulai, tp.tanggal_akhir, tp.program_mbkm, tp.jenis_anggota');
+      $table->select('tp.id as id_penelitian, tp.id_status_tugas_akhir, tp.id_periode, tp.judul, tp.nomor_sk_tugas, tp.tanggal_sk_tugas, tp.id_jenis_aktivitas, tmja.nama as jenis_aktivitas, tmja.untuk_kampus_merdeka, tp.keterangan, tp.tanggal_mulai, tp.tanggal_akhir, tp.program_mbkm, tp.jenis_anggota');
       $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
       $table->join('tb_mst_jenis_aktivitas tmja', 'tmja.id = tp.id_jenis_aktivitas');
       $table->where('tsta.nim', $post['nim']);
