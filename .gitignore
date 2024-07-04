@@ -36,6 +36,7 @@ tugas-akhir/admin/writable/logs/*
 tugas-akhir/admin/writable/session/*
 tugas-akhir/admin/writable/uploads/*
 tugas-akhir/admin/node_modules
+tugas-akhir/admin/public/bundle
 pgdata
 tugas-akhir/dosen/vendor/*
 tugas-akhir/dosen/writable/cache/*
