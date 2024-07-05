@@ -118,6 +118,9 @@ class Home extends Common
       $table->join('tb_seminar_penelitian_detail tspd', 'tspd.id_seminar_penelitian = tsp.id');
       $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tspd.id_kategori_kegiatan');
       $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', function ($table) {
+         return $table->select('id')->from('tb_periode')->where('status', true);
+      });
       $table->orderBy('penguji_ke');
 
       $get = $table->get();

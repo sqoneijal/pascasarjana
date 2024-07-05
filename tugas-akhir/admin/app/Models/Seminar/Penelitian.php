@@ -11,7 +11,7 @@ class Penelitian extends Common
    public function hapusPenguji(array $post): array
    {
       try {
-         $table = $this->db->table('tb_penguji_sidang');
+         $table = $this->db->table('tb_seminar_penelitian_detail');
          $table->where('id', $post['id']);
          $table->delete();
 
@@ -25,8 +25,12 @@ class Penelitian extends Common
 
    private function handleUpdateStatusTesis(array $post): void
    {
-      $table = $this->db->table('tb_penguji_sidang');
-      $table->where('id_status_tugas_akhir', $post['id_status_tugas_akhir']);
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
+      $table->join('tb_seminar_penelitian tsp', 'tsp.id_penelitian = tp.id');
+      $table->join('tb_seminar_penelitian_detail tspd', 'tspd.id_seminar_penelitian = tsp.id');
+      $table->where('tsta.nim', $post['nim']);
+      $table->where('tsta.id_periode', $post['id_periode']);
 
       $found = $table->countAllResults() > 0;
 
@@ -38,7 +42,7 @@ class Penelitian extends Common
    public function submitPenguji(array $post): array
    {
       try {
-         $fields = ['nidn', 'nama_dosen', 'id_kategori_kegiatan', 'id_status_tugas_akhir', 'penguji_ke'];
+         $fields = ['penguji_ke', 'nidn', 'nama_dosen', 'id_kategori_kegiatan'];
          foreach ($fields as $field) {
             if (@$post[$field]) {
                $data[$field] = $post[$field];
@@ -48,9 +52,10 @@ class Penelitian extends Common
          }
 
          $data['user_modified'] = $post['user_modified'];
+         $data['id_seminar_penelitian'] = $this->getIDSeminarPenelitian($post['nim'], $post['id_periode']);
          $data['apakah_dosen_uin'] = $post['apakah_dosen_uin'] === 't';
 
-         $table = $this->db->table('tb_penguji_sidang');
+         $table = $this->db->table('tb_seminar_penelitian_detail');
          if ($post['pageType'] === 'insert') {
             $data['uploaded'] = new RawSql('now()');
 
@@ -69,6 +74,22 @@ class Penelitian extends Common
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }
+   }
+
+   private function getIDSeminarPenelitian(string $nim, int $id_periode): int
+   {
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->select('tsp.id');
+      $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
+      $table->join('tb_seminar_penelitian tsp', 'tsp.id_penelitian = tp.id');
+      $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', $id_periode);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $get->freeResult();
+
+      return $data['id'];
    }
 
    private function checkExistUsers(string $nidn): bool
@@ -187,9 +208,11 @@ class Penelitian extends Common
    private function getDaftarPenguji(string $nim, int $id_periode): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tps.*, tkk.nama as kategori_kegiatan');
-      $table->join('tb_penguji_sidang tps', 'tps.id_status_tugas_akhir = tsta.id');
-      $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tps.id_kategori_kegiatan');
+      $table->select('tspd.*, tkk.nama as kategori_kegiatan');
+      $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
+      $table->join('tb_seminar_penelitian tsp', 'tsp.id_penelitian = tp.id');
+      $table->join('tb_seminar_penelitian_detail tspd', 'tspd.id_seminar_penelitian = tsp.id');
+      $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tspd.id_kategori_kegiatan');
       $table->where('tsta.nim', $nim);
       $table->where('tsta.id_periode', $id_periode);
       $table->orderBy('penguji_ke');

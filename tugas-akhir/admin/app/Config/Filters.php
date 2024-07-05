@@ -14,6 +14,7 @@ use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\IsLogin;
 use App\Filters\CSP;
+use App\Filters\Throttle;
 
 class Filters extends BaseFilters
 {
@@ -38,6 +39,7 @@ class Filters extends BaseFilters
       'performance'   => PerformanceMetrics::class,
       'IsLogin'       => IsLogin::class,
       'CSP'           => CSP::class,
+      'Throttle'      => Throttle::class,
    ];
 
    /**
@@ -97,7 +99,9 @@ class Filters extends BaseFilters
     *
     * @var array<string, list<string>>
     */
-   public array $methods = [];
+   public array $methods = [
+      'POST' => ['Throttle']
+   ];
 
    /**
     * List of filter aliases that should run on any
