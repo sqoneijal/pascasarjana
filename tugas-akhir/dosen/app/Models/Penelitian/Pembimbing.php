@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Penelitian;
 
+use App\Models\Common;
 use CodeIgniter\Database\RawSql;
 
-class Penelitian extends Common
+class Pembimbing extends Common
 {
 
    public function submit(array $post): array
@@ -66,7 +67,57 @@ class Penelitian extends Common
          'lampiran_upload' => $this->getLampiranUploadMahasiswa($post['nim']),
          'pembimbing' => $this->getPembimbing($post['nim'], $post['id_periode']),
          'sk_penelitian' => $this->getSKPenelitian($post['nim'], $post['id_periode']),
+         'jadwal_seminar' => $this->getJadwalSeminarHasilPenelitian($post['nim'], $post['id_periode']),
+         'penguji' => $this->getPengujiHasilSeminarPenelitian($post['nim'], $post['id_periode'])
       ];
+   }
+
+   private function getPengujiHasilSeminarPenelitian(string $nim, int $id_periode): array
+   {
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->select('tspd.*, tkk.nama as kategori_kegiatan');
+      $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
+      $table->join('tb_seminar_penelitian tsp', 'tsp.id_penelitian = tp.id');
+      $table->join('tb_seminar_penelitian_detail tspd', 'tspd.id_seminar_penelitian = tsp.id');
+      $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tspd.id_kategori_kegiatan');
+      $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', $id_periode);
+      $table->orderBy('penguji_ke');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
+   private function getJadwalSeminarHasilPenelitian(string $nim, int $id_periode): array
+   {
+      $table = $this->db->table('tb_jadwal_seminar tjs');
+      $table->select('tjs.*');
+      $table->join('tb_status_tugas_akhir tsta', 'tsta.id = tjs.id_status_tugas_akhir');
+      $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', $id_periode);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
    }
 
    private function getPembimbing(string $nim, int $id_periode): array
@@ -167,7 +218,7 @@ class Penelitian extends Common
       $table->join('tb_pembimbing_penelitian tpp', 'tpp.id_penelitian = tp.id');
       $table->join('tb_prodi tp2', 'tp2.id_feeder = tsta.id_prodi');
       $table->join('tb_status_tesis tst', 'tst.id = tsta.status');
-      $table->whereIn('tsta.status', [14, 15]);
+      $table->where('tsta.status >=', 14);
 
       $this->dt_where($table, [
          'tpp.nidn' => $post['nidn']
@@ -185,12 +236,12 @@ class Penelitian extends Common
    private function queryData($post = [])
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tsta.id as id_status_tugas_akhir, tsta.nim, tsta.nama, tsta.id_periode, tsta.angkatan, concat(tp2.jenjang, \' \', tp2.nama) as program_studi, tst.short_name as status_tesis, tp.id as id_penelitian');
+      $table->select('tsta.id as id_status_tugas_akhir, tsta.nim, tsta.nama, tsta.id_periode, tsta.angkatan, concat(tp2.jenjang, \' \', tp2.nama) as program_studi, tst.short_name as status_tesis, tp.id as id_penelitian, tsta.status');
       $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
       $table->join('tb_pembimbing_penelitian tpp', 'tpp.id_penelitian = tp.id');
       $table->join('tb_prodi tp2', 'tp2.id_feeder = tsta.id_prodi');
       $table->join('tb_status_tesis tst', 'tst.id = tsta.status');
-      $table->whereIn('tsta.status', [14, 15]);
+      $table->where('tsta.status >=', 14);
 
       $this->dt_where($table, [
          'tpp.nidn' => $post['nidn']

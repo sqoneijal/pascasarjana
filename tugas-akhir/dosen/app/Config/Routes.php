@@ -12,6 +12,15 @@ function login(RouteCollection $routes): void
    });
 }
 
+firewall($routes);
+function firewall(RouteCollection $routes): void
+{
+   $routes->group('firewall', ['filter' => 'IsLogin'], function ($routes) {
+      $routes->get('panel', 'Firewall::panel');
+      $routes->post('panel', 'Firewall::panel');
+   });
+}
+
 dashboard($routes);
 function dashboard(RouteCollection $routes): void
 {
@@ -38,10 +47,29 @@ penelitian($routes);
 function penelitian(RouteCollection $routes): void
 {
    $routes->group('penelitian', ['filter' => 'IsLogin'], function ($routes) {
-      $routes->get('/', 'Penelitian::index');
+      penelitianPembimbing($routes);
+      penelitianPenguji($routes);
+   });
+}
 
-      $routes->post('getdata', 'Penelitian::getData');
-      $routes->post('getdetail', 'Penelitian::getDetail');
-      $routes->post('submit', 'Penelitian::submit');
+function penelitianPembimbing(RouteCollection $routes): void
+{
+   $routes->group('pembimbing', ['filter' => 'IsLogin', 'namespace' => 'App\Controllers\Penelitian'], function ($routes) {
+      $routes->get('/', 'Pembimbing::index');
+
+      $routes->post('getdata', 'Pembimbing::getData');
+      $routes->post('getdetail', 'Pembimbing::getDetail');
+      $routes->post('submit', 'Pembimbing::submit');
+   });
+}
+
+function penelitianPenguji(RouteCollection $routes): void
+{
+   $routes->group('penguji', ['filter' => 'IsLogin', 'namespace' => 'App\Controllers\Penelitian'], function ($routes) {
+      $routes->get('/', 'Penguji::index');
+
+      $routes->post('getdata', 'Penguji::getData');
+      $routes->post('getdetail', 'Penguji::getDetail');
+      $routes->post('submittelahseminar', 'Penguji::submitTelahSeminar');
    });
 }

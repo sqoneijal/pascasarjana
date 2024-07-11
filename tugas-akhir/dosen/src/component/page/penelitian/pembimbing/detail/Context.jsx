@@ -7,9 +7,11 @@ import { Each } from "~/Each";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
 import Identitas from "./Identitas";
+import JadwalSeminar from "./JadwalSeminar";
 import Lampiran from "./Lampiran";
 import SKPenelitian from "./SKPenelitian";
 import TimPembimbing from "./TimPembimbing";
+import TimPenguji from "./TimPenguji";
 
 const Context = () => {
    const { module, init } = useSelector((e) => e.redux);
@@ -23,11 +25,15 @@ const Context = () => {
    // string
    const [tabActive, setTabActive] = useState(1);
 
-   const handleClose = () => {
-      dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
+   const clearProps = () => {
       setTabActive(1);
       setIsLoading(true);
       setIsSubmit(false);
+   };
+
+   const handleClose = () => {
+      dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
+      clearProps();
    };
 
    const getDetail = (nim, id_periode) => {
@@ -60,6 +66,8 @@ const Context = () => {
       { value: 1, label: "Lampiran" },
       { value: 2, label: "SK Penelitian" },
       { value: 3, label: "Tim Pembimbing" },
+      { value: 4, label: "Jadwal Seminar Hasil" },
+      { value: 5, label: "Tim Penguji" },
    ];
 
    const submit = (e) => {
@@ -86,7 +94,8 @@ const Context = () => {
          h.notification(data.status, data.msg_response);
 
          if (!data.status) return;
-         dispatch(setModule({ ...module, ...data.content, detailContent: { ...detailContent, status: data.content.penelitian.status } }));
+         dispatch(setModule({ ...module, openDetail: false, detailContent: {}, ...data.content }));
+         clearProps();
          h.dtReload();
       });
       fetch.finally(() => {
@@ -156,6 +165,12 @@ const Context = () => {
                                  </Case>
                                  <Case value={3}>
                                     <TimPembimbing />
+                                 </Case>
+                                 <Case value={4}>
+                                    <JadwalSeminar />
+                                 </Case>
+                                 <Case value={5}>
+                                    <TimPenguji />
                                  </Case>
                               </Switch>
                            </div>

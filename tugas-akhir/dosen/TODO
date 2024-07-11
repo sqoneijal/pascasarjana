@@ -1,5 +1,4 @@
 dashboard:
-   ☐ notifikasi verifikasi seminar hasil penelitian
 seminar proposal:
    ✔ daftar @done(24-06-21 20:51)
    detail:
@@ -7,12 +6,28 @@ seminar proposal:
       ✔ jadwal seminar @done(24-06-21 21:12)
       ✔ tim pembimbing @done(24-06-23 20:18)
    ✔ filter @done(24-06-21 20:51)
-seminar penelitian:
-   ✔ daftar @done(24-06-29 20:56)
-   ☐ filter
-   detail:
-      ✔ identitas @done(24-06-29 21:29)
-      ✔ lampiran @done(24-06-29 21:29)
-      ☐ tim pembimbing
-      ☐ sk penelitian
+hasil penelitian:
+   bimbingan:
+      ✔ daftar @done(24-07-06 13:58)
+      ✔ filter @done(24-07-06 13:58)
+      detail:
+         ✔ identitas @done(24-07-06 13:58)
+         ✔ lampiran @done(24-07-06 13:58)
+         ✔ tim pembimbing @done(24-07-06 13:58)
+         ✔ sk penelitian @done(24-07-06 13:58)
+         ✔ jadwal seminar hasil penelitian @done(24-07-06 13:58)
+         ✔ tim penguji @done(24-07-06 13:58)
+   penguji:
+      ✔ daftar @done(24-07-06 20:55)
+      ✔ filter @done(24-07-06 20:55)
+      detail:
+         ✔ identitas @done(24-07-11 13:21)
+         ✔ lampiran @done(24-07-11 13:21)
+         ✔ tim pembimbing @done(24-07-11 13:21)
+         ✔ sk penelitian @done(24-07-11 13:21)
+         ✔ jadwal seminar hasil penelitian @done(24-07-11 13:21)
+         ✔ tim penguji @done(24-07-11 13:21)
+         ✔ setujui telah seminar hasil penelitian @done(24-07-11 21:00)
+         ☐ perbaiki seminar hasil penelitian
+   penguji:
 sidang munaqasyah:

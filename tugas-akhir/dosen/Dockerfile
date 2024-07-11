@@ -28,22 +28,9 @@ ENV TZ=Asia/Jakarta
 
 WORKDIR /var/www/html
 
-# RUN mkdir -p /var/www/html
-# RUN mkdir -p /var/www/html/app
-# RUN mkdir -p /var/www/html/public
-# RUN mkdir -p /var/www/html/writable
-
-# COPY ./app/* /var/www/html/app
-# COPY ./public/* /var/www/html/public
-# COPY ./writable/* /var/www/html/writable
-# COPY ./composer.json /var/www/html/composer.json
-
 RUN ln -s /usr/bin/php83 /usr/bin/php
 
 COPY ./nginx.conf /etc/nginx/http.d/default.conf
-
-# RUN chmod -R 777 writable
-# RUN chown -R nginx:nginx writable
 
 # Port yang akan digunakan oleh Nginx
 EXPOSE 80

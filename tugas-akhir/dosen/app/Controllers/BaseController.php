@@ -45,7 +45,7 @@ abstract class BaseController extends Controller
    public $post;
    public $getVar;
 
-   protected $publish = true;
+   protected $publish = false;
 
    /**
     * @return void

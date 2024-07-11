@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Penelitian;
 
 use App\Controllers\BaseController;
-use App\Models\Penelitian as Model;
+use App\Models\Penelitian\Pembimbing as Model;
 
-class Penelitian extends BaseController
+class Pembimbing extends BaseController
 {
    public function index()
    {
       $this->data = [
-         'title' => 'Seminar Penelitian'
+         'title' => 'Pembimbing'
       ];
 
       $this->template($this->data);

@@ -91,11 +91,11 @@ const Sidebar = () => {
    return (
       <div id="kt_app_sidebar" className="app-sidebar flex-column">
          <div className="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
-            <Link to="/">
-               <img alt="Logo" data-src={h.getFile("logo-uin-dark.png")} className="h-40px app-sidebar-logo-default theme-light-show lozad" />
-               <img alt="Logo" data-src={h.getFile("logo-uin-dark.png")} className="h-40px app-sidebar-logo-default theme-dark-show lozad" />
-               <img alt="Logo" data-src={h.getFile("logo-uin-small.png")} className="h-20px app-sidebar-logo-minimize lozad" />
-            </Link>
+            <span>
+               <img alt="Logo" data-src="/assets/logo-uin-dark.png" className="h-40px app-sidebar-logo-default theme-light-show lozad" />
+               <img alt="Logo" data-src="/assets/logo-uin-dark.png" className="h-40px app-sidebar-logo-default theme-dark-show lozad" />
+               <img alt="Logo" data-src="/assets/logo-uin-small.png" className="h-20px app-sidebar-logo-minimize lozad" />
+            </span>
             <div
                id="kt_app_sidebar_toggle"
                className="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary h-30px w-30px position-absolute top-50 start-100 translate-middle rotate">

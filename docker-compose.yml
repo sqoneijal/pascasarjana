@@ -64,7 +64,7 @@ services:
          - 8010:6379
       networks:
          - pps-network
-      restart: unless-stopped
+      restart: always
 
    pps-cdn:
       container_name: pps-cdn
@@ -77,7 +77,7 @@ services:
          - ./cdn:/var/www/html
       networks:
          - pps-network
-      restart: unless-stopped
+      restart: always
 
    pps-login:
       container_name: pps-login
@@ -90,7 +90,7 @@ services:
          - ./tugas-akhir/login:/var/www/html
       networks:
          - pps-network
-      restart: unless-stopped
+      restart: always
 
    pps-akademik:
       container_name: pps-akademik
@@ -103,7 +103,7 @@ services:
          - ./tugas-akhir/akademik:/var/www/html
       networks:
          - pps-network
-      restart: unless-stopped
+      restart: always
 
    pps-mahasiswa:
       container_name: pps-mahasiswa
@@ -116,7 +116,7 @@ services:
          - ./tugas-akhir/mahasiswa:/var/www/html
       networks:
          - pps-network
-      restart: unless-stopped
+      restart: always
 
    pps-admin:
       container_name: pps-admin
@@ -129,7 +129,7 @@ services:
          - ./tugas-akhir/admin:/var/www/html
       networks:
          - pps-network
-      restart: unless-stopped
+      restart: always
 
    pps-dosen:
       container_name: pps-dosen
@@ -142,13 +142,8 @@ services:
          - ./tugas-akhir/dosen:/var/www/html
       networks:
          - pps-network
-      restart: unless-stopped
+      restart: always
 
 networks:
    pps-network:
       external: true
-
-volumes:
-   pps-db-master:
-   pps-db-slave1:
-   # tugas-akhir-pasca-db-data:
