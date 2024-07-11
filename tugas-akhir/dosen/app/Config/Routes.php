@@ -71,5 +71,6 @@ function penelitianPenguji(RouteCollection $routes): void
       $routes->post('getdata', 'Penguji::getData');
       $routes->post('getdetail', 'Penguji::getDetail');
       $routes->post('submittelahseminar', 'Penguji::submitTelahSeminar');
+      $routes->post('submitperbaikihasilseminar', 'Penguji::submitPerbaikiHasilSeminar');
    });
 }

@@ -20,7 +20,9 @@ const TimPenguji = () => {
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-               <th className="text-center">ke</th>
+               <th className="text-center" style={{ width: "2%" }}>
+                  ke
+               </th>
                <th>nidn/nik</th>
                <th>nama</th>
                <th>kategori kegiatan</th>
@@ -33,13 +35,23 @@ const TimPenguji = () => {
             <Each
                of={penguji}
                render={(row) => (
-                  <tr>
-                     <td className="text-center">{h.parse("penguji_ke", row)}</td>
-                     <td>{h.parse("nidn", row)}</td>
-                     <td>{h.parse("nama_dosen", row)}</td>
-                     <td>{h.parse("kategori_kegiatan", row)}</td>
-                     <td className="text-center">{status(row)}</td>
-                  </tr>
+                  <React.Fragment>
+                     <tr>
+                        <td className="text-center">{h.parse("penguji_ke", row)}</td>
+                        <td>{h.parse("nidn", row)}</td>
+                        <td>{h.parse("nama_dosen", row)}</td>
+                        <td>{h.parse("kategori_kegiatan", row)}</td>
+                        <td className="text-center">{status(row)}</td>
+                     </tr>
+                     {h.parse("lanjut_sidang", row) === "f" && (
+                        <tr>
+                           <td />
+                           <td colSpan={4} className="text-danger fs-7">
+                              {h.parse("keterangan_perbaikan", row)}
+                           </td>
+                        </tr>
+                     )}
+                  </React.Fragment>
                )}
             />
          </tbody>

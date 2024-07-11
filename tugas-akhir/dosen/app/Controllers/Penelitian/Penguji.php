@@ -4,6 +4,7 @@ namespace App\Controllers\Penelitian;
 
 use App\Controllers\BaseController;
 use App\Models\Penelitian\Penguji as Model;
+use App\Validation\Penelitian\Penguji as Validate;
 
 class Penguji extends BaseController
 {
@@ -15,6 +16,23 @@ class Penguji extends BaseController
       ];
 
       $this->template($this->data);
+   }
+
+   public function submitPerbaikiHasilSeminar(): object
+   {
+      $response = ['status' => false, 'errors' => []];
+
+      $validation = new Validate();
+      if ($this->validate($validation->submitPerbaikiHasilSeminar())) {
+         $model = new Model();
+         $submit = $model->submitPerbaikiHasilSeminar($this->post);
+
+         $response = array_merge($submit, ['errors' => []]);
+      } else {
+         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
+         $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
    }
 
    public function submitTelahSeminar(): object

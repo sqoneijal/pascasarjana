@@ -6,6 +6,7 @@ import Switch, { Case } from "react-switch-case";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
+import FormsPerbaiki from "./FormsPerbaiki";
 import Identitas from "./Identitas";
 import JadwalSeminar from "./JadwalSeminar";
 import Lampiran from "./Lampiran";
@@ -115,6 +116,7 @@ const Context = () => {
 
    return (
       <React.Fragment>
+         <FormsPerbaiki />
          {openDetail && <div className="drawer-overlay" />}
          <div className={`bg-white drawer drawer-start min-w-75 ${openDetail ? "drawer-on" : ""}`}>
             <Card className="rounded-0 w-100">
@@ -188,11 +190,15 @@ const Context = () => {
                      </React.Fragment>
                   )}
                </Card.Body>
-               {!isLoading && [18].includes(h.parse("status", detailContent)) && (
+               {!isLoading && [18, 19].includes(h.parse("status", detailContent)) && (
                   <Card.Footer className="text-end">
                      <ButtonGroup>
                         {h.buttons(`Setujui, telah seminar hasil penelitian`, isSubmit, {
                            onClick: isSubmit ? null : handleTelahSeminar,
+                        })}
+                        {h.buttons(`Perbaiki seminar hasil penelitian`, false, {
+                           variant: "danger",
+                           onClick: () => dispatch(setModule({ ...module, openFormsPerbaiki: true })),
                         })}
                      </ButtonGroup>
                   </Card.Footer>

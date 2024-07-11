@@ -8,6 +8,33 @@ use CodeIgniter\Database\RawSql;
 class Penguji extends Common
 {
 
+   public function submitPerbaikiHasilSeminar(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_seminar_penelitian_detail');
+         $table->where('nidn', $post['nidn']);
+         $table->where('id_seminar_penelitian', function ($table) use ($post) {
+            return $table->select('tsp.id')->from('tb_penelitian tp')
+               ->join('tb_seminar_penelitian tsp', 'tsp.id_penelitian = tp.id')
+               ->join('tb_status_tugas_akhir tsta', 'tsta.id = tp.id_status_tugas_akhir')
+               ->where('tsta.nim', $post['nim'])
+               ->where('tsta.id_periode', $post['id_periode']);
+         });
+         $table->update([
+            'lanjut_sidang' => false,
+            'keterangan_perbaikan' => $post['keterangan_perbaikan'],
+            'user_modified' => $post['nidn'],
+            'modified' => new RawSql('now()')
+         ]);
+
+         $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], 19);
+
+         return ['status' => true, 'content' => $this->getPengujiHasilSeminarPenelitian($post['nim'], $post['id_periode']), 'msg_response' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
    public function submitTelahSeminar(array $post): array
    {
       try {
