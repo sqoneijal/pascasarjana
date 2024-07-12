@@ -20,15 +20,6 @@ const Lists = () => {
          return;
       }
 
-      const file = fileInput.files[0];
-      const fileType = file.type;
-
-      if (fileType !== "application/pdf") {
-         h.notification(false, "Hanya file PDF yang diizinkan.");
-         fileInput.value = "";
-         return;
-      }
-
       const config = {
          onUploadProgress(progressEvent) {
             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);

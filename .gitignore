@@ -29,6 +29,7 @@ tugas-akhir/mahasiswa/writable/logs/*
 tugas-akhir/mahasiswa/writable/session/*
 tugas-akhir/mahasiswa/writable/uploads/*
 tugas-akhir/mahasiswa/node_modules
+tugas-akhir/mahasiswa/public/bundle
 tugas-akhir/admin/vendor/*
 tugas-akhir/admin/writable/cache/*
 tugas-akhir/admin/writable/debugbar/*

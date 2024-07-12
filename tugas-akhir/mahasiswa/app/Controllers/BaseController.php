@@ -71,7 +71,7 @@ abstract class BaseController extends Controller
       if (!$this->publish) {
          return link_tag('http://localhost:8081/App.css');
       } else {
-         return link_tag(CDN_PATH . 'bundle/tugas-akhir/mahasiswa/app.' . HASH_CSS . '.css');
+         return link_tag('bundle/app.' . HASH_CSS . '.css');
       }
    }
 
@@ -80,7 +80,7 @@ abstract class BaseController extends Controller
       if (!$this->publish) {
          return script_tag('http://localhost:8081/App.js');
       } else {
-         return script_tag(['type' => 'module', 'src' => CDN_PATH . 'bundle/tugas-akhir/mahasiswa/app.' . HASH_JS . '.js']);
+         return script_tag(['type' => 'module', 'src' => 'bundle/app.' . HASH_JS . '.js']);
       }
    }
 

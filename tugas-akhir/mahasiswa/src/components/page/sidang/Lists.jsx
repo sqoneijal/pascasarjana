@@ -20,23 +20,6 @@ const Lists = () => {
          return;
       }
 
-      const file = fileInput.files[0];
-      const fileType = file.type;
-      const fileSize = file.size;
-      const maxSize = 20 * 1024 * 1024;
-
-      if (fileType !== "application/pdf") {
-         h.notification(false, "Hanya file PDF yang diizinkan.");
-         fileInput.value = "";
-         return;
-      }
-
-      if (fileSize > maxSize) {
-         h.notification(false, "Ukuran file melebihi batas maksimum 2 MB.");
-         fileInput.value = "";
-         return;
-      }
-
       const config = {
          onUploadProgress(progressEvent) {
             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -66,7 +49,12 @@ const Lists = () => {
 
          if (!data.status) return;
 
-         dispatch(setModule({ ...module, lampiranUpload: { ...lampiranUpload, ...data.content, [id_syarat]: { lampiran: data.fileName } } }));
+         dispatch(
+            setModule({
+               ...module,
+               lampiranUpload: { ...lampiranUpload, [id_syarat]: { id_google_drive: data.googleFile.id } },
+            })
+         );
       });
       fetch.finally(() => {
          setUploadProgres({});
@@ -76,7 +64,7 @@ const Lists = () => {
    const renderLampiranPermalink = (dataObject, idSyarat) => {
       if (h.parse(idSyarat, dataObject)) {
          return (
-            <a href={h.cdn(`media/${h.parse("nim", init)}/${h.parse("lampiran", dataObject[idSyarat])}`)} target="_blank">
+            <a href={h.getDriveFile(h.parse("id_google_drive", dataObject[idSyarat]))} target="_blank">
                lihat
             </a>
          );

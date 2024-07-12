@@ -190,7 +190,7 @@ const Context = () => {
                      </React.Fragment>
                   )}
                </Card.Body>
-               {!isLoading && [18, 19].includes(h.parse("status", detailContent)) && (
+               {!isLoading && [18, 19, 20].includes(h.parse("status", detailContent)) && (
                   <Card.Footer className="text-end">
                      <ButtonGroup>
                         {h.buttons(`Setujui, telah seminar hasil penelitian`, isSubmit, {

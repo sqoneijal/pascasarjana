@@ -15,7 +15,7 @@ build({
    },
    jsxSideEffects: true,
    splitting: true,
-   outdir: "../../cdn/bundle/tugas-akhir/login",
+   outdir: "./public/bundle",
    loader: {
       ".js": "jsx",
       ".png": "copy",
