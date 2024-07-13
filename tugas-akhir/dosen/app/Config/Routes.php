@@ -74,3 +74,22 @@ function penelitianPenguji(RouteCollection $routes): void
       $routes->post('submitperbaikihasilseminar', 'Penguji::submitPerbaikiHasilSeminar');
    });
 }
+
+sidangMunaqasyah($routes);
+function sidangMunaqasyah(RouteCollection $routes): void
+{
+   $routes->group('sidangmunaqasyah', ['filter' => 'IsLogin'], function ($routes) {
+      sidangMunaqasyahPembimbing($routes);
+   });
+}
+
+function sidangMunaqasyahPembimbing(RouteCollection $routes): void
+{
+   $routes->group('pembimbing', ['filter' => 'IsLogin', 'namespace' => 'App\Controllers\SidangMunaqasyah'], function ($routes) {
+      $routes->get('/', 'Pembimbing::index');
+
+      $routes->post('getdata', 'Pembimbing::getData');
+      $routes->post('getdetail', 'Pembimbing::getDetail');
+      $routes->post('submitlanjutsidang', 'Pembimbing::submitLanjutSidang');
+   });
+}

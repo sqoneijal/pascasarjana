@@ -29,5 +29,17 @@ hasil penelitian:
          ✔ tim penguji @done(24-07-11 13:21)
          ✔ setujui telah seminar hasil penelitian @done(24-07-11 21:00)
          ✔ perbaiki seminar hasil penelitian @done(24-07-11 21:20)
-   penguji:
 sidang munaqasyah:
+   pembimbing:
+      ✔ daftar @done(24-07-12 21:19)
+      ✔ filter @done(24-07-12 21:24)
+      detail:
+         ✔ identitas @done(24-07-13 11:38)
+         ✔ lampiran @done(24-07-13 12:02)
+         ✔ sk penelitian @done(24-07-13 12:15)
+         ✔ tim pembimbing @done(24-07-13 12:15)
+         ✔ tim penguji @done(24-07-13 12:15)
+         ✔ tombol setujui boleh melakukan sidang @done(24-07-13 12:53)
+   penguji:
+      ☐ daftar
+      ☐ filter

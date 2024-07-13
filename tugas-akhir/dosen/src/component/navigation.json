@@ -11,5 +11,14 @@
          { "label": "Penguji", "link": "/penelitian/penguji", "sub": false }
       ]
    },
-   { "label": "Sidang Munaqasyah", "icon": "ki-outline ki-faceid fs-2", "link": "/sidangmunaqasyah", "sub": false }
+   {
+      "label": "Sidang Munaqasyah",
+      "icon": "ki-outline ki-faceid fs-2",
+      "link": "/sidangmunaqasyah",
+      "sub": true,
+      "child": [
+         { "label": "Pembimbing", "link": "/sidangmunaqasyah/pembimbing", "sub": false },
+         { "label": "Penguji", "link": "/sidangmunaqasyah/penguji", "sub": false }
+      ]
+   }
 ]

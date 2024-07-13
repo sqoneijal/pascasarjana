@@ -34,7 +34,7 @@ const FormsSudahSeminar = () => {
          id_periode: h.parse("id_periode", detailContent),
          id_status_tugas_akhir: h.parse("id_status_tugas_akhir", detailContent),
          status_tesis: h.parse("status", detailContent),
-         nidn: h.parse("username", init),
+         nidn: init.username,
       };
       Object.keys(input).forEach((key) => (formData[key] = input[key]));
 

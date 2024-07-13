@@ -15,6 +15,7 @@ tugas-akhir/login/writable/logs/*
 tugas-akhir/login/writable/session/*
 tugas-akhir/login/writable/uploads/*
 tugas-akhir/login/node_modules
+tugas-akhir/login/public/bundle/*
 tugas-akhir/akademik/vendor/*
 tugas-akhir/akademik/writable/cache/*
 tugas-akhir/akademik/writable/debugbar/*
@@ -22,6 +23,7 @@ tugas-akhir/akademik/writable/logs/*
 tugas-akhir/akademik/writable/session/*
 tugas-akhir/akademik/writable/uploads/*
 tugas-akhir/akademik/node_modules
+tugas-akhir/akademik/public/bundle
 tugas-akhir/mahasiswa/vendor/*
 tugas-akhir/mahasiswa/writable/cache/*
 tugas-akhir/mahasiswa/writable/debugbar/*
@@ -46,4 +48,4 @@ tugas-akhir/dosen/writable/logs/*
 tugas-akhir/dosen/writable/session/*
 tugas-akhir/dosen/writable/uploads/*
 tugas-akhir/dosen/node_modules
-tugas-akhir/dosen/public/bundle/*
+tugas-akhir/dosen/public/bundle

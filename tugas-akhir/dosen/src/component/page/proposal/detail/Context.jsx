@@ -80,7 +80,7 @@ const Context = () => {
       const formData = {
          nim: h.parse("nim", detailContent),
          id_periode: h.parse("id_periode", detailContent),
-         nidn: h.parse("username", init),
+         nidn: init.username,
          id_status_tugas_akhir: h.parse("id_status_tugas_akhir", detailContent),
       };
 

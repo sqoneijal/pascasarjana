@@ -34,9 +34,9 @@ const FormsPerbaiki = () => {
       try {
          acquireLock();
          const formData = {
-            user_modified: h.parse("username", init),
+            user_modified: init.username,
             id_status_tugas_akhir: h.parse("id_status_tugas_akhir", detailContent),
-            nidn: h.parse("username", init),
+            nidn: init.username,
             nim: h.parse("nim", detailContent),
             id_periode: h.parse("id_periode", detailContent),
          };

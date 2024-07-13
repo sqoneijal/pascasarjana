@@ -20,6 +20,13 @@ const Lampiran = () => {
 
    return (
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
+         <thead>
+            <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+               <th>keterangan</th>
+               <th>bukti</th>
+               <th className="text-center">wajib</th>
+            </tr>
+         </thead>
          <tbody>
             <Each
                of={syarat}

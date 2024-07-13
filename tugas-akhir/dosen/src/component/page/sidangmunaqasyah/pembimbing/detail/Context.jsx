@@ -1,13 +1,11 @@
 import React, { useLayoutEffect, useState } from "react";
 import { Card } from "react-bootstrap";
-import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import Switch, { Case } from "react-switch-case";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
 import Identitas from "./Identitas";
-import JadwalSeminar from "./JadwalSeminar";
 import Lampiran from "./Lampiran";
 import SKPenelitian from "./SKPenelitian";
 import TimPembimbing from "./TimPembimbing";
@@ -26,8 +24,8 @@ const Context = () => {
    const [tabActive, setTabActive] = useState(1);
 
    const clearProps = () => {
-      setTabActive(1);
       setIsLoading(true);
+      setTabActive(1);
       setIsSubmit(false);
    };
 
@@ -62,26 +60,18 @@ const Context = () => {
       return () => {};
    }, [openDetail, detailContent]);
 
-   const tabMenus = [
-      { value: 1, label: "Lampiran" },
-      { value: 2, label: "SK Penelitian" },
-      { value: 3, label: "Tim Pembimbing" },
-      { value: 4, label: "Jadwal Seminar Hasil" },
-      { value: 5, label: "Tim Penguji" },
-   ];
-
    const submit = (e) => {
       e.preventDefault();
       const formData = {
          nim: h.parse("nim", detailContent),
          id_periode: h.parse("id_periode", detailContent),
-         nidn: init.username,
-         id_penelitian: h.parse("id_penelitian", detailContent),
          id_status_tugas_akhir: h.parse("id_status_tugas_akhir", detailContent),
+         status: h.parse("status", detailContent),
+         nidn: init.username,
       };
 
       setIsSubmit(true);
-      const fetch = h.post(`/submit`, formData);
+      const fetch = h.post(`/submitlanjutsidang`, formData);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 
@@ -94,14 +84,27 @@ const Context = () => {
          h.notification(data.status, data.msg_response);
 
          if (!data.status) return;
-         dispatch(setModule({ ...module, openDetail: false, detailContent: {}, ...data.content }));
-         clearProps();
-         h.dtReload();
+
+         if (data.status_tesis === 23) {
+            dispatch(setModule({ ...module, openDetail: false, detailContent: {} }));
+            clearProps();
+            h.dtReload();
+            return;
+         }
+
+         dispatch(setModule({ ...module, pembimbing: data.content, detailContent: { ...detailContent, status: data.status_tesis } }));
       });
       fetch.finally(() => {
          setIsSubmit(false);
       });
    };
+
+   const tabMenus = [
+      { value: 1, label: "Lampiran" },
+      { value: 2, label: "SK Penelitian" },
+      { value: 3, label: "Tim Pembimbing" },
+      { value: 4, label: "Tim Penguji" },
+   ];
 
    return (
       <React.Fragment>
@@ -111,7 +114,7 @@ const Context = () => {
                <Card.Header className="pe-5">
                   <div className="card-title">
                      <div className="d-flex justify-content-center flex-column me-3">
-                        <span className="fs-4 fw-bold text-gray-900 text-hover-primary me-1 lh-1">Detail Seminar Hasil Penelitian</span>
+                        <span className="fs-4 fw-bold text-gray-900 text-hover-primary me-1 lh-1">Detail Pengajuan Sidang Munaqasyah</span>
                      </div>
                   </div>
                   <div className="card-toolbar">
@@ -124,9 +127,7 @@ const Context = () => {
                   </div>
                </Card.Header>
                <Card.Body className="hover-scroll-overlay-y">
-                  {isLoading ? (
-                     <Bars height="80" width="80" color="#4fa94d" ariaLabel="bars-loading" visible={true} />
-                  ) : (
+                  {!isLoading && (
                      <React.Fragment>
                         <Identitas />
                         <div className="mb-5 hover-scroll-x mt-5">
@@ -167,9 +168,6 @@ const Context = () => {
                                     <TimPembimbing />
                                  </Case>
                                  <Case value={4}>
-                                    <JadwalSeminar />
-                                 </Case>
-                                 <Case value={5}>
                                     <TimPenguji />
                                  </Case>
                               </Switch>
@@ -178,13 +176,11 @@ const Context = () => {
                      </React.Fragment>
                   )}
                </Card.Body>
-               {[14].includes(h.parse("status", detailContent)) && (
-                  <Card.Footer className="text-end">
-                     {h.buttons(`Setujui, Lanjut Seminar Hasil Penelitian`, isSubmit, {
-                        onClick: isSubmit ? null : submit,
-                     })}
-                  </Card.Footer>
-               )}
+               <Card.Footer className="text-end">
+                  {h.buttons(`Setujui Untuk Lanjut Sidang`, isSubmit, {
+                     onClick: isSubmit ? null : submit,
+                  })}
+               </Card.Footer>
             </Card>
          </div>
       </React.Fragment>

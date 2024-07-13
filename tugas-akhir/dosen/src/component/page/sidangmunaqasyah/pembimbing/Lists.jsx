@@ -15,6 +15,7 @@ const Lists = () => {
       show_edit_button: false,
       show_delete_button: false,
       url: datatable_url,
+      filter: { nidn: init.username },
       columns: [
          {
             data: null,
@@ -33,7 +34,6 @@ const Lists = () => {
          },
       ],
       columnDefs: false,
-      filter: { nidn: init.username },
       createdRow: (row, data) => {
          row.querySelector("#nim").onclick = (e) => {
             e.preventDefault();
