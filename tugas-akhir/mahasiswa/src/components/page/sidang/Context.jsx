@@ -153,6 +153,18 @@ const Context = () => {
                            })}
                         </Card.Footer>
                      )}
+                     {!isLoading && [30].includes(h.parse("status", init)) && (
+                        <Card.Footer>
+                           {h.buttons(`Saya Telah Memperbaiki`, isSubmit, {
+                              onClick: () => {
+                                 h.confirm("Apakah benar anda telah memperbaiki lampiran yang diminta?").then((res) => {
+                                    const { isConfirmed } = res;
+                                    if (isConfirmed) submit(module.statusTugasAkhir.id, 31);
+                                 });
+                              },
+                           })}
+                        </Card.Footer>
+                     )}
                   </Card>
                </div>
             </div>

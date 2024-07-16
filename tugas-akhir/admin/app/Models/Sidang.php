@@ -15,29 +15,29 @@ class Sidang extends Common
          $table->where('id', $post['id']);
          $table->delete();
 
-         $this->checkPengujiSidangSetelahHapus($post['nim']);
+         $this->handleUpdateStatusTugasAkhir($post['id_status_tugas_akhir']);
 
-         return ['status' => true, 'content' => $this->getPengujiSidang($post['nim']), 'msg_response' => 'Data berhasil disimpan.'];
+         return ['status' => true, 'content' => $this->getPengujiSidangMunaqasyah($post['nim'], $post['id_periode']), 'msg_response' => 'Data berhasil dihapus.'];
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }
    }
 
-   private function checkPengujiSidangSetelahHapus(string $nim): void
+   private function handleUpdateStatusTugasAkhir(int $id_status_tugas_akhir): void
    {
-      $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->join('tb_penguji_sidang tps', 'tps.id_status_tugas_akhir = tsta.id');
-      $table->where('tsta.nim', $nim);
+      $table = $this->db->table('tb_penguji_sidang');
+      $table->where('id_status_tugas_akhir', $id_status_tugas_akhir);
 
-      if ($table->countAllResults() < 1) {
-         $this->updateStatusTugasAkhir($nim, 24);
+      $count = $table->countAllResults();
+      if ($count === 0) {
+         $this->updateStatusTugasAkhir($id_status_tugas_akhir, 24);
       }
    }
 
-   public function submitTimPenguji(array $post): array
+   public function submitPenguji(array $post): array
    {
       try {
-         $fields = ['id_status_tugas_akhir', 'penguji_ke', 'nidn', 'nama_dosen', 'id_kategori_kegiatan', 'apakah_dosen_uin'];
+         $fields = ['id_status_tugas_akhir', 'penguji_ke', 'nidn', 'nama_dosen', 'id_kategori_kegiatan'];
          foreach ($fields as $field) {
             if (@$post[$field]) {
                $data[$field] = $post[$field];
@@ -47,14 +47,13 @@ class Sidang extends Common
          }
 
          $data['user_modified'] = $post['user_modified'];
+         $data['apakah_dosen_uin'] = $post['apakah_dosen_uin'] === 't';
 
          $table = $this->db->table('tb_penguji_sidang');
          if ($post['pageType'] === 'insert') {
             $data['uploaded'] = new RawSql('now()');
 
             $table->insert($data);
-
-            $this->insertUsers($post);
          } elseif ($post['pageType'] === 'update') {
             $data['modified'] = new RawSql('now()');
 
@@ -62,31 +61,43 @@ class Sidang extends Common
             $table->update($data);
          }
 
-         $this->updateStatusTugasAkhir($post['nim'], 25);
+         $this->generateUser($post);
+         $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], 25);
 
-         return ['status' => true, 'content' => $this->getPengujiSidang($post['nim']), 'msg_response' => 'Data berhasil disimpan.'];
+         return ['status' => true, 'content' => $this->getPengujiSidangMunaqasyah($post['nim'], $post['id_periode']), 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }
    }
 
-   private function insertUsers(array $post): void
+   private function checkExistUsers(string $nidn): bool
    {
       $table = $this->db->table('tb_users');
-      $table->ignore(true)->insert([
-         'nama' => $post['nama_dosen'],
-         'username' => $post['nidn'],
-         'role' => '3',
-         'password' => password_hash($post['nidn'], PASSWORD_BCRYPT),
-         'uploaded' => new RawSql('now()'),
-         'user_modified' => $post['user_modified']
-      ]);
+      $table->where('username', $nidn);
+
+      return $table->countAllResults() > 0;
+   }
+
+   private function generateUser(array $post): void
+   {
+      $check = $this->checkExistUsers($post['nidn']);
+      if (!$check) {
+         $table = $this->db->table('tb_users');
+         $table->insert([
+            'nama' => $post['nama_dosen'],
+            'username' => $post['nidn'],
+            'role' => '3',
+            'password' => password_hash($post['nidn'], PASSWORD_BCRYPT),
+            'uploaded' => new RawSql('now()'),
+            'user_modified' => $post['user_modified']
+         ]);
+      }
    }
 
    public function submitJadwalSidang(array $post): array
    {
       try {
-         $check = $this->checkJadwalSidangSebelumnya($post['id_status_tugas_akhir']);
+         $check = $this->checkJadwalSebelumnya($post['id_status_tugas_akhir']);
 
          $fields = ['id_status_tugas_akhir', 'tanggal', 'jam'];
          foreach ($fields as $field) {
@@ -103,42 +114,23 @@ class Sidang extends Common
          if ($check) {
             $data['modified'] = new RawSql('now()');
 
-            $table->where('id', $post['id']);
+            $table->where('id_status_tugas_akhir', $post['id_status_tugas_akhir']);
             $table->update($data);
          } else {
             $data['uploaded'] = new RawSql('now()');
+
             $table->insert($data);
+
+            $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], 24);
          }
 
-         $checkApakahSudahAdaPenguji = $this->checkApakahSudahAdaPenguji($post['nim']);
-
-         $this->updateStatusTugasAkhir($post['nim'], $checkApakahSudahAdaPenguji ? 25 : 24);
-         return ['status' => true, 'content' => $this->getJadwalSidang($post['nim']), 'msg_response' => 'Data berhasil disimpan.'];
+         return ['status' => true, 'content' => $post, 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }
    }
 
-   private function checkApakahSudahAdaPenguji(string $nim): bool
-   {
-      $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->join('tb_penguji_sidang tps', 'tps.id_status_tugas_akhir = tsta.id');
-      $table->where('tsta.nim', $nim);
-
-      return $table->countAllResults() > 0;
-   }
-
-   private function updateStatusTugasAkhir(string $nim, int $value): void
-   {
-      $table = $this->db->table('tb_status_tugas_akhir');
-      $table->where('nim', $nim);
-      $table->where('id_periode', function ($table) {
-         return $table->select('id')->from('tb_periode')->where('status', true);
-      });
-      $table->update(['status' => $value]);
-   }
-
-   private function checkJadwalSidangSebelumnya(int $id_status_tugas_akhir): bool
+   private function checkJadwalSebelumnya(int $id_status_tugas_akhir): bool
    {
       $table = $this->db->table('tb_jadwal_sidang');
       $table->where('id_status_tugas_akhir', $id_status_tugas_akhir);
@@ -146,24 +138,113 @@ class Sidang extends Common
       return $table->countAllResults() > 0;
    }
 
-   public function getDetailSidang(string $nim): array
+   public function submitNotValidLampiran(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_lampiran_upload');
+         $table->where('nim', $post['nim']);
+         $table->where('id_syarat', $post['id_syarat']);
+         $table->update([
+            'valid' => false,
+            'keterangan' => $post['keterangan'],
+            'modified' => new RawSql('now()'),
+            'user_modified' => $post['user_modified']
+         ]);
+
+         $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], 30);
+
+         return ['status' => true, 'content' => $this->getLampiranUpload($post), 'msg_response' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
+   public function submitValidLampiran(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_lampiran_upload');
+         $table->where('nim', $post['nim']);
+         $table->where('id_syarat', $post['id_syarat']);
+         $table->update([
+            'valid' => true,
+            'modified' => new RawSql('now()'),
+            'user_modified' => $post['user_modified']
+         ]);
+         return ['status' => true, 'content' => $this->getLampiranUpload($post), 'msg_response' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
+   public function getDetail(array $post): array
    {
       return [
-         'statusTugasAkhir' => $this->getStatusTugasAkhir($nim),
-         'lampiranSidang' => $this->getLampiranSidang($nim),
-         'pembimbing' => $this->getPembimbingSeminarPenelitian($nim),
-         'jadwalSidang' => $this->getJadwalSidang($nim),
-         'penguji' => $this->getPengujiSidang($nim)
+         'identitas' => $this->getIdentitas($post['nim'], $post['id_periode']),
+         'syarat' => $this->getSyarat('3'),
+         'lampiran_upload' => $this->getLampiranUpload($post),
+         'sk_penelitian' => $this->getSKPenelitian($post),
+         'tim_pembimbing' => $this->getPembimbingPenelitian($post),
+         'tim_penguji_hasil_sidang' => $this->getPengujiHasilPenelitian($post['nim'], $post['id_periode']),
+         'jadwal_sidang' => $this->getJadwalSidang($post['nim'], $post['id_periode']),
+         'tim_penguji_sidang' => $this->getPengujiSidangMunaqasyah($post['nim'], $post['id_periode'])
       ];
    }
 
-   private function getPengujiSidang(string $nim): array
+   private function getPengujiSidangMunaqasyah(string $nim, int $id_periode): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tps.id, tps.id_status_tugas_akhir, tps.penguji_ke, tps.nidn, tps.nama_dosen, tps.id_kategori_kegiatan, tkk.nama as kategori_kegiatan, tps.apakah_dosen_uin, tps.keterangan_perbaikan, tps.telah_sidang');
+      $table->select('tps.*, tkk.nama as kategori_kegiatan');
       $table->join('tb_penguji_sidang tps', 'tps.id_status_tugas_akhir = tsta.id');
       $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tps.id_kategori_kegiatan');
       $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', $id_periode);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
+   private function getJadwalSidang(string $nim, int $id_periode): array
+   {
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->select('tjs.*');
+      $table->join('tb_jadwal_sidang tjs', 'tjs.id_status_tugas_akhir = tsta.id');
+      $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', $id_periode);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
+   private function getPengujiHasilPenelitian(string $nim, int $id_periode): array
+   {
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->select('tspd.id, tspd.id_seminar_penelitian, tspd.penguji_ke, tspd.nidn, tspd.nama_dosen, tspd.id_kategori_kegiatan, tkk.nama as kategori_kegiatan, tspd.apakah_dosen_uin, tspd.lanjut_sidang, tspd.keterangan_perbaikan');
+      $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
+      $table->join('tb_seminar_penelitian tsp', 'tsp.id_penelitian = tp.id');
+      $table->join('tb_seminar_penelitian_detail tspd', 'tspd.id_seminar_penelitian = tsp.id');
+      $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tspd.id_kategori_kegiatan');
+      $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', $id_periode);
       $table->orderBy('penguji_ke');
 
       $get = $table->get();
@@ -180,57 +261,15 @@ class Sidang extends Common
       return $response;
    }
 
-   private function getJadwalSidang(string $nim): array
+   private function getIdentitas(string $nim, string $id_periode): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tjs.id, tjs.id_status_tugas_akhir, tjs.tanggal, tjs.jam');
-      $table->join('tb_jadwal_sidang tjs', 'tjs.id_status_tugas_akhir = tsta.id');
-      $table->where('tsta.nim', $nim);
-
-      $get = $table->get();
-      $data = $get->getRowArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
-      $response = [];
-      if (isset($data)) {
-         foreach ($fieldNames as $field) {
-            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
-         }
-      }
-      return $response;
-   }
-
-   private function getPembimbingSeminarPenelitian(string $nim): array
-   {
-      $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tpp.id, tpp.id_penelitian, tpp.apakah_dosen_uin, tpp.pembimbing_ke, tpp.id_kategori_kegiatan, tkk.nama as kategori_kegiatan, tpp.nidn, tpp.nama_dosen, tpp.seminar_penelitian, tpp.boleh_seminar, tpp.boleh_sidang');
+      $table->select('tsta.id as id_status_tugas_akhir, tsta.nim, tsta.nama, tsta.angkatan, tsta.email, tsta.hp, tsta.status, tp.judul as judul_penelitian, concat(tp2.tahun_ajaran, tp2.id_semester) as periode, concat(tp3.jenjang, \' \', tp3.nama) as program_studi');
       $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
-      $table->join('tb_pembimbing_penelitian tpp', 'tpp.id_penelitian = tp.id');
-      $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tpp.id_kategori_kegiatan');
+      $table->join('tb_periode tp2', 'tp2.id = tsta.id_periode');
+      $table->join('tb_prodi tp3', 'tp3.id_feeder = tsta.id_prodi');
       $table->where('tsta.nim', $nim);
-      $table->orderBy('tpp.pembimbing_ke');
-
-      $get = $table->get();
-      $result = $get->getResultArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
-      $response = [];
-      foreach ($result as $key => $val) {
-         foreach ($fieldNames as $field) {
-            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
-         }
-      }
-      return $response;
-   }
-
-   private function getLampiranSidang(string $nim): array
-   {
-      $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tm.*');
-      $table->join('tb_munaqasyah tm', 'tm.id_status_tugas_akhir = tsta.id');
-      $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', $id_periode);
 
       $get = $table->get();
       $data = $get->getRowArray();
@@ -246,29 +285,7 @@ class Sidang extends Common
       return $response;
    }
 
-   private function getStatusTugasAkhir(string $nim): array
-   {
-      $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tsta.id, tsta.nim, tsta.status, tsta.id_periode, tsta.kode_prodi, tsta.nama, tsta.angkatan, tsta.nidn_penasehat, tsta.email, tsta.hp, concat(tp.tahun_ajaran, tp.id_semester) as periode, concat(tp2.jenjang, \' \', tp2.nama) as program_studi');
-      $table->join('tb_periode tp', 'tp.id = tsta.id_periode');
-      $table->join('tb_prodi tp2', 'tp2.kode = tsta.kode_prodi');
-      $table->where('tsta.nim', $nim);
-
-      $get = $table->get();
-      $data = $get->getRowArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
-      $response = [];
-      if (isset($data)) {
-         foreach ($fieldNames as $field) {
-            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
-         }
-      }
-      return $response;
-   }
-
-   public function getData(array $post): array
+   public function getData($post = [])
    {
       try {
          $table = $this->queryData($post);
@@ -292,39 +309,42 @@ class Sidang extends Common
       }
    }
 
-   public function countData(array $post): int
+   public function countData($post = [])
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->join('tb_prodi tp', 'tp.kode = tsta.kode_prodi');
-      $table->whereIn('tsta.status', [22, 23, 24, 25, 26, 27, 28, 29]);
+      $table->join('tb_prodi tp', 'tp.id_feeder = tsta.id_prodi');
+      $table->join('tb_status_tesis tst', 'tst.id = tsta.status');
+      $table->where(new RawSql('tsta.status >= 22'));
+
       $this->dt_where($table, [
-         'tsta.id_periode' => @$post['id_periode'],
+         'tsta.id_periode' => @$post['id_periode']
       ]);
 
       return $table->countAllResults();
    }
 
-   public function filteredData(array $post): int
+   public function filteredData($post = [])
    {
       $table = $this->queryData($post);
       return $table->countAllResults();
    }
 
-   private function queryData(array $post): object
+   private function queryData($post = [])
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tsta.id, tsta.nim, tsta.nama, tsta.angkatan, concat(tp.jenjang, \' \', tp.nama) as program_studi, tsta.status');
-      $table->join('tb_prodi tp', 'tp.kode = tsta.kode_prodi');
-      $table->whereIn('tsta.status', [22, 23, 24, 25, 26, 27, 28, 29]);
+      $table->select('tsta.id as id_status_tugas_akhir, tsta.nim, tsta.nama, tsta.angkatan, concat(tp.jenjang, \' \', tp.nama) as program_studi, tsta.status, tst.short_name as status_tesis, tsta.id_periode');
+      $table->join('tb_prodi tp', 'tp.id_feeder = tsta.id_prodi');
+      $table->join('tb_status_tesis tst', 'tst.id = tsta.status');
+      $table->where(new RawSql('tsta.status >= 22'));
 
       $this->dt_where($table, [
          'tsta.id_periode' => @$post['id_periode'],
-         'tsta.kode_prodi' => @$post['kode_prodi'],
+         'tsta.id_prodi' => @$post['id_prodi'],
          'tsta.angkatan' => @$post['angkatan'],
       ]);
 
-      $this->prepareDatatableColumnSearch($table, ['tsta.nim', 'tsta.nama', 'tsta.angkatan', 'tp.jenjang', 'tp.nama']);
-      $this->prepareDatatableColumnOrder($table, ['nim', 'nama', 'angkatan', 'program_studi', 'status']);
+      $this->prepareDatatableColumnOrder($table, ['tsta.nim', 'tsta.nama', 'tsta.angkatan', 'tp.nama', 'tst.short_name']);
+      $this->prepareDatatableColumnSearch($table, ['nim', 'nama', 'angkatan', 'program_studi', 'status']);
 
       return $table;
    }

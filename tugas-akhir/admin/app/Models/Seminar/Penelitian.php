@@ -196,7 +196,7 @@ class Penelitian extends Common
    {
       return [
          'identitas' => $this->getIdentitas($post['nim'], $post['id_periode']),
-         'syarat' => $this->getSyarat(),
+         'syarat' => $this->getSyarat('2'),
          'lampiran' => $this->getLampiranUpload($post),
          'sk_penelitian' => $this->getSKPenelitian($post),
          'pembimbing' => $this->getPembimbingPenelitian($post),
@@ -249,25 +249,6 @@ class Penelitian extends Common
       if (isset($data)) {
          foreach ($fieldNames as $field) {
             $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
-         }
-      }
-      return $response;
-   }
-
-   private function getSyarat(): array
-   {
-      $table = $this->db->table('tb_mst_syarat');
-      $table->where('syarat', '2');
-
-      $get = $table->get();
-      $result = $get->getResultArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
-      $response = [];
-      foreach ($result as $key => $val) {
-         foreach ($fieldNames as $field) {
-            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
          }
       }
       return $response;

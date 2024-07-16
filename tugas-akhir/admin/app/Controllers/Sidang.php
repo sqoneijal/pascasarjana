@@ -24,41 +24,44 @@ class Sidang extends BaseController
       return $this->respond($content);
    }
 
-   public function cariDosen(): object
-   {
-      $model = new Model();
-
-      $tokenFeeder = $model->getTokenFeeder();
-
-      $response['status'] = $tokenFeeder['status'];
-      $response['msg_response'] = @$tokenFeeder['msg_response'];
-      if ($tokenFeeder['status']) {
-         $query = trim(strtolower($this->post['query']));
-
-         $req = $model->feederAction($tokenFeeder['token'], 'DetailBiodataDosen', [
-            'limit' => 100,
-            'filter' => "trim(lower(nidn)) like '%" . $query . "%' or trim(lower(nama_dosen)) like '%" . $query . "%'"
-         ]);
-
-         $response['content'] = $req['content'];
-      }
-
-      return $this->respond($response);
-   }
-
-   public function submitTimPenguji(): object
+   public function submitPenguji(): object
    {
       $response = ['status' => false, 'errors' => []];
 
       $validation = new Validate();
-      if ($this->validate($validation->submitTimPenguji())) {
+      if ($this->validate($validation->submitPenguji())) {
          $model = new Model();
-         $submit = $model->submitTimPenguji($this->post);
+         $submit = $model->submitPenguji($this->post);
 
          $response = array_merge($submit, ['errors' => []]);
       } else {
          $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
          $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
+   }
+
+   public function cariDosen(): object
+   {
+      $model = new Model();
+      $getToken = $model->getTokenFeeder();
+
+      $response = ['status' => false];
+      if ($getToken['status']) {
+         $q = $this->post['query'];
+
+         $act = $model->feederAction($getToken['token'], 'DetailBiodataDosen', [
+            'filter' => "trim(lower(nama_dosen)) like '%" . trim(strtolower($q)) . "%' or trim(lower(nidn)) like '%" . trim(strtolower($q)) . "%'"
+         ]);
+
+         if ($act['status']) {
+            $response['status'] = true;
+            $response['content'] = $act['content'];
+         } else {
+            $response['msg_response'] = $act['msg_response'];
+         }
+      } else {
+         $response['msg_response'] = $getToken['msg_response'];
       }
       return $this->respond($response);
    }
@@ -80,28 +83,50 @@ class Sidang extends BaseController
       return $this->respond($response);
    }
 
-   public function getDetailSidang(): object
+   public function submitNotValidLampiran(): object
+   {
+      $response = ['status' => false, 'errors' => []];
+
+      $validation = new Validate();
+      if ($this->validate($validation->submitNotValidLampiran())) {
+         $model = new Model();
+         $submit = $model->submitNotValidLampiran($this->post);
+
+         $response = array_merge($submit, ['errors' => []]);
+      } else {
+         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
+         $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
+   }
+
+   public function submitValidLampiran(): object
    {
       $model = new Model();
-      $content = $model->getDetailSidang($this->post['nim']);
+      $content = $model->submitValidLampiran($this->post);
+      return $this->respond($content);
+   }
+
+   public function getDetail(): object
+   {
+      $model = new Model();
+      $content = $model->getDetail($this->post);
       return $this->respond($content);
    }
 
    public function initPage(): object
    {
       $model = new Model();
-
       $content = [
-         'daftarAngkatan' => $model->getDaftarAngkatan(),
          'daftarProdi' => $model->getDaftarProdi(),
+         'daftarAngkatan' => $model->getDaftarAngkatan(),
          'daftarPeriode' => $model->getDaftarPeriode(),
          'daftarKategoriKegiatan' => $model->getDaftarKategoriKegiatan(),
-         'daftarStatusTesis' => $model->getDaftarStatusTesis(),
       ];
       return $this->respond($content);
    }
 
-   public function getData(): object
+   public function getData()
    {
       $model = new Model();
       $query = $model->getData($this->getVar);

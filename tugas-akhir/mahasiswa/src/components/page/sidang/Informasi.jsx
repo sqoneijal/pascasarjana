@@ -71,6 +71,26 @@ const Informasi = () => {
                </div>
             </div>
          );
+      case 30:
+         return (
+            <div className="alert alert-dismissible bg-light-danger d-flex flex-column flex-sm-row p-5 mb-10">
+               <i className="ki-outline ki-notification-bing fs-2hx text-danger me-4 mb-5 mb-sm-0" />
+               <div className="d-flex flex-column pe-0 pe-sm-10">
+                  <h4 className="fw-semibold">Informasi</h4>
+                  <span>Akademik menyatakan ada perbaikan pada lampiran yang anda upload.</span>
+               </div>
+            </div>
+         );
+      case 31:
+         return (
+            <div className="alert alert-dismissible bg-light-danger d-flex flex-column flex-sm-row p-5 mb-10">
+               <i className="ki-outline ki-notification-bing fs-2hx text-danger me-4 mb-5 mb-sm-0" />
+               <div className="d-flex flex-column pe-0 pe-sm-10">
+                  <h4 className="fw-semibold">Informasi</h4>
+                  <span>Telah memperbaiki lampiran, menunggu persetujuan dan penentuan jadwal sidang dari akademik.</span>
+               </div>
+            </div>
+         );
    }
 };
 export default Informasi;

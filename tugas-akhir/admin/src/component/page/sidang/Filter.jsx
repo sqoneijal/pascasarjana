@@ -12,19 +12,19 @@ const Filter = () => {
    return (
       <Row className="d-flex flex-stack flex-wrap mb-5">
          <Col md={3} xs={12} className="align-items-center position-relative">
-            {h.form_text(`Cari ${document.title}`, "search", { onKeyDown: (e) => e.code === "Enter" && h.handleSearchDatatable(e.target.value) })}
+            {h.form_text(`Cari Mahasiswa`, "search", { onKeyDown: (e) => e.code === "Enter" && h.handleSearchDatatable(e.target.value) })}
          </Col>
          <Col md={9} xs={12}>
             <Row className="d-flex justify-content-end">
                <Col>
                   {h.form_select(
                      "Program Studi",
-                     "kode_prodi",
+                     "id_prodi",
                      {
-                        onChange: (e) => dispatch(applyFilter({ url: "/getdata", data: { ...filter, kode_prodi: e.target.value } })),
-                        value: h.parse("kode_prodi", filter),
+                        onChange: (e) => dispatch(applyFilter({ url: "/getdata", data: { ...filter, id_prodi: e.target.value } })),
+                        value: h.parse("id_prodi", filter),
                      },
-                     daftarProdi.map((row) => ({ value: h.parse("kode", row), label: h.parse("nama", row) }))
+                     daftarProdi.map((row) => ({ value: h.parse("id_feeder", row), label: h.parse("nama", row) }))
                   )}
                </Col>
                <Col md={2} sm={12}>

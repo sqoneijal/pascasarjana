@@ -1,14 +1,17 @@
 import React, { useLayoutEffect, useState } from "react";
+import { Card } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
 import { filter as setFilter, setModule } from "~/redux";
 
 const Lists = React.lazy(() => import("./Lists"));
+const Filter = React.lazy(() => import("./Filter"));
 const Detail = React.lazy(() => import("./detail/Context"));
 
 const Context = () => {
-   const { module } = useSelector((e) => e.redux);
+   const { module, init, filter } = useSelector((e) => e.redux);
+   const { periode } = init;
    const dispatch = useDispatch();
 
    // bool
@@ -27,7 +30,7 @@ const Context = () => {
          }
 
          dispatch(setModule({ ...module, ...data }));
-         dispatch(setFilter({ id_periode: h.parse("id", h.getPeriodeAktif(data.daftarPeriode)) }));
+         dispatch(setFilter({ id_periode: h.parse("id", periode) }));
       });
       fetch.finally(() => {
          setIsLoading(false);
@@ -40,7 +43,8 @@ const Context = () => {
    }, []);
 
    return (
-      !isLoading && (
+      !isLoading &&
+      h.objLength(filter) && (
          <React.Suspense
             fallback={
                <Bars
@@ -55,8 +59,13 @@ const Context = () => {
                   wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
                />
             }>
-            <Lists />
-            <Detail />
+            <Card className="shadow-sm card-bordered">
+               <Card.Body>
+                  <Filter />
+                  <Detail />
+                  <Lists />
+               </Card.Body>
+            </Card>
          </React.Suspense>
       )
    );

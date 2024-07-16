@@ -16,10 +16,12 @@ function sidang(RouteCollection $routes): void
       $routes->get('initpage', 'Sidang::initPage');
 
       $routes->post('getdata', 'Sidang::getData');
-      $routes->post('getdetailsidang', 'Sidang::getDetailSidang');
+      $routes->post('getdetail', 'Sidang::getDetail');
+      $routes->post('submitvalidlampiran', 'Sidang::submitValidLampiran');
+      $routes->post('submitnotvalidlampiran', 'Sidang::submitNotValidLampiran');
       $routes->post('submitjadwalsidang', 'Sidang::submitJadwalSidang');
-      $routes->post('submittimpenguji', 'Sidang::submitTimPenguji');
       $routes->post('caridosen', 'Sidang::cariDosen');
+      $routes->post('submitpenguji', 'Sidang::submitPenguji');
       $routes->post('hapuspenguji', 'Sidang::hapusPenguji');
    });
 }

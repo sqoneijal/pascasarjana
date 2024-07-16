@@ -19,6 +19,25 @@ class Common extends Model
       $this->curl = \Config\Services::curlrequest();
    }
 
+   public function getSyarat(string $syarat): array
+   {
+      $table = $this->db->table('tb_mst_syarat');
+      $table->where('syarat', $syarat);
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
+   }
+
    public function getPembimbingPenelitian(array $post): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');

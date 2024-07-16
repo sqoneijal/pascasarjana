@@ -1,50 +1,127 @@
 import React from "react";
 import { Table } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
+import { setModule } from "~/redux";
 
 const Lampiran = () => {
-   const { module } = useSelector((e) => e.redux);
-   const { detailContent, lampiranSidang } = module;
+   const { module, init } = useSelector((e) => e.redux);
+   const { syarat, detailContent, lampiran_upload } = module;
+   const dispatch = useDispatch();
 
-   const daftarLampiran = [
-      { id: "surat_permohonan", label: "Surat permohonan" },
-      { id: "sk_pembimbing", label: "SK Pembimbing Tesis (Dilampirkan di Tesis)" },
-      { id: "surat_pengantar", label: "Surat Pengantar penelitian dari Pasca dan Surat Keterangan Telah Melakukan Penelitian" },
-      { id: "nilai_ujian", label: "Nilai Ujian Telah Mengikuti Seminar Hasil Penelitian" },
-      { id: "lembar_persetujuan", label: "Melampirkan lembar persetujuan dari 4 orang penguji Seminar Penelitian Tesis" },
-      { id: "transkrip", label: "Transkrip Nilai" },
-      { id: "persetujuan_pembimbing", label: "Persetujuan Pembimbing Tesis (Dilampirkan di Tesis)" },
-      { id: "slip_spp", label: "Melampirkan Slip setoran SPP Dari Semester 1 s/d yang Terakhir" },
-      { id: "artikel_ilmiah", label: "Artikel Ilmiah dari Tesis/ Jurnal Disertai Dengan Abstrak 3 Bahasa di soft dalam CD dan prints 1 exs" },
-      { id: "slip_yudisium", label: "Slip Sidang Dan Yudisium" },
-      { id: "abstrak", label: "Melampirkan Tesis yang LENGKAP 1 exs, dan Abstrak 3 bahasa (Indonesia, Arab, Inggris)" },
-      { id: "turnitin", label: "Melampiran Turnitin Check dari Program Studi" },
-      { id: "hki", label: "HKI" },
-   ];
+   const renderWajib = (row) => {
+      return h.parse("wajib", row) === "t" ? (
+         <i className="ki-outline ki-check-square fs-2 fw-bold text-success" />
+      ) : (
+         <i className="ki-outline ki-close-square fs-2 fw-bold text-danger" />
+      );
+   };
+
+   const renderBukti = (id_syarat, lampiran) => {
+      if (h.parse(id_syarat, lampiran)) {
+         return (
+            <button
+               onClick={(e) => {
+                  e.preventDefault();
+                  window.open(h.getDriveFile(h.parse("id_google_drive", lampiran[id_syarat])), "_blank");
+               }}>
+               {h.parse("lampiran", lampiran[id_syarat])}
+            </button>
+         );
+      }
+   };
+
+   const handleChangeValidStatus = (row) => {
+      const formData = {
+         id_syarat: h.parse("id", row),
+         nim: h.parse("nim", detailContent),
+         id_periode: h.parse("id_periode", detailContent),
+         user_modified: h.parse("username", init),
+      };
+
+      const fetch = h.post(`/submitvalidlampiran`, formData);
+      fetch.then((res) => {
+         if (typeof res === "undefined") return;
+
+         const { data } = res;
+         if (typeof data.code !== "undefined" && h.parse("code", data) !== 200) {
+            h.notification(false, h.parse("message", data));
+            return;
+         }
+
+         h.notification(data.status, data.msg_response);
+
+         if (!data.status) return;
+
+         dispatch(setModule({ ...module, lampiran_upload: data.content }));
+      });
+   };
 
    return (
-      <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
+      <Table responsive hover id="datatable" className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-               <th colSpan={2}>daftar lampiran</th>
+               <th rowSpan={2} className="align-middle">
+                  keterangan
+               </th>
+               <th rowSpan={2} className="align-middle">
+                  bukti
+               </th>
+               <th className="text-center align-middle" rowSpan={2}>
+                  wajib
+               </th>
+               <th className="text-center align-middle" colSpan={2}>
+                  status
+               </th>
+            </tr>
+            <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+               <th>valid</th>
+               <th>tidak valid</th>
             </tr>
          </thead>
          <tbody className="text-gray-600 fw-semibold">
             <Each
-               of={daftarLampiran}
+               of={syarat}
                render={(row) => (
-                  <tr>
-                     <td>{h.parse("label", row)}</td>
-                     <td className="text-end" style={{ width: `5%` }}>
-                        {h.parse(h.parse("id", row), lampiranSidang) && (
-                           <a href={h.cdn(`media/${h.parse("nim", detailContent)}/${h.parse(h.parse("id", row), lampiranSidang)}`)} target="_blank">
-                              lihat
-                           </a>
-                        )}
-                     </td>
-                  </tr>
+                  <React.Fragment>
+                     <tr>
+                        <td>{h.parse("nama", row)}</td>
+                        <td>{renderBukti(h.parse("id", row), lampiran_upload)}</td>
+                        <td className="text-center">{renderWajib(row)}</td>
+                        <td className="text-center">
+                           {h.form_check_switch(
+                              null,
+                              h.parse("id", row),
+                              {
+                                 onChange: (e) => handleChangeValidStatus(row),
+                                 checked: h.parse("valid", lampiran_upload[h.parse("id", row)]) === "t",
+                              },
+                              "success",
+                              "h-20px w-30px"
+                           )}
+                        </td>
+                        <td className="text-center">
+                           {h.form_check_switch(
+                              null,
+                              h.parse("id", row),
+                              {
+                                 onChange: (e) => dispatch(setModule({ ...module, openFormTidakValidLampiran: true, detailSyarat: row })),
+                                 checked: h.parse("valid", lampiran_upload[h.parse("id", row)]) === "f",
+                              },
+                              "danger",
+                              "h-20px w-30px"
+                           )}
+                        </td>
+                     </tr>
+                     {h.parse("valid", lampiran_upload[h.parse("id", row)]) === "f" && (
+                        <tr>
+                           <td colSpan={5} className="text-danger fs-7" style={{ fontStyle: "italic" }}>
+                              {h.parse("keterangan", lampiran_upload[h.parse("id", row)])}
+                           </td>
+                        </tr>
+                     )}
+                  </React.Fragment>
                )}
             />
          </tbody>
