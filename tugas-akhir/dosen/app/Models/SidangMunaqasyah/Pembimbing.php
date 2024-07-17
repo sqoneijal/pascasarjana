@@ -8,6 +8,103 @@ use CodeIgniter\Database\RawSql;
 class Pembimbing extends Common
 {
 
+   public function submitSudahSidang(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_pembimbing_penelitian');
+         $table->where('id_penelitian', function ($table) use ($post) {
+            return $table->select('id')->from('tb_penelitian')->where('id_status_tugas_akhir', $post['id_status_tugas_akhir']);
+         });
+         $table->where('nidn', $post['nidn']);
+         $table->update([
+            'modified' => new RawSql('now()'),
+            'user_modified' => $post['nidn'],
+            'sudah_sidang' => true
+         ]);
+
+         return [
+            'status' => true,
+            'msg_response' => 'Data berhasil disimpan.',
+            'content' => $this->getPembimbingPenelitian($post['nim'], $post['id_periode']),
+            'status_tesis' => $this->handleUpdateStatusTugasAkhir($post)
+         ];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
+   private function handleUpdateStatusTugasAkhir(array $post): int
+   {
+      $checkApprovePembimbing = $this->checkApproveSudahSidangPembimbing($post['id_status_tugas_akhir']);
+      $checkApprovePenguji = $this->checkApproveSudahSidangPenguji($post['id_status_tugas_akhir']);
+
+      $status = 26;
+      if ($checkApprovePembimbing && $checkApprovePenguji) {
+         $status = 29;
+      }
+
+      $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], $status);
+
+      return $status;
+   }
+
+   private function checkApproveSudahSidangPenguji(int $id_status_tugas_akhir): bool
+   {
+      $table = $this->db->table('tb_penguji_sidang');
+      $table->select('count(*) filter (where telah_sidang = true) as disetujui, count(*) filter (where telah_sidang = false or telah_sidang is null) as belum_disetujui');
+      $table->where('id_status_tugas_akhir', $id_status_tugas_akhir);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $get->freeResult();
+
+      $disetujui = intval($data['disetujui']);
+      $belum_disetujui = intval($data['belum_disetujui']);
+
+      return $disetujui > $belum_disetujui;
+   }
+
+   private function checkApproveSudahSidangPembimbing(int $id_status_tugas_akhir): bool
+   {
+      $table = $this->db->table('tb_pembimbing_penelitian');
+      $table->select('count(*) filter (where sudah_sidang = true) as disetujui, count(*) filter (where sudah_sidang = false or sudah_sidang is null) as belum_disetujui');
+      $table->where('id', function ($table) use ($id_status_tugas_akhir) {
+         return $table->select('id')->from('tb_penelitian')->where('id_status_tugas_akhir', $id_status_tugas_akhir);
+      });
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $get->freeResult();
+
+      $disetujui = intval($data['disetujui']);
+      $belum_disetujui = intval($data['belum_disetujui']);
+
+      return $disetujui > $belum_disetujui;
+   }
+
+   public function submitPerbaikiSidang(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_pembimbing_penelitian');
+         $table->where('id_penelitian', function ($table) use ($post) {
+            return $table->select('id')->from('tb_penelitian')->where('id_status_tugas_akhir', $post['id_status_tugas_akhir']);
+         });
+         $table->where('nidn', $post['nidn']);
+         $table->update([
+            'user_modified' => $post['nidn'],
+            'modified' => new RawSql('now()'),
+            'catatan' => $post['catatan'],
+            'sudah_sidang' => false
+         ]);
+
+         $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], 27);
+
+         return ['status' => true, 'content' => $this->getPembimbingPenelitian($post['nim'], $post['id_periode']), 'msg_response' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
    public function submitLanjutSidang(array $post): array
    {
       try {
@@ -97,7 +194,7 @@ class Pembimbing extends Common
    private function getPembimbingPenelitian(string $nim, int $id_periode): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tpp.id, tpp.id_penelitian, tpp.apakah_dosen_uin, tpp.pembimbing_ke, tpp.id_kategori_kegiatan, tkk.nama as kategori_kegiatan, tpp.nidn, tpp.nama_dosen, tpp.seminar_penelitian, tpp.boleh_seminar, tpp.boleh_sidang');
+      $table->select('tpp.id, tpp.id_penelitian, tpp.apakah_dosen_uin, tpp.pembimbing_ke, tpp.id_kategori_kegiatan, tkk.nama as kategori_kegiatan, tpp.nidn, tpp.nama_dosen, tpp.seminar_penelitian, tpp.boleh_seminar, tpp.boleh_sidang, tpp.sudah_sidang, tpp.catatan');
       $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
       $table->join('tb_pembimbing_penelitian tpp', 'tpp.id_penelitian = tp.id');
       $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tpp.id_kategori_kegiatan');

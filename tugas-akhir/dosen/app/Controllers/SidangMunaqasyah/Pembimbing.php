@@ -4,6 +4,7 @@ namespace App\Controllers\SidangMunaqasyah;
 
 use App\Controllers\BaseController;
 use App\Models\SidangMunaqasyah\Pembimbing as Model;
+use App\Validation\SidangMunaqasyah\Pembimbing as Validate;
 
 class Pembimbing extends BaseController
 {
@@ -14,6 +15,30 @@ class Pembimbing extends BaseController
       ];
 
       $this->template($this->data);
+   }
+
+   public function submitSudahSidang(): object
+   {
+      $model = new Model();
+      $content = $model->submitSudahSidang($this->post);
+      return $this->respond($content);
+   }
+
+   public function submitPerbaikiSidang(): object
+   {
+      $response = ['status' => false, 'errors' => []];
+
+      $validation = new Validate();
+      if ($this->validate($validation->submitPerbaikiSidang())) {
+         $model = new Model();
+         $submit = $model->submitPerbaikiSidang($this->post);
+
+         $response = array_merge($submit, ['errors' => []]);
+      } else {
+         $response['msg_response'] = 'Tolong periksa kembali inputan anda!';
+         $response['errors'] = \Config\Services::validation()->getErrors();
+      }
+      return $this->respond($response);
    }
 
    public function submitLanjutSidang(): object

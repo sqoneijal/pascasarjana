@@ -91,5 +91,7 @@ function sidangMunaqasyahPembimbing(RouteCollection $routes): void
       $routes->post('getdata', 'Pembimbing::getData');
       $routes->post('getdetail', 'Pembimbing::getDetail');
       $routes->post('submitlanjutsidang', 'Pembimbing::submitLanjutSidang');
+      $routes->post('submitperbaikisidang', 'Pembimbing::submitPerbaikiSidang');
+      $routes->post('submitsudahsidang', 'Pembimbing::submitSudahSidang');
    });
 }

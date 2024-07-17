@@ -1,10 +1,12 @@
 import React, { useLayoutEffect, useState } from "react";
-import { Card } from "react-bootstrap";
+import { ButtonGroup, Card } from "react-bootstrap";
+import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import Switch, { Case } from "react-switch-case";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
+import FormsPerbaikiHasilSidang from "./FormsPerbaikiHasilSidang";
 import Identitas from "./Identitas";
 import Lampiran from "./Lampiran";
 import SKPenelitian from "./SKPenelitian";
@@ -99,6 +101,46 @@ const Context = () => {
       });
    };
 
+   const sudahSidang = (e) => {
+      e.preventDefault();
+      const confirm = h.confirm("Apakah benar mahasiswa ini telah melaksanakan sidang munaqasyah?");
+      confirm.then((res) => {
+         const { isConfirmed } = res;
+         if (!isConfirmed) {
+            return;
+         }
+
+         const formData = {
+            nidn: init.username,
+            nim: h.parse("nim", detailContent),
+            id_periode: h.parse("id_periode", detailContent),
+            id_status_tugas_akhir: h.parse("id_status_tugas_akhir", detailContent),
+         };
+
+         setIsSubmit(true);
+         const fetch = h.post(`/submitsudahsidang`, formData);
+         fetch.then((res) => {
+            if (typeof res === "undefined") return;
+
+            const { data } = res;
+            if (typeof data.code !== "undefined" && h.parse("code", data) !== 200) {
+               h.notification(false, h.parse("message", data));
+               return;
+            }
+
+            h.notification(data.status, data.msg_response);
+
+            if (!data.status) return;
+
+            dispatch(setModule({ ...module, pembimbing: data.content, detailContent: { ...detailContent, status: data.status_tesis } }));
+            h.dtReload();
+         });
+         fetch.finally(() => {
+            setIsSubmit(false);
+         });
+      });
+   };
+
    const tabMenus = [
       { value: 1, label: "Lampiran" },
       { value: 2, label: "SK Penelitian" },
@@ -108,6 +150,7 @@ const Context = () => {
 
    return (
       <React.Fragment>
+         <FormsPerbaikiHasilSidang />
          {openDetail && <div className="drawer-overlay" />}
          <div className={`bg-white drawer drawer-start min-w-75 ${openDetail ? "drawer-on" : ""}`}>
             <Card className="rounded-0 w-100">
@@ -127,7 +170,19 @@ const Context = () => {
                   </div>
                </Card.Header>
                <Card.Body className="hover-scroll-overlay-y">
-                  {!isLoading && (
+                  {isLoading ? (
+                     <Bars
+                        visible={true}
+                        color="#4fa94d"
+                        radius="9"
+                        wrapperStyle={{
+                           alignItems: "center",
+                           display: "flex",
+                           justifyContent: "center",
+                        }}
+                        wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+                     />
+                  ) : (
                      <React.Fragment>
                         <Identitas />
                         <div className="mb-5 hover-scroll-x mt-5">
@@ -176,11 +231,26 @@ const Context = () => {
                      </React.Fragment>
                   )}
                </Card.Body>
-               <Card.Footer className="text-end">
-                  {h.buttons(`Setujui Untuk Lanjut Sidang`, isSubmit, {
-                     onClick: isSubmit ? null : submit,
-                  })}
-               </Card.Footer>
+               {[22].includes(h.parse("status", detailContent)) && (
+                  <Card.Footer className="text-end">
+                     {h.buttons(`Setujui Untuk Lanjut Sidang`, isSubmit, {
+                        onClick: isSubmit ? null : submit,
+                     })}
+                  </Card.Footer>
+               )}
+               {[26, 28].includes(h.parse("status", detailContent)) && (
+                  <Card.Footer className="text-end">
+                     <ButtonGroup>
+                        {h.buttons(`Sudah Melaksanakan Sidang Munaqasyah`, isSubmit, {
+                           onClick: isSubmit ? null : sudahSidang,
+                        })}
+                        {h.buttons(`Perbaiki Hasil Sidang Munaqasyah`, false, {
+                           variant: "danger",
+                           onClick: () => dispatch(setModule({ ...module, openFormsPerbaikiSidang: true })),
+                        })}
+                     </ButtonGroup>
+                  </Card.Footer>
+               )}
             </Card>
          </div>
       </React.Fragment>
