@@ -10,6 +10,7 @@ const Informasi = React.lazy(() => import("./Informasi"));
 const DaftarPembimbing = React.lazy(() => import("./DaftarPembimbing"));
 const DaftarPenguji = React.lazy(() => import("./DaftarPenguji"));
 const JudulProposal = React.lazy(() => import("./JudulProposal"));
+const JadwalSidang = React.lazy(() => import("./JadwalSidang"));
 
 const Context = () => {
    const { init, module } = useSelector((e) => e.redux);
@@ -119,6 +120,7 @@ const Context = () => {
                         <Informasi />
                         {[22, 23, 24, 25, 26, 27, 28, 29].includes(h.parse("status", init)) && <DaftarPembimbing />}
                         {[25, 26, 27, 28, 29].includes(h.parse("status", init)) && <DaftarPenguji />}
+                        {[25, 26, 27, 28, 29].includes(h.parse("status", init)) && <JadwalSidang />}
                         <JudulProposal />
                         <Lists />
                      </Card.Body>

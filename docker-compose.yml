@@ -50,8 +50,8 @@ services:
          - PGPOOL_ADMIN_USERNAME=admin
          - PGPOOL_ADMIN_PASSWORD=KQYsG4Hi201ajyEzOSGzr4MVfw==
          - ALLOW_EMPTY_PASSWORD=yes
-      volumes:
-         - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      #volumes:
+      #- ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       ports:
          - "1999:5432"
       networks:

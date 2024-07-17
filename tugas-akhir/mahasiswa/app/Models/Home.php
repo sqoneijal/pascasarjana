@@ -28,16 +28,43 @@ class Home extends Common
          'lampiranSidang' => $this->getLampiranSidang($nim),
          'pembimbing' => $this->getPembimbingSeminarPenelitian($nim),
          'penguji' => $this->getPengujiSidang($nim),
-         'lampiranUpload' => $this->getLampiranUpload($nim)
+         'lampiranUpload' => $this->getLampiranUpload($nim),
+         'jadwalSidang' => $this->getJadwalSidang($nim)
       ];
+   }
+
+   private function getJadwalSidang(string $nim): array
+   {
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->select('tjs.*');
+      $table->join('tb_jadwal_sidang tjs', 'tjs.id_status_tugas_akhir = tsta.id');
+      $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', function ($table) {
+         return $table->select('id')->from('tb_periode')->where('status', true);
+      });
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
    }
 
    private function getPengujiSidang(string $nim): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tps.*');
+      $table->select('tps.*, tkk.nama as kategori_kegiatan');
       $table->join('tb_penguji_sidang tps', 'tps.id_status_tugas_akhir = tsta.id');
+      $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tps.id_kategori_kegiatan');
       $table->where('tsta.nim', $nim);
+      $table->orderBy('tps.penguji_ke');
 
       $get = $table->get();
       $result = $get->getResultArray();
