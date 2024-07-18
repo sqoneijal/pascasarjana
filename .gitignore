@@ -51,3 +51,5 @@ tugas-akhir/dosen/node_modules
 tugas-akhir/dosen/public/bundle
 docker-entrypoint-initdb.d
 credentials.json
+tugas-akhir/admin/app/Common.php
+tugas-akhir/admin/app/Common.php.sample
