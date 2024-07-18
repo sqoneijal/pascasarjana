@@ -49,3 +49,5 @@ tugas-akhir/dosen/writable/session/*
 tugas-akhir/dosen/writable/uploads/*
 tugas-akhir/dosen/node_modules
 tugas-akhir/dosen/public/bundle
+docker-entrypoint-initdb.d
+credentials.json
