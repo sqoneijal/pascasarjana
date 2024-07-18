@@ -53,3 +53,11 @@ docker-entrypoint-initdb.d
 credentials.json
 tugas-akhir/admin/app/Common.php
 tugas-akhir/admin/app/Common.php.sample
+tugas-akhir/akademik/app/Common.php
+tugas-akhir/akademik/app/Common.php
+tugas-akhir/dosen/app/Common.php.sample
+tugas-akhir/dosen/app/Common.php.sample
+tugas-akhir/login/app/Common.php.sample
+tugas-akhir/login/app/Common.php.sample
+tugas-akhir/mahasiswa/app/Common.php.sample
+tugas-akhir/mahasiswa/app/Common.php.sample
