@@ -1,4 +1,0 @@
-<?php
-
-define('CDN_PATH', 'http://localhost:8012/');
-define('JWT_KEY', '');

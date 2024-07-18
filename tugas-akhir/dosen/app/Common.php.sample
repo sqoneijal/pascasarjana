@@ -1,4 +1,0 @@
-<?php
-
-define('LOGIN_URL', 'http://localhost:8013/');
-define('JWT_KEY', '');
