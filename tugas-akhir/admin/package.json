@@ -4,8 +4,8 @@
    "description": "",
    "main": "esbuild.config.js",
    "scripts": {
-      "dev": "./dev.sh && esbuild --define:process.env.NODE_ENV=\\\"development\\\" ./src/App.jsx --bundle --watch --serve=8081 --alias:~=./src --outdir=../../cdn/bundle/tugas-akhir/admin --loader:.svg=copy --loader:.eot=copy --loader:.png=dataurl --loader:.jpg=copy --loader:.woff=copy --loader:.woff2=copy --loader:.ttf=copy --sourcemap --log-limit=0  --loader=jsx",
-      "build": "rm -rf ../../cdn/bundle/tugas-akhir/admin/* && ./esbuild.config.js && ./build.sh"
+      "dev": "./dev.sh && esbuild --define:process.env.NODE_ENV=\\\"development\\\" ./src/App.jsx --bundle --watch --serve=8081 --alias:~=./src --outdir=./public/bundle --loader:.svg=copy --loader:.eot=copy --loader:.png=dataurl --loader:.jpg=copy --loader:.woff=copy --loader:.woff2=copy --loader:.ttf=copy --sourcemap --log-limit=0  --loader=jsx",
+      "build": "rm -rf ./public/bundle/* && ./esbuild.config.js && ./build.sh"
    },
    "keywords": [
       "tugas akhir"

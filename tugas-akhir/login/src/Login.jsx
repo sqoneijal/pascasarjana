@@ -40,13 +40,12 @@ const Login = () => {
          const { role } = data.content;
 
          const loginToken = `login/${h.parse("token", data)}`;
-         const deploy = process.env.NODE_ENV === "deploy";
 
          const roleRedirect = {
-            1: deploy ? `https://admin.tesis.ar-raniry.ac.id/${loginToken}` : `http://localhost:8014/${loginToken}`,
-            2: deploy ? `https://akademik.tesis.ar-raniry.ac.id/${loginToken}` : `http://localhost:8015/${loginToken}`,
-            3: deploy ? `https://dosen.tesis.ar-raniry.ac.id/${loginToken}` : `http://localhost:8017/${loginToken}`,
-            4: deploy ? `https://mahasiswa.tesis.ar-raniry.ac.id/${loginToken}` : `http://localhost:8011/${loginToken}`,
+            1: `${window.adminBaseURL}${loginToken}`,
+            2: `${window.akademikBaseURL}${loginToken}`,
+            3: `${window.dosenBaseURL}${loginToken}`,
+            4: `${window.mahasiswaBaseURL}${loginToken}`,
          };
 
          window.open(roleRedirect[h.toInt(role)], "_parent");

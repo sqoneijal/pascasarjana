@@ -108,7 +108,7 @@ const Sidebar = () => {
             <div className="aside-toolbar flex-column-auto ms-5 me-5">
                <div className="aside-user d-flex align-items-sm-center justify-content-center py-5">
                   <Link to={"/profile"} className="symbol symbol-50px">
-                     <img src={h.cdn(`media/${h.parse("avatar", init)}`)} alt={h.parse("nama", init)} />
+                     <img src={`/assets/${h.parse("avatar", init)}`} alt={h.parse("nama", init)} />
                   </Link>
                   <div className="aside-user-info flex-row-fluid flex-wrap ms-5">
                      <div className="d-flex">

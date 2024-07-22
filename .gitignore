@@ -16,6 +16,7 @@ tugas-akhir/login/writable/session/*
 tugas-akhir/login/writable/uploads/*
 tugas-akhir/login/node_modules
 tugas-akhir/login/public/bundle/*
+tugas-akhir/login/upload.sh
 tugas-akhir/akademik/vendor/*
 tugas-akhir/akademik/writable/cache/*
 tugas-akhir/akademik/writable/debugbar/*
@@ -24,6 +25,7 @@ tugas-akhir/akademik/writable/session/*
 tugas-akhir/akademik/writable/uploads/*
 tugas-akhir/akademik/node_modules
 tugas-akhir/akademik/public/bundle
+tugas-akhir/akademik/upload.sh
 tugas-akhir/mahasiswa/vendor/*
 tugas-akhir/mahasiswa/writable/cache/*
 tugas-akhir/mahasiswa/writable/debugbar/*
@@ -32,6 +34,7 @@ tugas-akhir/mahasiswa/writable/session/*
 tugas-akhir/mahasiswa/writable/uploads/*
 tugas-akhir/mahasiswa/node_modules
 tugas-akhir/mahasiswa/public/bundle
+tugas-akhir/mahasiswa/upload.sh
 tugas-akhir/admin/vendor/*
 tugas-akhir/admin/writable/cache/*
 tugas-akhir/admin/writable/debugbar/*
@@ -40,6 +43,7 @@ tugas-akhir/admin/writable/session/*
 tugas-akhir/admin/writable/uploads/*
 tugas-akhir/admin/node_modules
 tugas-akhir/admin/public/bundle
+tugas-akhir/admin/upload.sh
 pgdata
 tugas-akhir/dosen/vendor/*
 tugas-akhir/dosen/writable/cache/*
@@ -49,6 +53,7 @@ tugas-akhir/dosen/writable/session/*
 tugas-akhir/dosen/writable/uploads/*
 tugas-akhir/dosen/node_modules
 tugas-akhir/dosen/public/bundle
+tugas-akhir/dosen/upload.sh
 docker-entrypoint-initdb.d
 credentials.json
 tugas-akhir/admin/app/Common.php
