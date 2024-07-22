@@ -30,6 +30,7 @@ const FormsSKPenelitian = () => {
             judul: h.parse("judul_proposal_final", status_tugas_akhir),
             ...skPenelitian,
             kampusMerdeka: h.parse("untuk_kampus_merdeka", skPenelitian),
+            id: h.parse("id_penelitian", skPenelitian),
          }));
          setSelectedJenisAktivitas([
             {

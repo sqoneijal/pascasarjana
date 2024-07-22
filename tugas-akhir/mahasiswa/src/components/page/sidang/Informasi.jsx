@@ -43,7 +43,7 @@ const Informasi = () => {
                <i className="ki-outline ki-notification-bing fs-2hx text-danger me-4 mb-5 mb-sm-0" />
                <div className="d-flex flex-column pe-0 pe-sm-10">
                   <h4 className="fw-semibold">Informasi</h4>
-                  <span>Tim pembimbing menyatakan ada perbaikan pada tesis/disertasi hasil sidang munaqasyah.</span>
+                  <span>Tim pembimbing/penguji menyatakan ada perbaikan pada tesis/disertasi hasil sidang munaqasyah.</span>
                </div>
             </div>
          );

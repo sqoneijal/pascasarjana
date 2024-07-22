@@ -18,13 +18,21 @@ const Lampiran = () => {
       }
    };
 
+   const renderStatusSyarat = (status) => {
+      if (status === "t") {
+         return <i className="ki-outline ki-check-square fs-2 fw-bold text-success" />;
+      }
+   };
+
    return (
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+               <th style={{ width: "5%" }} className="text-center">
+                  wajib
+               </th>
                <th>keterangan</th>
-               <th>bukti</th>
-               <th className="text-center">wajib</th>
+               <th className="text-end">bukti</th>
             </tr>
          </thead>
          <tbody>
@@ -32,6 +40,7 @@ const Lampiran = () => {
                of={syarat}
                render={(row) => (
                   <tr>
+                     <td className="text-center">{renderStatusSyarat(h.parse("wajib", row))}</td>
                      <td className="text-start fw-bold fs-7 gs-0">{h.parse("nama", row)}</td>
                      <td className="text-end">{renderLampiran(h.parse("id", row), lampiran_upload)}</td>
                   </tr>

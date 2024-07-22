@@ -89,7 +89,17 @@ const Context = () => {
                </Card.Header>
                <Card.Body className="hover-scroll-overlay-y">
                   {isLoading ? (
-                     <Bars height="80" width="80" color="#4fa94d" ariaLabel="bars-loading" visible={true} />
+                     <Bars
+                        visible={true}
+                        color="#4fa94d"
+                        radius="9"
+                        wrapperStyle={{
+                           alignItems: "center",
+                           display: "flex",
+                           justifyContent: "center",
+                        }}
+                        wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+                     />
                   ) : (
                      <React.Fragment>
                         <Identitas />

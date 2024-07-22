@@ -4,12 +4,11 @@ import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
-
-const Lists = React.lazy(() => import("./Lists"));
-const Informasi = React.lazy(() => import("./Informasi"));
-const JadwalDanPembimbingSeminarProposal = React.lazy(() => import("./JadwalDanPembimbingSeminarProposal"));
-const FormsJudulProposal = React.lazy(() => import("./FormsJudulProposal"));
-const JudulProposalDisetujui = React.lazy(() => import("./JudulProposalDisetujui"));
+import FormsJudulProposal from "./FormsJudulProposal";
+import Informasi from "./Informasi";
+import JadwalDanPembimbingSeminarProposal from "./JadwalDanPembimbingSeminarProposal";
+import JudulProposalDisetujui from "./JudulProposalDisetujui";
+import Lists from "./Lists";
 
 const Context = () => {
    const { init, module } = useSelector((e) => e.redux);
@@ -118,76 +117,71 @@ const Context = () => {
 
    const props = { input, setInput, errors };
 
-   return (
-      !isLoading && (
-         <React.Suspense
-            fallback={
-               <Bars
-                  visible={true}
-                  color="#4fa94d"
-                  radius="9"
-                  wrapperStyle={{
-                     alignItems: "center",
-                     display: "flex",
-                     justifyContent: "center",
-                  }}
-                  wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
-               />
-            }>
-            <div id="kt_content_container" className="d-flex flex-column-fluid align-items-start container-xxl">
-               <div className="content flex-row-fluid" id="kt_content">
-                  <Card className="shadow-sm card-bordered">
-                     <Card.Header>
-                        <h3 className="card-title">PERSYARATAN SEMINAR PROPOSAL TESIS</h3>
-                     </Card.Header>
-                     <Card.Body>
-                        <Informasi />
-                        {[7, 8, 9, 10].includes(h.parse("status", init)) && <JadwalDanPembimbingSeminarProposal />}
-                        <FormsJudulProposal {...props} />
-                        <JudulProposalDisetujui />
-                        <Lists />
-                     </Card.Body>
-                     {jumlahUploadLampiran >= syarat.filter((e) => h.parse("syarat", e) === 1 && h.parse("wajib", e) === "t").length &&
-                        ["", 3].includes(h.parse("status", init)) && (
-                           <Card.Footer>
-                              {h.buttons(`Daftar Seminar Proposal`, isLoadingButton, {
-                                 onClick: isLoadingButton ? null : submitDaftarSeminarProposal,
-                              })}
-                           </Card.Footer>
-                        )}
-                     {jumlahUploadLampiran >= syarat.filter((e) => h.parse("syarat", e) === 1 && h.parse("wajib", e) === "t").length &&
-                        [7].includes(h.parse("status", init)) && (
-                           <Card.Footer>
-                              {h.buttons(`Saya Sudah Menyelesaikan Seminar Proposal`, isLoadingButton, {
-                                 onClick: () => {
-                                    const confirm = h.confirm("Apakah benar anda telah melakukan seminar proposal?");
-                                    confirm.then((res) => {
-                                       if (!res.isConfirmed) return;
-                                       updateStatusTugasAkhir(8);
-                                    });
-                                 },
-                              })}
-                           </Card.Footer>
-                        )}
-                     {jumlahUploadLampiran >= syarat.filter((e) => h.parse("syarat", e) === 1 && h.parse("wajib", e) === "t").length &&
-                        [9].includes(h.parse("status", init)) && (
-                           <Card.Footer>
-                              {h.buttons(`Tandai Sudah Memperbaiki Seminar Proposal`, isLoadingButton, {
-                                 onClick: () => {
-                                    const confirm = h.confirm("Apakah anda yakin telah memperbaiki proposal?");
-                                    confirm.then((res) => {
-                                       if (!res.isConfirmed) return;
-                                       updateStatusTugasAkhir(10);
-                                    });
-                                 },
-                              })}
-                           </Card.Footer>
-                        )}
-                  </Card>
-               </div>
-            </div>
-         </React.Suspense>
-      )
+   return isLoading ? (
+      <Bars
+         visible={true}
+         color="#4fa94d"
+         radius="9"
+         wrapperStyle={{
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+         }}
+         wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+      />
+   ) : (
+      <div id="kt_content_container" className="d-flex flex-column-fluid align-items-start container-xxl">
+         <div className="content flex-row-fluid" id="kt_content">
+            <Card className="shadow-sm card-bordered">
+               <Card.Header>
+                  <h3 className="card-title">PERSYARATAN SEMINAR PROPOSAL TESIS</h3>
+               </Card.Header>
+               <Card.Body>
+                  <Informasi />
+                  {[7, 8, 9, 10].includes(h.parse("status", init)) && <JadwalDanPembimbingSeminarProposal />}
+                  <FormsJudulProposal {...props} />
+                  <JudulProposalDisetujui />
+                  <Lists />
+               </Card.Body>
+               {jumlahUploadLampiran >= syarat.filter((e) => h.parse("syarat", e) === 1 && h.parse("wajib", e) === "t").length &&
+                  ["", 3].includes(h.parse("status", init)) && (
+                     <Card.Footer>
+                        {h.buttons(`Daftar Seminar Proposal`, isLoadingButton, {
+                           onClick: isLoadingButton ? null : submitDaftarSeminarProposal,
+                        })}
+                     </Card.Footer>
+                  )}
+               {jumlahUploadLampiran >= syarat.filter((e) => h.parse("syarat", e) === 1 && h.parse("wajib", e) === "t").length &&
+                  [7].includes(h.parse("status", init)) && (
+                     <Card.Footer>
+                        {h.buttons(`Saya Sudah Menyelesaikan Seminar Proposal`, isLoadingButton, {
+                           onClick: () => {
+                              const confirm = h.confirm("Apakah benar anda telah melakukan seminar proposal?");
+                              confirm.then((res) => {
+                                 if (!res.isConfirmed) return;
+                                 updateStatusTugasAkhir(8);
+                              });
+                           },
+                        })}
+                     </Card.Footer>
+                  )}
+               {jumlahUploadLampiran >= syarat.filter((e) => h.parse("syarat", e) === 1 && h.parse("wajib", e) === "t").length &&
+                  [9].includes(h.parse("status", init)) && (
+                     <Card.Footer>
+                        {h.buttons(`Tandai Sudah Memperbaiki Seminar Proposal`, isLoadingButton, {
+                           onClick: () => {
+                              const confirm = h.confirm("Apakah anda yakin telah memperbaiki proposal?");
+                              confirm.then((res) => {
+                                 if (!res.isConfirmed) return;
+                                 updateStatusTugasAkhir(10);
+                              });
+                           },
+                        })}
+                     </Card.Footer>
+                  )}
+            </Card>
+         </div>
+      </div>
    );
 };
 export default Context;

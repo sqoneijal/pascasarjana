@@ -23,8 +23,8 @@ const Header = () => {
             </div>
             <div className="header-logo me-5 me-md-10 flex-grow-1 flex-lg-grow-0">
                <Link to={`/`}>
-                  <img alt="Logo" data-src={h.getFile("logo-uin.svg")} className="logo-default h-40px lozad" />
-                  <img alt="Logo" data-src={h.getFile("logo-uin.svg")} className="logo-sticky h-40px lozad" />
+                  <img alt="Logo" data-src="/assets/logo-uin.svg" className="logo-default h-40px lozad" />
+                  <img alt="Logo" data-src="/assets/logo-uin.svg" className="logo-sticky h-40px lozad" />
                </Link>
             </div>
             <div className="d-flex align-items-stretch justify-content-between flex-lg-grow-1">
@@ -32,7 +32,7 @@ const Header = () => {
                <div className="topbar d-flex align-items-stretch flex-shrink-0">
                   <Dropdown bsPrefix="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" align="end">
                      <Dropdown.Toggle as="div" bsPrefix="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px">
-                        <img className="h-30px w-30px rounded lozad" data-src={h.getFile("avatar-placeholder.png")} alt="avatar" />
+                        <img className="h-30px w-30px rounded lozad" data-src={`/assets/avatar-placeholder.png`} alt="avatar" />
                      </Dropdown.Toggle>
                      <Dropdown.Menu
                         renderOnMount={true}
@@ -40,7 +40,7 @@ const Header = () => {
                         <div className="menu-item px-3">
                            <div className="menu-content d-flex align-items-center px-3">
                               <div className="symbol symbol-50px me-5">
-                                 <img alt="avatar" className="lozad" data-src={h.getFile("avatar-placeholder.png")} />
+                                 <img alt="avatar" className="lozad" data-src={`/assets/avatar-placeholder.png`} />
                               </div>
                               <div className="d-flex flex-column">
                                  <div className="fw-bold d-flex align-items-center fs-5">{h.parse("nama", init)}</div>

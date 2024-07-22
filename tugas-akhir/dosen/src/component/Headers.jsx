@@ -47,7 +47,7 @@ const Headers = () => {
             </div>
             <div className="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
                <Link to="/" className="d-lg-none">
-                  <img alt="Logo" src={h.getFile("logo-uin-small.png")} className="h-30px lozad" />
+                  <img alt="Logo" src="/assets/logo-uin-small.png" className="h-30px lozad" />
                </Link>
             </div>
             <div className="d-flex align-items-stretch justify-content-between flex-lg-grow-1" id="kt_app_header_wrapper">
@@ -58,7 +58,7 @@ const Headers = () => {
                <div className="app-navbar flex-shrink-0">
                   <Dropdown as="div" bsPrefix="app-navbar-item ms-1 ms-md-4" id="kt_header_user_menu_toggle">
                      <Dropdown.Toggle as="div" bsPrefix="cursor-pointer symbol symbol-35px">
-                        <img data-src={h.getFile(h.parse("avatar", init))} className="rounded-3 lozad" alt={h.parse("nama", init)} />
+                        <img data-src={`/assets/${h.parse("avatar", init)}`} className="rounded-3 lozad" alt={h.parse("nama", init)} />
                      </Dropdown.Toggle>
                      <Dropdown.Menu
                         as="div"
@@ -67,7 +67,7 @@ const Headers = () => {
                         <div className="menu-item px-3">
                            <div className="menu-content d-flex align-items-center px-3">
                               <div className="symbol symbol-50px me-5">
-                                 <img alt={h.parse("nama", init)} className="lozad" data-src={h.getFile(h.parse("avatar", init))} />
+                                 <img alt={h.parse("nama", init)} className="lozad" data-src={`/assets/${h.parse("avatar", init)}`} />
                               </div>
                               <div className="d-flex flex-column">
                                  <div className="fw-bold d-flex align-items-center fs-5">{h.parse("nama", init)}</div>

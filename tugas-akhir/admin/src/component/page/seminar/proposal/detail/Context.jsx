@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useState } from "react";
 import { Card } from "react-bootstrap";
+import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import Switch, { Case } from "react-switch-case";
 import { Each } from "~/Each";
@@ -81,7 +82,19 @@ const Context = () => {
                   </div>
                </Card.Header>
                <Card.Body className="hover-scroll-overlay-y">
-                  {!isLoading && (
+                  {isLoading ? (
+                     <Bars
+                        visible={true}
+                        color="#4fa94d"
+                        radius="9"
+                        wrapperStyle={{
+                           alignItems: "center",
+                           display: "flex",
+                           justifyContent: "center",
+                        }}
+                        wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+                     />
+                  ) : (
                      <React.Fragment>
                         <StatusTugasAkhir />
                         <div className="mb-5 hover-scroll-x mt-5">

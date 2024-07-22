@@ -144,11 +144,30 @@ class Penelitian extends Common
             $table->insert($data);
          }
 
-         $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], 16);
+         $this->handleUpdateStatusTugasAkhir($post);
+
          return ['status' => true, 'content' => $this->getJadwalSeminar($post['nim'], $post['id_periode']), 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }
+   }
+
+   private function handleUpdateStatusTugasAkhir(array $post): void
+   {
+      $status = $this->apakahSudahAdaPengujiSeminarHasilPenelitian($post['nim'], $post['id_periode']);
+      $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], $status ? 17 : 16);
+   }
+
+   private function apakahSudahAdaPengujiSeminarHasilPenelitian(string $nim, int $id_periode): bool
+   {
+      $table = $this->db->table('tb_status_tugas_akhir tsta');
+      $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
+      $table->join('tb_seminar_penelitian tsp', 'tsp.id_penelitian = tp.id');
+      $table->join('tb_seminar_penelitian_detail tspd', 'tspd.id_seminar_penelitian = tsp.id');
+      $table->where('tsta.nim', $nim);
+      $table->where('tsta.id_periode', $id_periode);
+
+      return $table->countAllResults() > 0;
    }
 
    private function checkJadwalHasilPenelitianSebelumnya(int $id_penelitian): bool

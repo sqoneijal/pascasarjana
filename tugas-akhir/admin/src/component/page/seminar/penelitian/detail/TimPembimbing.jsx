@@ -24,9 +24,7 @@ const TimPembimbing = () => {
                <th>nidn/nik</th>
                <th>nama</th>
                <th>kategori kegiatan</th>
-               <th className="text-center" style={{ width: "5%" }}>
-                  status
-               </th>
+               <th className="text-center">lanjut seminar</th>
             </tr>
          </thead>
          <tbody className="text-gray-600 fw-semibold">

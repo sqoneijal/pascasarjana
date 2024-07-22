@@ -41,12 +41,13 @@ class Common extends Model
    public function getPembimbingPenelitian(array $post): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tpp.id, tpp.id_penelitian, tpp.apakah_dosen_uin, tpp.pembimbing_ke, tpp.id_kategori_kegiatan, tpp.nidn, tpp.nama_dosen, tpp.seminar_penelitian, tpp.boleh_seminar, tpp.boleh_sidang, tkk.nama as kategori_kegiatan');
+      $table->select('tpp.*, tkk.nama as kategori_kegiatan');
       $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
       $table->join('tb_pembimbing_penelitian tpp', 'tpp.id_penelitian = tp.id');
       $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tpp.id_kategori_kegiatan');
       $table->where('tsta.nim', $post['nim']);
       $table->where('tsta.id_periode', $post['id_periode']);
+      $table->orderBy('tpp.pembimbing_ke');
 
       $get = $table->get();
       $result = $get->getResultArray();

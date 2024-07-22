@@ -49,7 +49,18 @@ const Lists = () => {
 
          if (!data.status) return;
 
-         dispatch(setModule({ ...module, lampiranUpload: { ...lampiranUpload, [id_syarat]: data.post } }));
+         dispatch(
+            setModule({
+               ...module,
+               lampiranUpload: {
+                  ...lampiranUpload,
+                  [id_syarat]: {
+                     id_google_drive: h.parse("id", data.googleFile),
+                     lampiran: h.parse("name", data.googleFile),
+                  },
+               },
+            })
+         );
       });
       fetch.finally(() => {
          setUploadProgres({});
@@ -90,10 +101,17 @@ const Lists = () => {
       }
    };
 
+   const statusWajib = (status) => {
+      return status === "t" && <i className="ki-outline ki-check-circle fs-4 fw-bold text-success" />;
+   };
+
    return (
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+               <th className="text-center" style={{ width: "5%" }}>
+                  wajib
+               </th>
                <th colSpan={3}>daftar lampiran</th>
             </tr>
          </thead>
@@ -102,6 +120,7 @@ const Lists = () => {
                of={syarat.filter((e) => h.parse("syarat", e) === 2)}
                render={(row) => (
                   <tr>
+                     <td className="text-center">{statusWajib(h.parse("wajib", row))}</td>
                      <td className="text-middle">
                         {h.parse("nama", row)}
                         {renderCatatanPerbaikan(lampiranUpload, h.parse("id", row))}

@@ -34,9 +34,9 @@ const Lampiran = () => {
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+               <th className="text-center">wajib</th>
                <th>keterangan</th>
                <th>bukti</th>
-               <th className="text-center">wajib</th>
             </tr>
          </thead>
          <tbody className="text-gray-600 fw-semibold">
@@ -44,9 +44,9 @@ const Lampiran = () => {
                of={syarat}
                render={(row) => (
                   <tr>
+                     <td className="text-center">{renderWajib(h.parse("wajib", row))}</td>
                      <td>{h.parse("nama", row)}</td>
                      <td>{renderBukti(lampiran_upload, h.parse("id", row))}</td>
-                     <td className="text-center">{renderWajib(h.parse("wajib", row))}</td>
                   </tr>
                )}
             />

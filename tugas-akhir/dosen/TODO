@@ -43,5 +43,14 @@ sidang munaqasyah:
          ✔ setujui sudah melaksanakan sidang munaqasyah @done(24-07-17 13:24)
          ✔ perbaiki sidang munaqasyah @done(24-07-17 13:18)
    penguji:
-      ☐ daftar
+      ✔ daftar @done(24-07-20 13:56)
       ☐ filter
+      detail:
+         ✔ identitas @done(24-07-21 12:46)
+         ✔ lampiran @done(24-07-21 12:46)
+         ✔ sk penelitian @done(24-07-21 12:46)
+         ✔ tim pembimbing @done(24-07-21 12:46)
+         ✔ jadwal sidang @done(24-07-21 12:46)
+         ✔ tim penguji @done(24-07-21 12:46)
+         ✔ approve sudah melaksanakan sidang munaqasyah @done(24-07-21 13:09)
+         ✔ perbaiki hasil sidang munaqasyah @done(24-07-21 13:22)

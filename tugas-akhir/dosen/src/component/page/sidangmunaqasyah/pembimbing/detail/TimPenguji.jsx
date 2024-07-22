@@ -38,7 +38,7 @@ const TimPenguji = () => {
                   <React.Fragment>
                      <tr>
                         <td className="text-center">{h.parse("penguji_ke", row)}</td>
-                        <td>{h.parse("nidn", row)}</td>
+                        <td>{row.nidn}</td>
                         <td>{h.parse("nama_dosen", row)}</td>
                         <td>{h.parse("kategori_kegiatan", row)}</td>
                         <td className="text-center">{status(row)}</td>

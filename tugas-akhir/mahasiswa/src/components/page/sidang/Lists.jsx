@@ -52,7 +52,7 @@ const Lists = () => {
          dispatch(
             setModule({
                ...module,
-               lampiranUpload: { ...lampiranUpload, [id_syarat]: { id_google_drive: data.googleFile.id } },
+               lampiranUpload: { ...lampiranUpload, [id_syarat]: { id_google_drive: data.googleFile.id, lampiran: data.googleFile.name } },
             })
          );
       });
@@ -71,22 +71,17 @@ const Lists = () => {
       }
    };
 
-   const renderStatusApprove = (dataObject, idSyarat) => {
-      if (h.parse(idSyarat, dataObject)) {
-         if (h.parse("valid", dataObject[idSyarat]) === "") {
-            return <i className="ki-outline ki-archive fs-4 fw-bold text-end float-end text-warning" />;
-         } else if (h.parse("valid", dataObject[idSyarat]) === "t") {
-            return <i className="ki-outline ki-like fs-4 fw-bold text-end float-end text-success" />;
-         } else if (h.parse("valid", dataObject[idSyarat]) === "f") {
-            return <i className="ki-outline ki-dislike fs-4 fw-bold text-end float-end text-danger" />;
-         }
-      }
+   const statusWajib = (status) => {
+      return status === "t" && <i className="ki-outline ki-check-circle fs-4 fw-bold text-success" />;
    };
 
    return (
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+               <th className="text-center" style={{ width: "5%" }}>
+                  wajib
+               </th>
                <th>daftar lampiran</th>
             </tr>
          </thead>
@@ -96,10 +91,8 @@ const Lists = () => {
                render={(row) => (
                   <React.Fragment>
                      <tr>
-                        <td>
-                           {h.parse("nama", row)}
-                           {renderStatusApprove(lampiranUpload, h.parse("id", row))}
-                        </td>
+                        <td className="text-center">{statusWajib(h.parse("wajib", row))}</td>
+                        <td>{h.parse("nama", row)}</td>
                         <td>{renderLampiranPermalink(lampiranUpload, h.parse("id", row))}</td>
                         <td className="text-end" style={{ width: `5%` }}>
                            {h.parse(h.parse("id", row), uploadProgres) && `${h.parse(h.parse("id", row), uploadProgres)}%`}

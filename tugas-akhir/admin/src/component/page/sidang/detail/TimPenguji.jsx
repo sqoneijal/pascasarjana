@@ -10,8 +10,8 @@ const TimPenguji = () => {
    const { tim_penguji_sidang, detailContent } = module;
    const dispatch = useDispatch();
 
-   const status = (row) => {
-      return h.parse("telah_sidang", row) === "t" ? (
+   const status = (status) => {
+      return status === "t" ? (
          <i className="ki-outline ki-flag fs-2 fw-bold text-success" />
       ) : (
          <i className="ki-outline ki-flag fs-2 fw-bold text-danger" />
@@ -26,9 +26,7 @@ const TimPenguji = () => {
                <th>nidn/nik</th>
                <th>nama</th>
                <th>kategori kegiatan</th>
-               <th className="text-center" style={{ width: "5%" }}>
-                  status
-               </th>
+               <th className="text-center">sudah sidang</th>
                <th />
             </tr>
          </thead>
@@ -41,7 +39,7 @@ const TimPenguji = () => {
                      <td>{h.parse("nidn", row)}</td>
                      <td>{h.parse("nama_dosen", row)}</td>
                      <td>{h.parse("kategori_kegiatan", row)}</td>
-                     <td className="text-center">{status(row)}</td>
+                     <td className="text-center">{status(h.parse("telah_sidang", row))}</td>
                      <td className="text-end">
                         <a
                            href="#"

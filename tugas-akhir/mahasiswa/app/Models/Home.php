@@ -167,7 +167,7 @@ class Home extends Common
    private function getPembimbingSeminarPenelitian(string $nim): array
    {
       $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tpp.id, tpp.id_penelitian, tpp.apakah_dosen_uin, tpp.pembimbing_ke, tpp.id_kategori_kegiatan, tkk.nama as kategori_kegiatan, tpp.nidn, tpp.nama_dosen, tpp.seminar_penelitian, tpp.boleh_seminar, tpp.boleh_sidang');
+      $table->select('tpp.id, tpp.id_penelitian, tpp.apakah_dosen_uin, tpp.pembimbing_ke, tpp.id_kategori_kegiatan, tkk.nama as kategori_kegiatan, tpp.nidn, tpp.nama_dosen, tpp.seminar_penelitian, tpp.boleh_seminar, tpp.boleh_sidang, tpp.sudah_sidang, tpp.catatan');
       $table->join('tb_penelitian tp', 'tp.id_status_tugas_akhir = tsta.id');
       $table->join('tb_pembimbing_penelitian tpp', 'tpp.id_penelitian = tp.id');
       $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tpp.id_kategori_kegiatan');
@@ -455,7 +455,7 @@ class Home extends Common
       }
    }
 
-   public function updateLampiran(array $post): array
+   public function updateLampiran(array $post): void
    {
       $data['lampiran'] = $post['lampiran'];
       $data['nim'] = $post['nim'];
@@ -476,8 +476,6 @@ class Home extends Common
 
          $table->ignore(true)->insert($data);
       }
-
-      return $this->getLampiranUpload($post['nim']);
    }
 
    private function checkLampiranUploadSebelumnya(array $post): bool

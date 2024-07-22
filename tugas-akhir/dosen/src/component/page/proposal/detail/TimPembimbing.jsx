@@ -24,7 +24,7 @@ const TimPembimbing = () => {
                <th>nidn/nik</th>
                <th>nama</th>
                <th>kategori kegiatan</th>
-               <th />
+               <th className="text-center">sudah seminar</th>
             </tr>
          </thead>
          <tbody className="text-gray-600 fw-semibold">
@@ -34,10 +34,10 @@ const TimPembimbing = () => {
                   <React.Fragment>
                      <tr>
                         <td className="text-center">{h.parse("pembimbing_ke", row)}</td>
-                        <td>{h.parse("nidn", row)}</td>
+                        <td>{row.nidn}</td>
                         <td>{h.parse("nama_dosen", row)}</td>
                         <td>{h.parse("kategori_kegiatan", row)}</td>
-                        <td className="text-end">{renderStatus(h.parse("sudah_seminar", row))}</td>
+                        <td className="text-center">{renderStatus(h.parse("sudah_seminar", row))}</td>
                      </tr>
                      {h.parse("sudah_seminar", row) === "f" && (
                         <tr>

@@ -94,84 +94,94 @@ const Context = () => {
       });
    };
 
-   return (
-      !isLoading && (
-         <React.Suspense
-            fallback={
-               <Bars
-                  visible={true}
-                  color="#4fa94d"
-                  radius="9"
-                  wrapperStyle={{
-                     alignItems: "center",
-                     display: "flex",
-                     justifyContent: "center",
-                  }}
-                  wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
-               />
-            }>
-            <div id="kt_content_container" className="d-flex flex-column-fluid align-items-start container-xxl">
-               <div className="content flex-row-fluid" id="kt_content">
-                  <Card className="shadow-sm card-bordered">
-                     <Card.Header>
-                        <h3 className="card-title">PERSYARATAN MUNAQASYAH TESIS/DISERTASI</h3>
-                     </Card.Header>
-                     <Card.Body>
-                        <Informasi />
-                        {[22, 23, 24, 25, 26, 27, 28, 29].includes(h.parse("status", init)) && <DaftarPembimbing />}
-                        {[25, 26, 27, 28, 29].includes(h.parse("status", init)) && <DaftarPenguji />}
-                        {[25, 26, 27, 28, 29].includes(h.parse("status", init)) && <JadwalSidang />}
-                        <JudulProposal />
-                        <Lists />
-                     </Card.Body>
-                     {!isLoading && [21].includes(h.parse("status", init)) && jumlahSyaratDiUpload >= jumlahSyaratWajib && (
-                        <Card.Footer>
-                           {h.buttons(`Daftar Sidang Munaqasyah`, isSubmit, {
-                              onClick: () => (isSubmit ? null : submit(module.statusTugasAkhir.id, 22)),
-                           })}
-                        </Card.Footer>
-                     )}
-                     {!isLoading && [25].includes(h.parse("status", init)) && (
-                        <Card.Footer>
-                           {h.buttons(`Saya Telah Melaksanakan Sidang Munaqasyah`, isSubmit, {
-                              onClick: () => {
-                                 h.confirm("Apakah benar anda telah melaksanakan sidang munaqasyah?").then((res) => {
-                                    const { isConfirmed } = res;
-                                    if (isConfirmed) submit(module.statusTugasAkhir.id, 26);
-                                 });
-                              },
-                           })}
-                        </Card.Footer>
-                     )}
-                     {!isLoading && [27].includes(h.parse("status", init)) && (
-                        <Card.Footer>
-                           {h.buttons(`Saya Telah Memperbaiki Tesis/Disertasi`, isSubmit, {
-                              onClick: () => {
-                                 h.confirm("Apakah benar anda telah memperbaiki tesis/disertasi?").then((res) => {
-                                    const { isConfirmed } = res;
-                                    if (isConfirmed) submit(module.statusTugasAkhir.id, 28);
-                                 });
-                              },
-                           })}
-                        </Card.Footer>
-                     )}
-                     {!isLoading && [30].includes(h.parse("status", init)) && (
-                        <Card.Footer>
-                           {h.buttons(`Saya Telah Memperbaiki`, isSubmit, {
-                              onClick: () => {
-                                 h.confirm("Apakah benar anda telah memperbaiki lampiran yang diminta?").then((res) => {
-                                    const { isConfirmed } = res;
-                                    if (isConfirmed) submit(module.statusTugasAkhir.id, 31);
-                                 });
-                              },
-                           })}
-                        </Card.Footer>
-                     )}
-                  </Card>
-               </div>
+   return isLoading ? (
+      <Bars
+         visible={true}
+         color="#4fa94d"
+         radius="9"
+         wrapperStyle={{
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+         }}
+         wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+      />
+   ) : (
+      <React.Suspense
+         fallback={
+            <Bars
+               visible={true}
+               color="#4fa94d"
+               radius="9"
+               wrapperStyle={{
+                  alignItems: "center",
+                  display: "flex",
+                  justifyContent: "center",
+               }}
+               wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+            />
+         }>
+         <div id="kt_content_container" className="d-flex flex-column-fluid align-items-start container-xxl">
+            <div className="content flex-row-fluid" id="kt_content">
+               <Card className="shadow-sm card-bordered">
+                  <Card.Header>
+                     <h3 className="card-title">PERSYARATAN MUNAQASYAH TESIS/DISERTASI</h3>
+                  </Card.Header>
+                  <Card.Body>
+                     <Informasi />
+                     {[22, 23, 24, 25, 26, 27, 28, 29].includes(h.parse("status", init)) && <DaftarPembimbing />}
+                     {[25, 26, 27, 28, 29].includes(h.parse("status", init)) && <DaftarPenguji />}
+                     {[25, 26, 27, 28, 29].includes(h.parse("status", init)) && <JadwalSidang />}
+                     <JudulProposal />
+                     <Lists />
+                  </Card.Body>
+                  {!isLoading && [21].includes(h.parse("status", init)) && jumlahSyaratDiUpload >= jumlahSyaratWajib && (
+                     <Card.Footer>
+                        {h.buttons(`Daftar Sidang Munaqasyah`, isSubmit, {
+                           onClick: () => (isSubmit ? null : submit(module.statusTugasAkhir.id, 22)),
+                        })}
+                     </Card.Footer>
+                  )}
+                  {!isLoading && [25].includes(h.parse("status", init)) && (
+                     <Card.Footer>
+                        {h.buttons(`Saya Telah Melaksanakan Sidang Munaqasyah`, isSubmit, {
+                           onClick: () => {
+                              h.confirm("Apakah benar anda telah melaksanakan sidang munaqasyah?").then((res) => {
+                                 const { isConfirmed } = res;
+                                 if (isConfirmed) submit(module.statusTugasAkhir.id, 26);
+                              });
+                           },
+                        })}
+                     </Card.Footer>
+                  )}
+                  {!isLoading && [27].includes(h.parse("status", init)) && (
+                     <Card.Footer>
+                        {h.buttons(`Saya Telah Memperbaiki Tesis/Disertasi`, isSubmit, {
+                           onClick: () => {
+                              h.confirm("Apakah benar anda telah memperbaiki tesis/disertasi?").then((res) => {
+                                 const { isConfirmed } = res;
+                                 if (isConfirmed) submit(module.statusTugasAkhir.id, 28);
+                              });
+                           },
+                        })}
+                     </Card.Footer>
+                  )}
+                  {!isLoading && [30].includes(h.parse("status", init)) && (
+                     <Card.Footer>
+                        {h.buttons(`Saya Telah Memperbaiki`, isSubmit, {
+                           onClick: () => {
+                              h.confirm("Apakah benar anda telah memperbaiki lampiran yang diminta?").then((res) => {
+                                 const { isConfirmed } = res;
+                                 if (isConfirmed) submit(module.statusTugasAkhir.id, 31);
+                              });
+                           },
+                        })}
+                     </Card.Footer>
+                  )}
+               </Card>
             </div>
-         </React.Suspense>
-      )
+         </div>
+      </React.Suspense>
    );
 };
 export default Context;

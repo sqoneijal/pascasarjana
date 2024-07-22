@@ -4,9 +4,8 @@ import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
-
-const StatusTugasAkhir = React.lazy(() => import("./StatusTugasAkhir"));
-const Lampiran = React.lazy(() => import("./Lampiran"));
+import Lampiran from "./Lampiran";
+import StatusTugasAkhir from "./StatusTugasAkhir";
 
 const Context = () => {
    const { module } = useSelector((e) => e.redux);
@@ -48,20 +47,7 @@ const Context = () => {
    }, [openDetail, detailContent]);
 
    return (
-      <React.Suspense
-         fallback={
-            <Bars
-               visible={true}
-               color="#4fa94d"
-               radius="9"
-               wrapperStyle={{
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "center",
-               }}
-               wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
-            />
-         }>
+      <React.Fragment>
          {openDetail && <div className="drawer-overlay" />}
          <div className={`bg-white drawer drawer-start ${openDetail ? "drawer-on" : ""} min-w-75`}>
             <Card className="rounded-0 w-100">
@@ -81,7 +67,19 @@ const Context = () => {
                   </div>
                </Card.Header>
                <Card.Body className="hover-scroll-overlay-y">
-                  {!isLoading && (
+                  {isLoading ? (
+                     <Bars
+                        visible={true}
+                        color="#4fa94d"
+                        radius="9"
+                        wrapperStyle={{
+                           alignItems: "center",
+                           display: "flex",
+                           justifyContent: "center",
+                        }}
+                        wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+                     />
+                  ) : (
                      <React.Fragment>
                         <StatusTugasAkhir />
                         <Lampiran />
@@ -95,7 +93,7 @@ const Context = () => {
                </Card.Footer>
             </Card>
          </div>
-      </React.Suspense>
+      </React.Fragment>
    );
 };
 export default Context;

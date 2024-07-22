@@ -14,7 +14,9 @@ const TimPembimbing = () => {
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-               <th className="text-center">pembimbing ke</th>
+               <th style={{ width: "2%" }} className="text-center">
+                  ke
+               </th>
                <th>nidn/nik</th>
                <th>nama</th>
                <th>kategori kegiatan</th>

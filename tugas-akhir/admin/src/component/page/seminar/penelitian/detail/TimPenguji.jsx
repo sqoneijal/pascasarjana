@@ -10,6 +10,14 @@ const TimPenguji = () => {
    const { penguji, detailContent } = module;
    const dispatch = useDispatch();
 
+   const status = (status) => {
+      return status === "t" ? (
+         <i className="ki-outline ki-flag fs-2 fw-bold text-success" />
+      ) : (
+         <i className="ki-outline ki-flag fs-2 fw-bold text-danger" />
+      );
+   };
+
    return (
       <Table responsive hover className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
@@ -18,6 +26,7 @@ const TimPenguji = () => {
                <th>nidn/nik</th>
                <th>nama</th>
                <th>kategori kegiatan</th>
+               <th className="text-center">lanjut sidang</th>
                <th style={{ width: "5%" }} />
             </tr>
          </thead>
@@ -30,6 +39,7 @@ const TimPenguji = () => {
                      <td>{h.parse("nidn", row)}</td>
                      <td>{h.parse("nama_dosen", row)}</td>
                      <td>{h.parse("kategori_kegiatan", row)}</td>
+                     <td className="text-center">{status(h.parse("lanjut_sidang", row))}</td>
                      <td className="text-end">
                         <a
                            href="#"

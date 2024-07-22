@@ -66,11 +66,10 @@ class Pembimbing extends Common
 
    private function checkApproveSudahSidangPembimbing(int $id_status_tugas_akhir): bool
    {
-      $table = $this->db->table('tb_pembimbing_penelitian');
-      $table->select('count(*) filter (where sudah_sidang = true) as disetujui, count(*) filter (where sudah_sidang = false or sudah_sidang is null) as belum_disetujui');
-      $table->where('id', function ($table) use ($id_status_tugas_akhir) {
-         return $table->select('id')->from('tb_penelitian')->where('id_status_tugas_akhir', $id_status_tugas_akhir);
-      });
+      $table = $this->db->table('tb_pembimbing_penelitian tpp');
+      $table->select('count(*) filter (where tpp.sudah_sidang = true) as disetujui, count(*) filter (where tpp.sudah_sidang = false or tpp.sudah_sidang is null) as belum_disetujui');
+      $table->join('tb_penelitian tp', 'tp.id = tpp.id_penelitian');
+      $table->where('tp.id_status_tugas_akhir', $id_status_tugas_akhir);
 
       $get = $table->get();
       $data = $get->getRowArray();

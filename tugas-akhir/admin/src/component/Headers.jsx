@@ -7,7 +7,7 @@ import * as h from "~/Helpers";
 import { setModule } from "~/redux";
 
 const Headers = () => {
-   const { position, showButton, buttonConfig, module } = useSelector((e) => e.redux);
+   const { position, showButton, buttonConfig } = useSelector((e) => e.redux);
    const dispatch = useDispatch();
 
    useLayoutEffect(() => {
@@ -48,7 +48,7 @@ const Headers = () => {
             </div>
             <div className="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
                <Link to="/" className="d-lg-none">
-                  <img alt="Logo" src={h.getFile("logo-uin-small.png")} className="h-30px lozad" />
+                  <img alt="Logo" src="/assets/logo-uin-small.png" className="h-30px lozad" />
                </Link>
             </div>
             <div className="d-flex align-items-stretch justify-content-between flex-lg-grow-1" id="kt_app_header_wrapper">

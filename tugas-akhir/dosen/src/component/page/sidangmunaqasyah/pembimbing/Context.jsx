@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 import { Bars } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
-import { filter as setFilter } from "~/redux";
+import { position, filter as setFilter } from "~/redux";
 
 const Lists = React.lazy(() => import("./Lists"));
 const Filter = React.lazy(() => import("./Filter"));
@@ -17,6 +17,7 @@ const Context = () => {
       const { periode } = init;
       const periodeAktif = h.getPeriodeAktif(periode);
       dispatch(setFilter({ id_periode: h.parse("id", periodeAktif) }));
+      dispatch(position(["Sidang Munaqasyah", document.title]));
       return () => {};
    }, [init]);
 

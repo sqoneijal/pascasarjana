@@ -120,7 +120,6 @@ class Home extends BaseController
                $folderId = buatFolderGoogleDrive($driveService, $this->post['nim'], $parentId);
             }
 
-
             $driveFile->setName($file->getClientName());
             $driveFile->setParents([$folderId]);
 
@@ -136,17 +135,16 @@ class Home extends BaseController
                $this->post['lampiran'] = $googleFile['name'];
 
                $model = new Model();
-               $content = $model->updateLampiran($this->post);
+               $model->updateLampiran($this->post);
 
                $response['status'] = true;
                $response['msg_response'] = 'File lampiran berhasil di upload';
-               $response['content'] = $content;
-               $response['post'] = $this->post;
+               $response['googleFile'] = $googleFile;
             } else {
                $response['msg_response'] = 'Gagal upload file, silahkan coba kembali.';
             }
          } catch (\Exception $e) {
-            return ['status' => false, 'msg_response' => $e->getMessage()];
+            $response['msg_response'] = $e->getMessage();
          }
       }
       return $this->respond($response);

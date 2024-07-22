@@ -120,14 +120,28 @@ class Sidang extends Common
             $data['uploaded'] = new RawSql('now()');
 
             $table->insert($data);
-
-            $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], 24);
          }
+
+         $this->handleUpdateStatusTugasAkhirJadwalSidang($post);
 
          return ['status' => true, 'content' => $post, 'msg_response' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
          return ['status' => false, 'msg_response' => $e->getMessage()];
       }
+   }
+
+   private function handleUpdateStatusTugasAkhirJadwalSidang(array $post): void
+   {
+      $status = $this->hitungJumlahPengujiSidangMunaqasyah($post['id_status_tugas_akhir']);
+      $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], $status ? 25 : 24);
+   }
+
+   private function hitungJumlahPengujiSidangMunaqasyah(int $id_status_tugas_akhir): bool
+   {
+      $table = $this->db->table('tb_penguji_sidang');
+      $table->where('id_status_tugas_akhir', $id_status_tugas_akhir);
+
+      return $table->countAllResults() > 0;
    }
 
    private function checkJadwalSebelumnya(int $id_status_tugas_akhir): bool
@@ -198,6 +212,7 @@ class Sidang extends Common
       $table->join('tb_kategori_kegiatan tkk', 'tkk.id = tps.id_kategori_kegiatan');
       $table->where('tsta.nim', $nim);
       $table->where('tsta.id_periode', $id_periode);
+      $table->orderBy('tps.penguji_ke');
 
       $get = $table->get();
       $result = $get->getResultArray();

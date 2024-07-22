@@ -11,6 +11,16 @@ import toastr from "toastr";
 import { uid } from "uid/secure";
 import wNumb from "wnumb";
 
+export const renderGoogleDrivePermalink = (id_google_drive, label) => {
+   if (id_google_drive) {
+      return (
+         <a href={`https://drive.google.com/file/d/${id_google_drive}/view`} target="_blank">
+            {label}
+         </a>
+      );
+   }
+};
+
 export const getDriveFile = (id) => {
    return `https://drive.google.com/file/d/${id}/view`;
 };

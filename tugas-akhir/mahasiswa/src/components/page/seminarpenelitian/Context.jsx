@@ -95,78 +95,88 @@ const Context = () => {
       });
    };
 
-   return (
-      !isLoading && (
-         <React.Suspense
-            fallback={
-               <Bars
-                  visible={true}
-                  color="#4fa94d"
-                  radius="9"
-                  wrapperStyle={{
-                     alignItems: "center",
-                     display: "flex",
-                     justifyContent: "center",
-                  }}
-                  wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
-               />
-            }>
-            <div id="kt_content_container" className="d-flex flex-column-fluid align-items-start container-xxl">
-               <div className="content flex-row-fluid" id="kt_content">
-                  <Card className="shadow-sm card-bordered">
-                     <Card.Header>
-                        <h3 className="card-title">PERSYARATAN SEMINAR HASIL PENELITIAN</h3>
-                     </Card.Header>
-                     <Card.Body>
-                        <Informasi />
-                        {[14, 15, 16, 17, 18, 19, 20].includes(h.parse("status", init)) && <DaftarPembimbing />}
-                        {[17, 18, 19, 20].includes(h.parse("status", init)) && (
-                           <React.Fragment>
-                              <JadwalSeminarHasilPenelitian />
-                              <DaftarTimPembahas />
-                           </React.Fragment>
-                        )}
-                        <JudulProposal />
-                        <Lists />
-                     </Card.Body>
-                     {jumlahUploadLampiran >= 7 && [13].includes(h.parse("status", init)) && (
-                        <Card.Footer>
-                           {h.buttons(`Daftar Seminar Hasil Penelitian`, isLoadingButton, {
-                              onClick: () => (isLoadingButton ? null : updateStatusTugasAkhir(14)),
-                           })}
-                        </Card.Footer>
+   return isLoading ? (
+      <Bars
+         visible={true}
+         color="#4fa94d"
+         radius="9"
+         wrapperStyle={{
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+         }}
+         wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+      />
+   ) : (
+      <React.Suspense
+         fallback={
+            <Bars
+               visible={true}
+               color="#4fa94d"
+               radius="9"
+               wrapperStyle={{
+                  alignItems: "center",
+                  display: "flex",
+                  justifyContent: "center",
+               }}
+               wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
+            />
+         }>
+         <div id="kt_content_container" className="d-flex flex-column-fluid align-items-start container-xxl">
+            <div className="content flex-row-fluid" id="kt_content">
+               <Card className="shadow-sm card-bordered">
+                  <Card.Header>
+                     <h3 className="card-title">PERSYARATAN SEMINAR HASIL PENELITIAN</h3>
+                  </Card.Header>
+                  <Card.Body>
+                     <Informasi />
+                     {[14, 15, 16, 17, 18, 19, 20].includes(h.parse("status", init)) && <DaftarPembimbing />}
+                     {[17, 18, 19, 20].includes(h.parse("status", init)) && (
+                        <React.Fragment>
+                           <JadwalSeminarHasilPenelitian />
+                           <DaftarTimPembahas />
+                        </React.Fragment>
                      )}
-                     {jumlahUploadLampiran >= 7 && [17].includes(h.parse("status", init)) && (
-                        <Card.Footer>
-                           {h.buttons(`Saya Telah Melaksanakan Seminar Hasil Penelitian`, isLoadingButton, {
-                              onClick: () => {
-                                 const confirm = h.confirm("Apakah benar anda telah melaksanakan seminar hasil penelitian?");
-                                 confirm.then((res) => {
-                                    if (!res.isConfirmed) return;
-                                    updateStatusTugasAkhir(18);
-                                 });
-                              },
-                           })}
-                        </Card.Footer>
-                     )}
-                     {jumlahUploadLampiran >= jumlahWajibUpload && [19].includes(h.parse("status", init)) && (
-                        <Card.Footer>
-                           {h.buttons(`Saya Telah Memperbaiki`, isLoadingButton, {
-                              onClick: () => {
-                                 const confirm = h.confirm("Apakah benar anda telah memperbaikinya?");
-                                 confirm.then((res) => {
-                                    if (!res.isConfirmed) return;
-                                    updateStatusTugasAkhir(20);
-                                 });
-                              },
-                           })}
-                        </Card.Footer>
-                     )}
-                  </Card>
-               </div>
+                     <JudulProposal />
+                     <Lists />
+                  </Card.Body>
+                  {jumlahUploadLampiran >= 7 && [13].includes(h.parse("status", init)) && (
+                     <Card.Footer>
+                        {h.buttons(`Daftar Seminar Hasil Penelitian`, isLoadingButton, {
+                           onClick: () => (isLoadingButton ? null : updateStatusTugasAkhir(14)),
+                        })}
+                     </Card.Footer>
+                  )}
+                  {jumlahUploadLampiran >= 7 && [17].includes(h.parse("status", init)) && (
+                     <Card.Footer>
+                        {h.buttons(`Saya Telah Melaksanakan Seminar Hasil Penelitian`, isLoadingButton, {
+                           onClick: () => {
+                              const confirm = h.confirm("Apakah benar anda telah melaksanakan seminar hasil penelitian?");
+                              confirm.then((res) => {
+                                 if (!res.isConfirmed) return;
+                                 updateStatusTugasAkhir(18);
+                              });
+                           },
+                        })}
+                     </Card.Footer>
+                  )}
+                  {jumlahUploadLampiran >= jumlahWajibUpload && [19].includes(h.parse("status", init)) && (
+                     <Card.Footer>
+                        {h.buttons(`Saya Telah Memperbaiki`, isLoadingButton, {
+                           onClick: () => {
+                              const confirm = h.confirm("Apakah benar anda telah memperbaikinya?");
+                              confirm.then((res) => {
+                                 if (!res.isConfirmed) return;
+                                 updateStatusTugasAkhir(20);
+                              });
+                           },
+                        })}
+                     </Card.Footer>
+                  )}
+               </Card>
             </div>
-         </React.Suspense>
-      )
+         </div>
+      </React.Suspense>
    );
 };
 export default Context;

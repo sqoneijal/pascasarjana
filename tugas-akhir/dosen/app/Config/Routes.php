@@ -80,6 +80,7 @@ function sidangMunaqasyah(RouteCollection $routes): void
 {
    $routes->group('sidangmunaqasyah', ['filter' => 'IsLogin'], function ($routes) {
       sidangMunaqasyahPembimbing($routes);
+      sidangMunaqasyahPenguji($routes);
    });
 }
 
@@ -93,5 +94,17 @@ function sidangMunaqasyahPembimbing(RouteCollection $routes): void
       $routes->post('submitlanjutsidang', 'Pembimbing::submitLanjutSidang');
       $routes->post('submitperbaikisidang', 'Pembimbing::submitPerbaikiSidang');
       $routes->post('submitsudahsidang', 'Pembimbing::submitSudahSidang');
+   });
+}
+
+function sidangMunaqasyahPenguji(RouteCollection $routes): void
+{
+   $routes->group('penguji', ['filter' => 'IsLogin', 'namespace' => 'App\Controllers\SidangMunaqasyah'], function ($routes) {
+      $routes->get('/', 'Penguji::index');
+
+      $routes->post('getdata', 'Penguji::getData');
+      $routes->post('getdetail', 'Penguji::getDetail');
+      $routes->post('submitsudahmelaksanakansidang', 'Penguji::submitSudahMelaksanakanSidang');
+      $routes->post('submitperbaikihasilsidang', 'Penguji::submitPerbaikiHasilSidang');
    });
 }

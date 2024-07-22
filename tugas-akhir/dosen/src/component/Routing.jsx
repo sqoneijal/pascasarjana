@@ -6,6 +6,7 @@ const Proposal = React.lazy(() => import("./page/proposal/Context"));
 const PenelitianPembimbing = React.lazy(() => import("./page/penelitian/pembimbing/Context"));
 const PenelitianPenguji = React.lazy(() => import("./page/penelitian/penguji/Context"));
 const SidangMunaqasyahPembimbing = React.lazy(() => import("./page/sidangmunaqasyah/pembimbing/Context"));
+const SidangMunaqasyahPenguji = React.lazy(() => import("./page/sidangmunaqasyah/penguji/Context"));
 
 const Routing = () => {
    return (
@@ -14,6 +15,7 @@ const Routing = () => {
          <Route path="proposal" element={<Proposal />} />
          <Route path="sidangmunaqasyah">
             <Route path="pembimbing" element={<SidangMunaqasyahPembimbing />} />
+            <Route path="penguji" element={<SidangMunaqasyahPenguji />} />
          </Route>
          <Route path="penelitian">
             <Route path="pembimbing" element={<PenelitianPembimbing />} />
