@@ -2,49 +2,61 @@ import React, { useLayoutEffect } from "react";
 import { Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
-import { buttonConfig, setModule } from "~/redux";
+import { setModule } from "~/redux";
 
 let datatable;
 
 const Lists = () => {
-   const { filter, init, module } = useSelector((e) => e.redux);
+   const { filter, module } = useSelector((e) => e.redux);
    const dispatch = useDispatch();
+
+   const renderWajib = (status) => {
+      return status === "t"
+         ? `<i class="ki-outline ki-check-square fs-2 fw-bold text-success" />`
+         : `<i class="ki-outline ki-close-square fs-2 fw-bold text-danger" />`;
+   };
+
+   const jenisSyarat = {
+      1: "Seminar Proposal",
+      2: "Seminar Hasil Penelitian",
+      3: "Sidang Munaqasyah",
+   };
 
    const datatable_url = `/getdata?${h.serialize(filter)}`;
    datatable = h.initDatatable({
       show_edit_button: true,
       show_delete_button: true,
       url: datatable_url,
-      filter: { username: h.parse("username", init) },
       columns: [
          {
             data: null,
-            orderable: false,
             class: "text-center",
             render: (data) => {
-               const avatarPath = `assets/${h.parse("avatar", data)}`;
-               return `<img src="${avatarPath}" alt="${h.parse("nama", data)}" class="img-fluid rounded-3 w-50px h-50px" />`;
+               return renderWajib(h.parse("wajib", data));
             },
          },
          { data: "nama" },
-         { data: "username" },
-         { data: "email" },
          {
             data: null,
             render: (data) => {
-               return h.userRole(h.parse("role", data));
+               return jenisSyarat[h.parse("syarat", data)];
+            },
+         },
+         {
+            data: null,
+            render: (data) => {
+               return `<a href="${h.getDriveFile(h.parse("id_google_drive", data))}" target="_blank">${h.parse("nama_lampiran", data)}</a>`;
             },
          },
          { data: null },
       ],
-      order: [[1, "asc"]],
       columnDefs: true,
       createdRow: (row, data) => {
          const _edit = row.querySelector("#edit");
          if (_edit) {
             _edit.onclick = (e) => {
                e.preventDefault();
-               dispatch(setModule({ ...module, openForms: true, pageType: "update", detailContent: data }));
+               dispatch(setModule({ ...module, openForms: true, detailContent: data, pageType: "update" }));
             };
          }
 
@@ -68,16 +80,6 @@ const Lists = () => {
 
    useLayoutEffect(() => {
       datatable.init();
-      dispatch(
-         buttonConfig({
-            label: `Tambah ${document.title}`,
-            variant: "primary",
-            init: {
-               openForms: true,
-               pageType: "insert",
-            },
-         })
-      );
       return () => {};
    }, []);
 
@@ -85,11 +87,10 @@ const Lists = () => {
       <Table responsive hover id="datatable" className="align-middle table-row-dashed fs-6" size="sm">
          <thead>
             <tr className="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-               <th style={{ width: "5%" }} />
-               <th>nama</th>
-               <th>username</th>
-               <th>email</th>
-               <th>role</th>
+               <th className="text-center">wajib</th>
+               <th>keterangan</th>
+               <th>jenis</th>
+               <th>format lampiran</th>
                <th />
             </tr>
          </thead>

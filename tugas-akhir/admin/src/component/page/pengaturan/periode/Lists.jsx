@@ -1,15 +1,10 @@
 import React, { useLayoutEffect } from "react";
 import { Card, Table } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
-import { setModule } from "~/redux";
 
 let datatable;
 
 const Lists = () => {
-   const { module } = useSelector((e) => e.redux);
-   const dispatch = useDispatch();
-
    const renderStatus = (key) => {
       return key === "t" ? `<span class="badge badge-success">Aktif</span>` : `<span class="badge badge-danger">Tidak Aktif</span>`;
    };
@@ -62,14 +57,6 @@ const Lists = () => {
 
    return (
       <Card className="shadow-sm card-bordered">
-         <Card.Header>
-            <h3 className="card-title">Daftar {document.title}</h3>
-            <div className="card-toolbar">
-               {h.buttons(`Tambah ${document.title}`, false, {
-                  onClick: () => dispatch(setModule({ ...module, pageType: "insert", openForms: true })),
-               })}
-            </div>
-         </Card.Header>
          <Card.Body>
             <Table responsive hover id="datatable" className="align-middle table-row-dashed fs-6" size="sm">
                <thead>

@@ -1,12 +1,12 @@
 import React, { useLayoutEffect, useState } from "react";
-import { ButtonGroup, Card, Col, Row } from "react-bootstrap";
+import { ButtonGroup, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
 import { setModule } from "~/redux";
 
 const Forms = () => {
    const { module, init } = useSelector((e) => e.redux);
-   const { openForms, pageType, detailContent } = module;
+   const { pageType, openForms, detailContent } = module;
    const dispatch = useDispatch();
 
    // bool
@@ -22,13 +22,14 @@ const Forms = () => {
    }, [pageType, detailContent]);
 
    const clearProps = () => {
+      setIsSubmit(false);
       setInput({});
       setErrors({});
    };
 
    const handleClose = () => {
-      clearProps();
       dispatch(setModule({ ...module, openForms: false, pageType: "", detailContent: {} }));
+      clearProps();
    };
 
    const submit = (e) => {
@@ -51,19 +52,15 @@ const Forms = () => {
          h.notification(data.status, data.msg_response);
 
          if (!data.status) return;
-         clearProps();
+
          dispatch(setModule({ ...module, openForms: false, pageType: "", detailContent: {} }));
+         clearProps();
          h.dtReload();
       });
       fetch.finally(() => {
          setIsSubmit(false);
       });
    };
-
-   const daftarIDSemester = [
-      { value: 1, label: "Ganjil" },
-      { value: 2, label: "Genap" },
-   ];
 
    return (
       <React.Fragment>
@@ -88,40 +85,61 @@ const Forms = () => {
                   </div>
                </Card.Header>
                <Card.Body className="hover-scroll-overlay-y">
-                  <div className="alert alert-primary d-flex align-items-center p-5">
-                     <i className="ki-outline ki-shield-tick fs-2hx text-success me-4" />
-                     <div className="d-flex flex-column">
-                        <h4 className="mb-1 text-dark">Informasi</h4>
-                        <span>Jika menambahkan tahun periode baru, maka tahun periode sebelumnya akan dinonaktifkan secara otomatis.</span>
-                     </div>
-                  </div>
-                  <Row>
-                     <Col>
-                        {h.form_text(
-                           `Tahun Ajaran`,
-                           `tahun_ajaran`,
-                           {
-                              onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.value })),
-                              value: h.parse(`tahun_ajaran`, input),
-                           },
-                           true,
-                           errors
-                        )}
-                     </Col>
-                     <Col>
-                        {h.form_select(
-                           "Semester",
-                           "id_semester",
-                           {
-                              onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.value })),
-                              value: h.parse("id_semester", input),
-                           },
-                           daftarIDSemester,
-                           true,
-                           errors
-                        )}
-                     </Col>
-                  </Row>
+                  {h.form_textarea(
+                     `Keterangan Lampiran`,
+                     `nama`,
+                     {
+                        onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.value })),
+                        value: h.parse(`nama`, input),
+                        style: {
+                           height: 200,
+                        },
+                     },
+                     true,
+                     errors
+                  )}
+                  {h.form_select(
+                     "Jenis Syarat",
+                     "syarat",
+                     { onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.value })), value: h.parse("syarat", input) },
+                     [
+                        { value: 1, label: "Seminar Proposal" },
+                        { value: 2, label: "Seminar Hasil Penelitian" },
+                        { value: 3, label: "Sidang Munaqasyah" },
+                     ],
+                     true,
+                     errors
+                  )}
+                  {h.form_select(
+                     "Apakah Wajib",
+                     "wajib",
+                     { onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.value })), value: h.parse("wajib", input) },
+                     [
+                        { value: "t", label: "Iya" },
+                        { value: "f", label: "Tidak" },
+                     ],
+                     true,
+                     errors
+                  )}
+                  {h.form_select(
+                     "Apakah Ada Lampiran",
+                     "ada_lampiran",
+                     { onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.value })), value: h.parse("ada_lampiran", input) },
+                     [
+                        { value: "t", label: "Iya" },
+                        { value: "f", label: "Tidak" },
+                     ],
+                     true,
+                     errors
+                  )}
+                  {h.parse("ada_lampiran", input) === "t" &&
+                     h.form_upload(
+                        `File Lampiran`,
+                        `file`,
+                        { onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.files[0] })) },
+                        true,
+                        errors
+                     )}
                </Card.Body>
                <Card.Footer className="text-end">
                   <ButtonGroup>

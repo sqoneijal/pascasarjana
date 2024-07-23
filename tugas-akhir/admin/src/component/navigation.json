@@ -49,13 +49,13 @@
       "sub": true,
       "child": [
          {
-            "label": "Lampiran",
-            "link": "/pengaturan/lampiran",
+            "label": "Periode",
+            "link": "/pengaturan/periode",
             "sub": false
          },
          {
-            "label": "Periode",
-            "link": "/pengaturan/periode",
+            "label": "Syarat",
+            "link": "/pengaturan/syarat",
             "sub": false
          }
       ]

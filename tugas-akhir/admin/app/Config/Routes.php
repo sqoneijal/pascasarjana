@@ -45,6 +45,18 @@ function pengaturan(RouteCollection $routes): void
    $routes->group('pengaturan', ['namespace' => 'App\Controllers\Pengaturan', 'filter' => 'IsLogin'], function ($routes) {
       pengaturanLampiran($routes);
       pengaturanPeriode($routes);
+      pengaturanSyarat($routes);
+   });
+}
+
+function pengaturanSyarat(RouteCollection $routes): void
+{
+   $routes->group('syarat', ['namespace' => 'App\Controllers\Pengaturan', 'filter' => 'IsLogin'], function ($routes) {
+      $routes->get('/', 'Syarat::index');
+
+      $routes->post('getdata', 'Syarat::getData');
+      $routes->post('submit', 'Syarat::submit');
+      $routes->post('hapus', 'Syarat::hapus');
    });
 }
 

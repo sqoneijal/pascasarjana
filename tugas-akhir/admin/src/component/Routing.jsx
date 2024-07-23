@@ -12,6 +12,7 @@ const SeminarPenelitian = React.lazy(() => import("./page/seminar/penelitian/Con
 const Sidang = React.lazy(() => import("./page/sidang/Context"));
 const Dashboard = React.lazy(() => import("./page/dashboard/Context"));
 const Pengguna = React.lazy(() => import("./page/pengguna/Context"));
+const PengaturanSyarat = React.lazy(() => import("./page/pengaturan/syarat/Context"));
 
 const Routing = () => {
    return (
@@ -29,6 +30,7 @@ const Routing = () => {
          <Route path="pengaturan">
             <Route path="lampiran" element={<PengaturanLampiran />} />
             <Route path="periode" element={<PengaturanPeriode />} />
+            <Route path="syarat" element={<PengaturanSyarat />} />
          </Route>
          <Route path="profile" element={<Profile />} />
          <Route path="sidang" element={<Sidang />} />
