@@ -11,8 +11,7 @@
    },
    "require": {
       "php": "^8.1",
-      "firebase/php-jwt": "^6.10",
-      "shieldon/shieldon": "^2.1"
+      "firebase/php-jwt": "^6.10"
    },
    "config": {
       "optimize-autoloader": true,

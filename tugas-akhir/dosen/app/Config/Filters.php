@@ -13,7 +13,6 @@ use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 use App\Filters\IsLogin;
-use App\Filters\Shieldon;
 
 class Filters extends BaseFilters
 {
@@ -37,7 +36,6 @@ class Filters extends BaseFilters
       'pagecache'     => PageCache::class,
       'performance'   => PerformanceMetrics::class,
       'IsLogin'       => IsLogin::class,
-      // 'Shieldon'      => Shieldon::class,
    ];
 
    /**
@@ -73,7 +71,6 @@ class Filters extends BaseFilters
     */
    public array $globals = [
       'before' => [
-         // 'Shieldon',
          // 'honeypot',
          // 'csrf',
          // 'invalidchars',
