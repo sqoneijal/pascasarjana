@@ -17,10 +17,10 @@ class App extends BaseConfig
     * E.g., http://example.com/
     */
    public string $baseURL = 'http://localhost:8013/';
-   public string $adminBaseURL = 'http://localhost:8014/';
-   public string $dosenBaseURL = 'http://localhost:8017/';
-   public string $mahasiswaBaseURL = 'http://localhost:8011/';
-   public string $akademikBaseURL = 'http://localhost:8015/';
+   public string $adminBaseURL = 'http://localhost:8014/admin/';
+   public string $dosenBaseURL = 'http://localhost:8017/dosen/';
+   public string $mahasiswaBaseURL = 'http://localhost:8011/mahasiswa/';
+   public string $akademikBaseURL = 'http://localhost:8015/akademik/';
 
    /**
     * Allowed Hostnames in the Site URL other than the hostname in the baseURL.

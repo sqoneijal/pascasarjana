@@ -41,7 +41,7 @@ const Navbar = ({ menuActive, setMenuActive }) => {
             <div className="d-flex flex-wrap flex-sm-nowrap">
                <div className="me-7 mb-4">
                   <div className="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                     <img alt={h.parse("nama", init)} src={h.getFile(h.parse("avatar", init))} />
+                     <img alt={h.parse("nama", init)} src={`/admin/profile/avatar?name=${h.parse("avatar", init)}`} />
                   </div>
                </div>
                <div className="flex-grow-1">

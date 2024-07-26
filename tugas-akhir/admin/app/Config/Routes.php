@@ -2,13 +2,29 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-$routes->group('login', function ($routes) {
-   $routes->get('logout', 'Login::logout');
-   $routes->get('init', 'Login::init');
-   $routes->get('(:any)', 'Login::index/$1');
+$routes->group('admin', function ($routes) {
+   $routes->group('login', function ($routes) {
+      $routes->get('logout', 'Login::logout');
+      $routes->get('init', 'Login::init');
+      $routes->get('(:any)', 'Login::index/$1');
+   });
+
+   dashboard($routes);
+   verifikasi($routes);
+   seminar($routes);
+   sidang($routes);
+   pengaturan($routes);
+   pengguna($routes);
+   profile($routes);
 });
 
-sidang($routes);
+function dashboard(RouteCollection $routes): void
+{
+   $routes->get('/', 'Dashboard::index', ['filter' => 'IsLogin']);
+
+   $routes->get('initpage', 'Dashboard::initPage', ['filter' => 'IsLogin']);
+}
+
 function sidang(RouteCollection $routes): void
 {
    $routes->group('sidang', ['filter' => 'IsLogin'], function ($routes) {
@@ -26,11 +42,11 @@ function sidang(RouteCollection $routes): void
    });
 }
 
-profile($routes);
 function profile(RouteCollection $routes): void
 {
    $routes->group('profile', ['filter' => 'IsLogin'], function ($routes) {
       $routes->get('/', 'Profile::index');
+      $routes->get('avatar', 'Profile::avatar');
 
       $routes->post('submit', 'Profile::submit');
       $routes->post('gantiavatar', 'Profile::gantiAvatar');
@@ -39,7 +55,6 @@ function profile(RouteCollection $routes): void
    });
 }
 
-pengaturan($routes);
 function pengaturan(RouteCollection $routes): void
 {
    $routes->group('pengaturan', ['namespace' => 'App\Controllers\Pengaturan', 'filter' => 'IsLogin'], function ($routes) {
@@ -81,7 +96,6 @@ function pengaturanLampiran(RouteCollection $routes): void
    });
 }
 
-seminar($routes);
 function seminar(RouteCollection $routes): void
 {
    $routes->group('seminar', ['namespace' => 'App\Controllers\Seminar', 'filter' => 'IsLogin'], function ($routes) {
@@ -122,7 +136,6 @@ function seminarProposal(RouteCollection $routes): void
    });
 }
 
-verifikasi($routes);
 function verifikasi(RouteCollection $routes): void
 {
    $routes->group('verifikasi', ['namespace' => 'App\Controllers\Verifikasi', 'filter' => 'IsLogin'], function ($routes) {
@@ -173,16 +186,6 @@ function verifikasiProposal(RouteCollection $routes): void
    });
 }
 
-dashboard($routes);
-function dashboard(RouteCollection $routes): void
-{
-   $routes->get('/', 'Dashboard::index', ['filter' => 'IsLogin']);
-   $routes->group('/', ['filter' => 'IsLogin'], function ($routes) {
-      $routes->get('initpage', 'Dashboard::initPage');
-   });
-}
-
-pengguna($routes);
 function pengguna(RouteCollection $routes): void
 {
    $routes->group('pengguna', ['filter' => 'IsLogin'], function ($routes) {

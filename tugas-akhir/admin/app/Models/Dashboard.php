@@ -3,137 +3,173 @@
 namespace App\Models;
 
 use App\Models\Common;
+use CodeIgniter\Database\RawSql;
 
 class Dashboard extends Common
 {
 
-   public function initPage(): array
+   public function initPage(array $post): array
    {
       return [
-         'verifikasi' => [
-            'totalMenuVerifikasi' => $this->hitungTotalMenuVerifikasi(),
-            'jumlahProposal' => $this->hitungVerifikasiJumlahProposal(),
-            'jumlahPerbaikan' => $this->hitungVerifikasiJumlahPerbaikan(),
-            'jumlahDiterima' => $this->hitungVerifikasiJumlahDiterima()
+         'status_tesis' => [
+            'seminar_proposal' => $this->getStatusTesis($post['id_periode'], [1, 3, 4, 5, 6, 7]),
+            'seminar_hasil_penelitian' => $this->getStatusTesis($post['id_periode'], [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]),
+            'sidang_munaqasyah' => $this->getStatusTesis($post['id_periode'], [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31])
          ],
-         'seminar' => [
-            'totalMenuSeminar' => $this->hitungTotalMenuSeminar(),
-            'jumlahProposal' => $this->hitungSeminarJumlahProposal(),
-            'jumlahPenelitian' => $this->hitungSeminarJumlahPenelitian(),
-         ],
-         'daftarMahasiswaSidang' => $this->getDaftarMahasiswaSidang(),
-         'jumlahMahasiswaSidang' => $this->hitungJumlahMahasiswaSidang(),
+         'kalender' => [
+            'tanggal_seminar_proposal' => $this->getTanggalSeminar(),
+            'tanggal_seminar_hasil_penelitian' => $this->getTanggalSeminarHasilPenelitian(),
+            'tanggal_sidang_munaqasyah' => $this->getTanggalSidangMunaqasyah(),
+            'peserta_seminar_proposal' => $this->getPesertaSidangProposal(),
+            'peserta_seminar_hasil_penelitian' => $this->getPesertaSidangHasilPenelitian(),
+            'peserta_sidang_munaqasyah' => $this->getPesertaSidangMunaqasyah(),
+         ]
       ];
    }
 
-   private function hitungSeminarJumlahPenelitian(): int
+   private function getPesertaSidangMunaqasyah(): array
    {
-      $table = $this->db->table('tb_status_tugas_akhir');
-      $table->whereIn('status', [13, 14, 15, 16, 17, 18, 19, 20, 21]);
-
-      return $table->countAllResults();
-   }
-
-   private function hitungSeminarJumlahProposal(): int
-   {
-      $table = $this->db->table('tb_status_tugas_akhir');
-      $table->whereIn('status', [7, 8, 9, 10, 11, 12, 13]);
-
-      return $table->countAllResults();
-   }
-
-   private function hitungTotalMenuSeminar(): int
-   {
-      $table = $this->db->table('tb_status_tugas_akhir');
-      $table->whereIn('status', [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]);
-
-      return $table->countAllResults();
-   }
-
-   private function hitungJumlahMahasiswaSidang(): int
-   {
-      $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->join('tb_jadwal_sidang tjs', 'tjs.id_status_tugas_akhir = tsta.id');
-      $table->whereIn('tjs.tanggal', $this->mengambilTanggalMingguSekarang());
-
-      return $table->countAllResults();
-   }
-
-   private function getDaftarMahasiswaSidang(): array
-   {
-      $table = $this->db->table('tb_status_tugas_akhir tsta');
-      $table->select('tjs.jam, tjs.tanggal, tsta.nim, tsta.nama, concat(tp.jenjang, \' \', tp.nama) as program_studi, tsta.angkatan, tsta.hp, tsta.email, tp2.judul');
-      $table->join('tb_jadwal_sidang tjs', 'tjs.id_status_tugas_akhir = tsta.id');
-      $table->join('tb_prodi tp', 'tp.kode = tsta.kode_prodi');
-      $table->join('tb_penelitian tp2', 'tp2.id_status_tugas_akhir = tsta.id');
-      $table->whereIn('tjs.tanggal', $this->mengambilTanggalMingguSekarang());
+      $table = $this->db->table('tb_jadwal_sidang tjs');
+      $table->select('tjs.tanggal, tjs.jam, tsta.nim, tsta.nama, tsta.id_periode');
+      $table->join('tb_status_tugas_akhir tsta', 'tsta.id = tjs.id_status_tugas_akhir');
+      $table->where(new RawSql('extract(month from tjs.tanggal) = extract(month from now())'));
 
       $get = $table->get();
       $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
       $get->freeResult();
 
       $response = [];
-      foreach ($result as $row) {
-         $response[date('d', strtotime($row['tanggal']))][] = $row;
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
       }
       return $response;
    }
 
-   private function mengambilTanggalMingguSekarang(): array
+   private function getPesertaSidangHasilPenelitian(): array
    {
-      $today = new \DateTime();
+      $table = $this->db->table('tb_seminar_penelitian tsp');
+      $table->select('tsp.tanggal_seminar, tsp.jam_seminar, tsta.nim, tsta.nama, tsta.id_periode');
+      $table->join('tb_penelitian tp', 'tp.id = tsp.id_penelitian');
+      $table->join('tb_status_tugas_akhir tsta', 'tsta.id = tp.id_status_tugas_akhir');
+      $table->where(new RawSql('extract(month from tsp.tanggal_seminar) = extract(month from now())'));
 
-      // Cari hari Senin dari minggu ini (days to subtract to get to Monday)
-      $startOfWeek = clone $today;
-      $startOfWeek->modify('last monday');
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
 
-      // Cari hari Minggu dari minggu ini (days to add to get to Sunday)
-      $endOfWeek = clone $today;
-      $endOfWeek->modify('next monday');
-
-      // Array untuk menyimpan tanggal-tanggal minggu ini
-      $datesOfWeek = [];
-
-      // Loop melalui setiap hari dalam minggu ini
-      $currentDay = clone $startOfWeek;
-      while ($currentDay <= $endOfWeek) {
-         $datesOfWeek[] = $currentDay->format('Y-m-d');
-         $currentDay->modify('+1 day');
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
       }
-
-      // Output hasil
-      return $datesOfWeek;
+      return $response;
    }
 
-   private function hitungVerifikasiJumlahDiterima(): int
+   private function getPesertaSidangProposal(): array
    {
-      $table = $this->db->table('tb_status_tugas_akhir');
-      $table->whereIn('status', [5, 6, 7]);
+      $table = $this->db->table('tb_jadwal_seminar tjs');
+      $table->select('tjs.tanggal_seminar, tjs.jam_seminar, tsta.nim, tsta.nama, tsta.id_periode');
+      $table->join('tb_status_tugas_akhir tsta', 'tsta.id = tjs.id_status_tugas_akhir');
+      $table->where(new RawSql('extract(month from tjs.tanggal_seminar) = extract(month from now())'));
 
-      return $table->countAllResults();
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
    }
 
-   private function hitungVerifikasiJumlahPerbaikan(): int
+   private function getTanggalSidangMunaqasyah(): array
    {
-      $table = $this->db->table('tb_status_tugas_akhir');
-      $table->whereIn('status', [3, 4]);
+      $table = $this->db->table('tb_jadwal_sidang');
+      $table->select('min(tanggal) as tanggal_mulai, max(tanggal) as tanggal_sampai');
+      $table->where(new RawSql('extract(month from tanggal) = extract(month from now())'));
 
-      return $table->countAllResults();
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
    }
 
-   private function hitungVerifikasiJumlahProposal(): int
+   private function getTanggalSeminarHasilPenelitian(): array
    {
-      $table = $this->db->table('tb_status_tugas_akhir');
-      $table->whereIn('status', [1]);
+      $table = $this->db->table('tb_seminar_penelitian');
+      $table->select('min(tanggal_seminar) as tanggal_mulai, max(tanggal_seminar) as tanggal_sampai');
+      $table->where(new RawSql('extract(month from tanggal_seminar) = extract(month from now())'));
 
-      return $table->countAllResults();
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
    }
 
-   private function hitungTotalMenuVerifikasi(): int
+   private function getTanggalSeminar(): array
    {
-      $table = $this->db->table('tb_status_tugas_akhir');
-      $table->whereIn('status', [1, 2, 3, 4, 5, 6, 7]);
+      $table = $this->db->table('tb_jadwal_seminar');
+      $table->select('min(tanggal_seminar) as tanggal_mulai, max(tanggal_seminar) as tanggal_sampai');
+      $table->where(new RawSql('extract(month from tanggal_seminar) = extract(month from now())'));
 
-      return $table->countAllResults();
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
+   private function getStatusTesis(int $id_periode, array $id): array
+   {
+      $table = $this->db->table('tb_status_tesis tst');
+      $table->select('tst.short_name, count(*) filter (where tst.id = tsta.status) as jumlah');
+      $table->join('tb_status_tugas_akhir tsta', 'tsta.status = tst.id and tsta.id_periode = ' . $id_periode, 'left');
+      $table->whereIn('tst.id', $id);
+      $table->groupBy('tst.short_name');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return $response;
    }
 }

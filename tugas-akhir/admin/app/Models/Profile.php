@@ -55,7 +55,7 @@ class Profile extends Common
       $table = $this->db->table('tb_users');
       $table->where('id', $post['id']);
       $table->update([
-         'avatar' => $post['avatar']
+         'avatar' => $post['avatar'],
       ]);
    }
 

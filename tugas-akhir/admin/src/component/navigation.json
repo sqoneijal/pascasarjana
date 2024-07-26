@@ -3,7 +3,7 @@
    {
       "label": "Verifikasi Proposal",
       "icon": "ki-outline ki-verify fs-2",
-      "link": "verifikasi",
+      "link": "/verifikasi",
       "sub": true,
       "child": [
          {
@@ -26,7 +26,7 @@
    {
       "label": "Seminar",
       "icon": "ki-outline ki-calendar-tick fs-2",
-      "link": "seminar",
+      "link": "/seminar",
       "sub": true,
       "child": [
          {
@@ -45,7 +45,7 @@
    {
       "label": "Pengaturan",
       "icon": "ki-outline ki-wrench fs-2",
-      "link": "pengaturan",
+      "link": "/pengaturan",
       "sub": true,
       "child": [
          {

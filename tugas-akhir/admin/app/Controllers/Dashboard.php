@@ -20,7 +20,7 @@ class Dashboard extends BaseController
    public function initPage(): object
    {
       $model = new Model();
-      $content = $model->initPage();
+      $content = $model->initPage($this->getVar);
       return $this->respond($content);
    }
 }

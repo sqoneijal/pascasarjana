@@ -23,7 +23,7 @@ const App = () => {
    const [isLoading, setIsLoading] = useState(true);
 
    const initPage = () => {
-      const fetch = h.get(`/login/init`, {}, true);
+      const fetch = h.get(`/admin/login/init`, {}, true);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 
@@ -84,7 +84,7 @@ const App = () => {
                   wrapperclassName="page-loader flex-column bg-dark bg-opacity-25"
                />
             }>
-            <BrowserRouter basename="/">
+            <BrowserRouter basename="/admin">
                <div className="app-page flex-column flex-column-fluid" id="kt_app_page">
                   <Headers />
                   <div className="app-wrapper flex-column flex-row-fluid">
