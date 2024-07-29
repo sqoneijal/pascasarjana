@@ -22,7 +22,7 @@ const Lists = () => {
             orderable: false,
             class: "text-center",
             render: (data) => {
-               const avatarPath = `/admin/profile/avatar?name=${h.parse("avatar", data)}`;
+               const avatarPath = `/profile/avatar?name=${h.parse("avatar", data)}`;
                return `<img src="${avatarPath}" alt="${h.parse("nama", data)}" class="img-fluid rounded-3 w-50px h-50px" />`;
             },
          },

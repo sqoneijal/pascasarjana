@@ -22,14 +22,14 @@ const StatusTesis = () => {
                wrapperClass="page-loader flex-column bg-dark bg-opacity-25"
             />
          }>
-         <Row className="gx-5 gx-xl-10 mb-xl-10">
-            <Col>
+         <Row>
+            <Col lg={4} sm={12} className="mt-5">
                <SeminarProposal />
             </Col>
-            <Col>
+            <Col lg={4} sm={12} className="mt-5">
                <SeminarHasilPenelitian />
             </Col>
-            <Col>
+            <Col lg={4} sm={12} className="mt-5">
                <SidangMunaqasyah />
             </Col>
          </Row>

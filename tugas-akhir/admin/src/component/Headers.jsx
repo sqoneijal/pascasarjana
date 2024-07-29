@@ -1,5 +1,5 @@
 import lozad from "lozad";
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Each } from "~/Each";
@@ -9,11 +9,29 @@ import { setModule } from "~/redux";
 const Headers = () => {
    const { position, showButton, buttonConfig } = useSelector((e) => e.redux);
    const dispatch = useDispatch();
+   const appHeader = useRef(null);
 
    useLayoutEffect(() => {
       lozad().observe();
+      setInterval(() => {
+         const cur = appHeader.current;
+         if (window.scrollY >= 20) {
+            cur.style.top = 0;
+            cur.style.transition = "none";
+            cur.style.zIndex = 100;
+            cur.style.backgroundColor = `var(--bs-app-header-minimize-bg-color)`;
+            cur.style.boxShadow = `var(--bs-app-header-minimize-box-shadow)`;
+            return;
+         }
+
+         cur.style.removeProperty("top");
+         cur.style.removeProperty("transition");
+         cur.style.removeProperty("z-index");
+         cur.style.removeProperty("background-color");
+         cur.style.removeProperty("box-shadow");
+      }, 300);
       return () => {};
-   }, []);
+   }, [appHeader]);
 
    const renderBreadcrumb = (position) => {
       return h.objLength(position) ? (
@@ -39,7 +57,7 @@ const Headers = () => {
    };
 
    return (
-      <div id="kt_app_header" className="app-header">
+      <div id="kt_app_header" className="app-header" ref={appHeader}>
          <div className="app-container container-fluid d-flex align-items-stretch justify-content-between" id="kt_app_header_container">
             <div className="d-flex align-items-center d-lg-none ms-n3 me-1 me-md-2" title="Show sidebar menu">
                <div className="btn btn-icon btn-active-color-primary w-35px h-35px" id="kt_app_sidebar_mobile_toggle">
@@ -63,11 +81,6 @@ const Headers = () => {
                            variant: h.parse("variant", buttonConfig),
                            onClick: () => dispatch(setModule({ ...buttonConfig.init })),
                         })}
-                  </div>
-                  <div className="app-navbar-item d-lg-none ms-2 me-n2" title="Show header menu">
-                     <div className="btn btn-flex btn-icon btn-active-color-primary w-30px h-30px" id="kt_app_header_menu_toggle">
-                        <i className="ki-outline ki-element-4 fs-1" />
-                     </div>
                   </div>
                </div>
             </div>

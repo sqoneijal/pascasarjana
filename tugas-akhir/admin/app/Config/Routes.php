@@ -2,21 +2,19 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-$routes->group('admin', function ($routes) {
-   $routes->group('login', function ($routes) {
-      $routes->get('logout', 'Login::logout');
-      $routes->get('init', 'Login::init');
-      $routes->get('(:any)', 'Login::index/$1');
-   });
-
-   dashboard($routes);
-   verifikasi($routes);
-   seminar($routes);
-   sidang($routes);
-   pengaturan($routes);
-   pengguna($routes);
-   profile($routes);
+$routes->group('login', function ($routes) {
+   $routes->get('logout', 'Login::logout');
+   $routes->get('init', 'Login::init');
+   $routes->get('(:any)', 'Login::index/$1');
 });
+
+dashboard($routes);
+verifikasi($routes);
+seminar($routes);
+sidang($routes);
+pengaturan($routes);
+pengguna($routes);
+profile($routes);
 
 function dashboard(RouteCollection $routes): void
 {

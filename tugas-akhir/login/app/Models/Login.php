@@ -32,6 +32,9 @@ class Login extends Common
 
             $jwt = JWT::encode($data, JWT_KEY, 'HS256');
 
+            $client = new \Predis\Client();
+            $client->set('tesis-' . $data['id'], $jwt);
+
             $response['status'] = true;
             $response['content'] = $data;
             $response['token'] = $jwt;

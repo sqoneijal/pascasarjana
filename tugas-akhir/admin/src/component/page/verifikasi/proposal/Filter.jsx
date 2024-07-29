@@ -12,7 +12,7 @@ const Filter = () => {
    return (
       <Row className="d-flex flex-stack flex-wrap mb-5">
          <Col md={3} xs={12} className="align-items-center position-relative">
-            {h.form_text(`Cari ${document.title}`, "search", { onKeyDown: (e) => e.code === "Enter" && h.handleSearchDatatable(e.target.value) })}
+            {h.form_text(`Cari...`, "search", { onKeyDown: (e) => e.code === "Enter" && h.handleSearchDatatable(e.target.value) })}
          </Col>
          <Col md={9} xs={12}>
             <Row className="d-flex justify-content-end">
@@ -38,7 +38,7 @@ const Filter = () => {
                      daftarAngkatan.map((row) => ({ value: row, label: row }))
                   )}
                </Col>
-               <Col md={2} sm={12}>
+               <Col md={3} sm={12}>
                   {h.form_select(
                      "Periode",
                      "id_periode",

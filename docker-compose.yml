@@ -66,19 +66,6 @@ services:
          - pps-network
       restart: always
 
-   pps-cdn:
-      container_name: pps-cdn
-      build:
-         context: ./cdn
-         dockerfile: ./Dockerfile
-      ports:
-         - 8012:80
-      volumes:
-         - ./cdn:/var/www/html
-      networks:
-         - pps-network
-      restart: always
-
    pps-login:
       container_name: pps-login
       build:

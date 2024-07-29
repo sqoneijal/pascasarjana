@@ -12,6 +12,7 @@ export const redux = createSlice({
       filter: {},
       showButton: false,
       buttonConfig: {},
+      sidebarMinize: "off",
    },
    reducers: {
       setInit: (state, { payload } = action) => {
@@ -42,7 +43,11 @@ export const redux = createSlice({
       buttonConfig: (state, { payload } = action) => {
          state.buttonConfig = payload;
       },
+      sidebarMinize: (state, { payload } = action) => {
+         state.sidebarMinize = payload;
+      },
    },
 });
-export const { init, setInit, setModule, secondaryNav, detailNavActive, position, applyFilter, filter, showButton, buttonConfig } = redux.actions;
+export const { init, setInit, setModule, secondaryNav, detailNavActive, position, applyFilter, filter, showButton, buttonConfig, sidebarMinize } =
+   redux.actions;
 export default redux.reducer;

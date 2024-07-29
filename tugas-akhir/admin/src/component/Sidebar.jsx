@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { Each } from "~/Each";
 import * as h from "~/Helpers";
-import { position, filter as setFilter, setModule, showButton } from "~/redux";
+import { position, filter as setFilter, setModule, sidebarMinize as setSidebarMinize, showButton } from "~/redux";
 import navigation from "./navigation.json";
 
 const Sidebar = () => {
-   const { init } = useSelector((e) => e.redux);
+   const { init, sidebarMinize } = useSelector((e) => e.redux);
    const location = useLocation();
    const dispatch = useDispatch();
 
@@ -90,6 +90,14 @@ const Sidebar = () => {
       return pathname === h.parse("link", data) ? "active" : "";
    };
 
+   const handleSidebarToggle = () => {
+      if (sidebarMinize === "off") {
+         dispatch(setSidebarMinize("on"));
+      } else {
+         dispatch(setSidebarMinize("off"));
+      }
+   };
+
    return (
       <div id="kt_app_sidebar" className="app-sidebar flex-column">
          <div className="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
@@ -98,17 +106,18 @@ const Sidebar = () => {
                <img alt="Logo" data-src="/assets/logo-uin-dark.png" className="h-40px app-sidebar-logo-default theme-dark-show lozad" />
                <img alt="Logo" data-src="/assets/logo-uin-small.png" className="h-20px app-sidebar-logo-minimize lozad" />
             </Link>
-            <div
+            <button
                id="kt_app_sidebar_toggle"
-               className="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary h-30px w-30px position-absolute top-50 start-100 translate-middle rotate">
-               <i className="ki-outline ki-black-left-line fs-3 rotate-180" />
-            </div>
+               className="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary h-30px w-30px position-absolute top-50 start-100 translate-middle rotate"
+               onClick={handleSidebarToggle}>
+               <i className={`ki-outline ${sidebarMinize === "on" ? "ki-black-right-line" : "ki-black-left-line"} fs-3 rotate-180`} />
+            </button>
          </div>
          <div className="app-sidebar-menu overflow-hidden flex-column-fluid">
             <div className="aside-toolbar flex-column-auto ms-5 me-5">
                <div className="aside-user d-flex align-items-sm-center justify-content-center py-5">
                   <Link to={"/profile"} className="symbol symbol-50px">
-                     <img src={`/admin/profile/avatar?name=${h.parse("avatar", init)}`} alt={h.parse("nama", init)} />
+                     <img src={`/profile/avatar?name=${h.parse("avatar", init)}`} alt={h.parse("nama", init)} />
                   </Link>
                   <div className="aside-user-info flex-row-fluid flex-wrap ms-5">
                      <div className="d-flex">

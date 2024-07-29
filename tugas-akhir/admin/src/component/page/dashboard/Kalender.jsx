@@ -70,7 +70,7 @@ const Kalender = () => {
    }, [kalender]);
 
    return (
-      <Card className="shadow-sm card-bordered gx-5 gx-xl-10 mb-xl-10">
+      <Card className="shadow-sm card-bordered gx-5 gx-xl-10 mb-xl-10 mt-5">
          <Card.Body>
             <FullCalendar
                locale={idLocale}

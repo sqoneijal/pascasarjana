@@ -15,7 +15,7 @@ const Context = () => {
    const [isLoading, setIsLoading] = useState(true);
 
    const initPage = () => {
-      const fetch = h.get(`/initpage?id_periode=${init.periode.id}`);
+      const fetch = h.get(`/initpage?id_periode=${init.periode.id}`, {}, true);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 
