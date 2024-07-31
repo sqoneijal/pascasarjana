@@ -3,10 +3,39 @@
 use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
-$routes->get('init', 'Home::initLogin');
+$routes->get('init', 'Home::initLogin', ['filter' => 'Islogin']);
 $routes->get('logout', 'Home::logout');
 
 $routes->post('submit', 'Home::submit');
+
+mahasiswa($routes);
+function mahasiswa(RouteCollection $routes): void
+{
+   $routes->group('mahasiswa', ['namespace' => 'App\Controllers\Mahasiswa', 'filter' => 'Islogin'], function ($routes) {
+      dashboardMahasiswa($routes);
+      profile($routes);
+   });
+}
+
+function dashboardMahasiswa(RouteCollection $routes): void
+{
+   $routes->get('/', 'Home::index');
+
+   $routes->post('getdaftarlampiran', 'Home::getDaftarLampiran');
+   $routes->post('uploadlampiran', 'Home::uploadLampiran');
+   $routes->post('submitdaftarproposal', 'Home::submitDaftarProposal');
+   $routes->post('submitdaftarulangproposal', 'Home::submitDaftarUlangProposal');
+   $routes->post('submittelahseminar', 'Home::submitTelahSeminar');
+   $routes->post('submitpenentuansk', 'Home::submitPenentuanSK');
+   $routes->post('getdetailseminarproposal', 'Home::getDetailSeminarProposal');
+   $routes->post('submitdaftarseminarproposal', 'Home::submitDaftarSeminarProposal');
+   $routes->post('submitsudahseminarproposal', 'Home::submitSudahSeminarProposal');
+   $routes->post('updatestatustugasakhir', 'Home::updateStatusTugasAkhir');
+   $routes->post('getdetailseminarpenelitian', 'Home::getDetailSeminarPenelitian');
+   $routes->post('uploadlampiranpenelitian', 'Home::uploadLampiranPenelitian');
+   $routes->post('getdetailmunaqasyah', 'Home::getDetailMunaqasyah');
+   $routes->post('updatejudulproposal', 'Home::updateJudulProposal');
+}
 
 admin($routes);
 function admin(RouteCollection $routes): void

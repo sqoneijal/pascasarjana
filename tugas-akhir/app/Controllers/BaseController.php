@@ -20,7 +20,7 @@ abstract class BaseController extends Controller
    public $post;
    public $getVar;
 
-   protected $publish = true;
+   protected $publish = false;
 
    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
    {

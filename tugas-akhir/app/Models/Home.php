@@ -11,9 +11,11 @@ class Home extends Common
    {
       $session = \Config\Services::session();
 
-      $table = $this->db->table('tb_users');
-      $table->where('id', $session->get('id'));
-      $table->where('role', $session->get('role'));
+      $table = $this->db->table('tb_users tu');
+      $table->select('tu.*, tsta.status');
+      $table->join('tb_status_tugas_akhir tsta', 'tsta.nim = tu.username', 'left');
+      $table->where('tu.id', $session->get('id'));
+      $table->where('tu.role', $session->get('role'));
 
       $get = $table->get();
       $data = $get->getRowArray();

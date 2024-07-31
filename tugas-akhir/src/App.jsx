@@ -12,6 +12,7 @@ import "./assets/style.bundle.css";
 
 const Login = React.lazy(() => import("./login/Context"));
 const Admin = React.lazy(() => import("./admin/Context"));
+const Mahasiswa = React.lazy(() => import("./mahasiswa/Context"));
 
 const App = () => {
    // string
@@ -63,6 +64,9 @@ const App = () => {
          <Switch condition={pathname}>
             <Case value="admin">
                <Admin />
+            </Case>
+            <Case value="mahasiswa">
+               <Mahasiswa />
             </Case>
             <Default>
                <Login />

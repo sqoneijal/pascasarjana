@@ -846,3 +846,13 @@ export const cdn = (filepath) => {
 export const getDriveFile = (id) => {
    return `https://drive.google.com/file/d/${id}/view`;
 };
+
+export const renderGoogleDrivePermalink = (id_google_drive, label) => {
+   if (id_google_drive) {
+      return (
+         <a href={`https://drive.google.com/file/d/${id_google_drive}/view`} target="_blank">
+            {label}
+         </a>
+      );
+   }
+};
