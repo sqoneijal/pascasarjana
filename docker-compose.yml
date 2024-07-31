@@ -131,6 +131,19 @@ services:
          - pps-network
       restart: always
 
+   pps-tugas-akhir:
+      container_name: pps-tugas-akhir
+      build:
+         context: ./tugas-akhir
+         dockerfile: ./Dockerfile
+      ports:
+         - 1002:80
+      volumes:
+         - ./tugas-akhir:/var/www/html
+      networks:
+         - pps-network
+      restart: always
+
 networks:
    pps-network:
       external: true

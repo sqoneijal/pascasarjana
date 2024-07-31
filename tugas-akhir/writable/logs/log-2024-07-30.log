@@ -1,0 +1,189 @@
+INFO - 2024-07-30 15:34:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+CRITICAL - 2024-07-30 15:34:53 --> CodeIgniter\Database\Exceptions\DatabaseException: You must set the database table to be used with your query.
+[Method: POST, Route: admin/verifikasi/diterima/caridosen]
+in SYSTEMPATH/Database/BaseConnection.php on line 927.
+ 1 SYSTEMPATH/Model.php(716): CodeIgniter\Database\BaseConnection->table()
+ 2 SYSTEMPATH/Model.php(897): CodeIgniter\Model->builder()
+ 3 APPPATH/Models/Common.php(288): CodeIgniter\Model->__get()
+ 4 APPPATH/Controllers/Admin/Verifikasi/Diterima.php(43): App\Models\Common->getTokenFeeder()
+ 5 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Admin\Verifikasi\Diterima->cariDosen()
+ 6 SYSTEMPATH/CodeIgniter.php(509): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(355): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(325): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb()
+INFO - 2024-07-30 15:35:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:35:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:35:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:35:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:35:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:35:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:36:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+CRITICAL - 2024-07-30 15:36:51 --> CodeIgniter\Database\Exceptions\DatabaseException: You must set the database table to be used with your query.
+[Method: POST, Route: admin/seminar/proposal/getdetail]
+in SYSTEMPATH/Database/BaseConnection.php on line 927.
+ 1 SYSTEMPATH/Model.php(716): CodeIgniter\Database\BaseConnection->table()
+ 2 SYSTEMPATH/Model.php(922): CodeIgniter\Model->builder()
+ 3 APPPATH/Models/Admin/Seminar/Proposal.php(180): CodeIgniter\Model->__call()
+ 4 APPPATH/Controllers/Admin/Seminar/Proposal.php(90): App\Models\Admin\Seminar\Proposal->getDetail()
+ 5 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Admin\Seminar\Proposal->getDetail()
+ 6 SYSTEMPATH/CodeIgniter.php(509): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(355): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(325): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb()
+INFO - 2024-07-30 15:36:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:37:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:37:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:37:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 15:37:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:09:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:09:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:09:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:09:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:09:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:09:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+CRITICAL - 2024-07-30 16:09:36 --> CodeIgniter\Database\Exceptions\DatabaseException: You must set the database table to be used with your query.
+[Method: POST, Route: admin/seminar/proposal/getdetail]
+in SYSTEMPATH/Database/BaseConnection.php on line 927.
+ 1 SYSTEMPATH/Model.php(716): CodeIgniter\Database\BaseConnection->table()
+ 2 SYSTEMPATH/Model.php(922): CodeIgniter\Model->builder()
+ 3 APPPATH/Models/Admin/Seminar/Proposal.php(180): CodeIgniter\Model->__call()
+ 4 APPPATH/Controllers/Admin/Seminar/Proposal.php(90): App\Models\Admin\Seminar\Proposal->getDetail()
+ 5 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Admin\Seminar\Proposal->getDetail()
+ 6 SYSTEMPATH/CodeIgniter.php(509): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(355): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(325): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb()
+INFO - 2024-07-30 16:10:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:10:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:10:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:10:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:10:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:10:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+CRITICAL - 2024-07-30 16:10:51 --> CodeIgniter\Database\Exceptions\DatabaseException: You must set the database table to be used with your query.
+[Method: POST, Route: admin/seminar/proposal/getdetail]
+in SYSTEMPATH/Database/BaseConnection.php on line 927.
+ 1 SYSTEMPATH/Model.php(716): CodeIgniter\Database\BaseConnection->table()
+ 2 SYSTEMPATH/Model.php(922): CodeIgniter\Model->builder()
+ 3 APPPATH/Models/Admin/Seminar/Proposal.php(180): CodeIgniter\Model->__call()
+ 4 APPPATH/Controllers/Admin/Seminar/Proposal.php(90): App\Models\Admin\Seminar\Proposal->getDetail()
+ 5 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Admin\Seminar\Proposal->getDetail()
+ 6 SYSTEMPATH/CodeIgniter.php(509): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(355): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(325): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb()
+INFO - 2024-07-30 16:12:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:12:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:13:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:13:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:13:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:14:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:16:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:16:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:16:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:16:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:16:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:16:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:17:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:17:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:17:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:17:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:17:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:17:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:17:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:17:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:17:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:50:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:50:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:50:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:50:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 16:50:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:08:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:08:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:08:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:08:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:08:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:09:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+CRITICAL - 2024-07-30 17:09:32 --> CodeIgniter\Database\Exceptions\DatabaseException: You must set the database table to be used with your query.
+[Method: POST, Route: admin/seminar/penelitian/getdetail]
+in SYSTEMPATH/Database/BaseConnection.php on line 927.
+ 1 SYSTEMPATH/Model.php(716): CodeIgniter\Database\BaseConnection->table()
+ 2 SYSTEMPATH/Model.php(922): CodeIgniter\Model->builder()
+ 3 APPPATH/Models/Admin/Seminar/Penelitian.php(218): CodeIgniter\Model->__call()
+ 4 APPPATH/Controllers/Admin/Seminar/Penelitian.php(114): App\Models\Admin\Seminar\Penelitian->getDetail()
+ 5 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Admin\Seminar\Penelitian->getDetail()
+ 6 SYSTEMPATH/CodeIgniter.php(509): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(355): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(325): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb()
+INFO - 2024-07-30 17:16:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:16:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:16:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:16:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:16:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+INFO - 2024-07-30 17:16:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
+CRITICAL - 2024-07-30 17:16:05 --> CodeIgniter\Database\Exceptions\DatabaseException: You must set the database table to be used with your query.
+[Method: POST, Route: admin/seminar/penelitian/getdetail]
+in SYSTEMPATH/Database/BaseConnection.php on line 927.
+ 1 SYSTEMPATH/Model.php(716): CodeIgniter\Database\BaseConnection->table()
+ 2 SYSTEMPATH/Model.php(922): CodeIgniter\Model->builder()
+ 3 APPPATH/Models/Admin/Seminar/Penelitian.php(218): CodeIgniter\Model->__call()
+ 4 APPPATH/Controllers/Admin/Seminar/Penelitian.php(114): App\Models\Admin\Seminar\Penelitian->getDetail()
+ 5 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\Admin\Seminar\Penelitian->getDetail()
+ 6 SYSTEMPATH/CodeIgniter.php(509): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(355): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(325): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb()
+INFO - 2024-07-30 20:56:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\RedisHandler' driver.
