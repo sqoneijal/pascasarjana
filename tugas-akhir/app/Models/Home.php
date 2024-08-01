@@ -29,6 +29,7 @@ class Home extends Common
          }
          $response['periode'] = $this->getPeriodeAktif();
          $response['syarat'] = $this->getDaftarSyarat();
+         $response['daftar_periode'] = $this->getDaftarPeriode();
       }
 
       unset($response['password']);

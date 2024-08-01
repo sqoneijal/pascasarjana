@@ -8,6 +8,102 @@ $routes->get('logout', 'Home::logout');
 
 $routes->post('submit', 'Home::submit');
 
+dosen($routes);
+function dosen(RouteCollection $routes): void
+{
+   $routes->group('dosen', ['namespace' => 'App\Controllers\Dosen', 'filter' => 'Islogin'], function ($routes) {
+      dashboardDosen($routes);
+      profile($routes);
+      dosenProposal($routes);
+      dosenPenelitian($routes, ['namespace' => 'App\Controllers\Dosen\Penelitian', 'filter' => 'Islogin']);
+      dosenSidangMunaqasyah($routes, ['namespace' => 'App\Controllers\Dosen\SidangMunaqasyah', 'filter' => 'Islogin']);
+   });
+}
+
+function dosenSidangMunaqasyah(RouteCollection $routes, array $opt): void
+{
+   $routes->group('sidangmunaqasyah', $opt, function ($routes) {
+      dosenSidangMunaqasyahPembimbing($routes);
+      dosenSidangMunaqasyahPenguji($routes);
+   });
+}
+
+function dosenSidangMunaqasyahPembimbing(RouteCollection $routes): void
+{
+   $routes->group('pembimbing', function ($routes) {
+      $routes->get('/', 'Pembimbing::index');
+
+      $routes->post('getdata', 'Pembimbing::getData');
+      $routes->post('getdetail', 'Pembimbing::getDetail');
+      $routes->post('submitlanjutsidang', 'Pembimbing::submitLanjutSidang');
+      $routes->post('submitperbaikisidang', 'Pembimbing::submitPerbaikiSidang');
+      $routes->post('submitsudahsidang', 'Pembimbing::submitSudahSidang');
+   });
+}
+
+function dosenSidangMunaqasyahPenguji(RouteCollection $routes): void
+{
+   $routes->group('penguji', function ($routes) {
+      $routes->get('/', 'Penguji::index');
+
+      $routes->post('getdata', 'Penguji::getData');
+      $routes->post('getdetail', 'Penguji::getDetail');
+      $routes->post('submitsudahmelaksanakansidang', 'Penguji::submitSudahMelaksanakanSidang');
+      $routes->post('submitperbaikihasilsidang', 'Penguji::submitPerbaikiHasilSidang');
+   });
+}
+
+function dosenPenelitian(RouteCollection $routes, array $opt): void
+{
+   $routes->group('penelitian', $opt, function ($routes) {
+      dosenPenelitianPembimbing($routes);
+      dosenPenelitianPenguji($routes);
+   });
+}
+
+function dosenPenelitianPembimbing(RouteCollection $routes): void
+{
+   $routes->group('pembimbing', function ($routes) {
+      $routes->get('/', 'Pembimbing::index');
+
+      $routes->post('getdata', 'Pembimbing::getData');
+      $routes->post('getdetail', 'Pembimbing::getDetail');
+      $routes->post('submit', 'Pembimbing::submit');
+   });
+}
+
+function dosenPenelitianPenguji(RouteCollection $routes): void
+{
+   $routes->group('penguji', function ($routes) {
+      $routes->get('/', 'Penguji::index');
+
+      $routes->post('getdata', 'Penguji::getData');
+      $routes->post('getdetail', 'Penguji::getDetail');
+      $routes->post('submittelahseminar', 'Penguji::submitTelahSeminar');
+      $routes->post('submitperbaikihasilseminar', 'Penguji::submitPerbaikiHasilSeminar');
+   });
+}
+
+function dosenProposal(RouteCollection $routes): void
+{
+   $routes->group('proposal', function ($routes) {
+      $routes->get('/', 'Proposal::index');
+
+      $routes->post('getdata', 'Proposal::getData');
+      $routes->post('getdetail', 'Proposal::getDetail');
+      $routes->post('submitperbaiki', 'Proposal::submitPerbaiki');
+      $routes->post('submitsudahseminar', 'Proposal::submitSudahSeminar');
+      $routes->post('updatestatustesis', 'Proposal::updateStatusTesis');
+   });
+}
+
+function dashboardDosen(RouteCollection $routes): void
+{
+   $routes->get('/', 'Dashboard::index');
+
+   $routes->post('initpage', 'Dashboard::initPage');
+}
+
 mahasiswa($routes);
 function mahasiswa(RouteCollection $routes): void
 {

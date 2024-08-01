@@ -35,26 +35,6 @@ class Profile extends BaseController
       return $this->respond($response);
    }
 
-   public function hapus(): object
-   {
-      $response = ['status' => false, 'msg_response' => 'Terjadi sesuatu kesalahan.'];
-
-      $validation = new Validate();
-      if ($this->validate($validation->hapus())) {
-         $model = new Model();
-         $model->hapus($this->post);
-
-         $response['status'] = true;
-         $response['msg_response'] = 'Data berhasil dihapus.';
-      } else {
-         $errors = \Config\Services::validation()->getErrors();
-         foreach ($errors as $key) {
-            $response['msg_response'] = $key;
-         }
-      }
-      return $this->respond($response);
-   }
-
    public function avatar()
    {
       $filename = $this->getVar['name'];

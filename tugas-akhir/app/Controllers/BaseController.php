@@ -14,13 +14,13 @@ abstract class BaseController extends Controller
    use ResponseTrait;
 
    protected $request;
-   protected $helpers = ['html'];
+   protected $helpers = ['html', 'autoload'];
 
    public $data;
    public $post;
    public $getVar;
 
-   protected $publish = false;
+   protected $publish = true;
 
    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
    {
