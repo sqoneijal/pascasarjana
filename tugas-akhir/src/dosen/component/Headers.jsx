@@ -90,7 +90,7 @@ const Headers = () => {
                            </Link>
                         </div>
                         <div className="menu-item px-5">
-                           <a href="/login/logout" className="menu-link px-5">
+                           <a href="/logout" className="menu-link px-5">
                               Logout
                            </a>
                         </div>
