@@ -1,9 +1,14 @@
 import lozad from "lozad";
 import React, { useLayoutEffect, useState } from "react";
 import { Form } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import * as h from "~/Helpers";
+import { setModule } from "~/redux";
 
 const Forms = () => {
+   const { module } = useSelector((e) => e.redux);
+   const dispatch = useDispatch();
+
    // bool
    const [isSubmit, setIsSubmit] = useState(false);
 
@@ -51,7 +56,7 @@ const Forms = () => {
             <div className="text-gray-500 fw-semibold fs-6">Akun Sistem Anda</div>
          </div>
          {h.form_text(
-            `Email/Username`,
+            `Email/Username/NIM/NIDN/NIK`,
             `username`,
             {
                onChange: (e) => setInput((prev) => ({ ...prev, [e.target.name]: e.target.value })),
@@ -82,6 +87,19 @@ const Forms = () => {
                size: "lg",
                onClick: isSubmit ? null : submit,
             })}
+         </div>
+         <div className="text-gray-500 text-center fw-semibold fs-6">
+            Anda mahasiswa belum memiliki akun tugas akhir?
+            <br />
+            <a
+               href="#"
+               className="link-primary"
+               onClick={(e) => {
+                  e.preventDefault();
+                  dispatch(setModule({ ...module, openFormsRegister: true }));
+               }}>
+               Daftar disini
+            </a>
          </div>
       </Form>
    );

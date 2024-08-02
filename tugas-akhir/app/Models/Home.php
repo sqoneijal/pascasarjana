@@ -7,6 +7,69 @@ use CodeIgniter\Database\RawSql;
 class Home extends Common
 {
 
+   public function submitDaftar(array $post): array
+   {
+      try {
+         $tugasAkhir = $this->db->table('tb_status_tugas_akhir');
+         $tugasAkhir->insert([
+            'nim' => $post['nim'],
+            'id_prodi' => $post['id_prodi'],
+            'uploaded' => new RawSql('now()'),
+            'email' => $post['email'],
+            'angkatan' => $post['angkatan'],
+         ]);
+
+         $fields = ['nama', 'username', 'email'];
+         foreach ($fields as $field) {
+            if (@$post[$field]) {
+               $data[$field] = $post[$field];
+            } else {
+               $data[$field] = null;
+            }
+         }
+
+         $data['role'] = '4';
+         $data['uploaded'] = new RawSql('now()');
+         $data['password'] = password_hash($post['password'], PASSWORD_BCRYPT);
+
+         $table = $this->db->table('tb_users');
+         $table->insert($data);
+
+         return ['status' => true, 'msg_response' => 'Pendaftaran berhasil dilakukan. Sekarang anda sudah dapat melakukan login.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
+   public function cariMahasiswa(array $post): array
+   {
+      $response = ['status' => false, 'content' => ''];
+      try {
+         $token = $this->getTokenFeeder();
+         if ($token['status']) {
+            $action = $this->feederAction($token['token'], 'GetListRiwayatPendidikanMahasiswa', [
+               'filter' => "id_prodi = '" . $post['id_prodi'] . "' and trim(nim) = '" . $post['nim'] . "'",
+            ]);
+
+            if ($action['status']) {
+               if (arrLength($action['content']) > 0) {
+                  $response['status'] = true;
+                  $response['content'] = $action['content'][0];
+               } else {
+                  $response['msg_response'] = 'Mohon maaf, data anda tidak ditemukan.';
+               }
+            } else {
+               $response['msg_response'] = $action['msg_response'];
+            }
+         } else {
+            $response['msg_response'] = $token['msg_response'];
+         }
+      } catch (\Exception $e) {
+         $response = ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+      return $response;
+   }
+
    public function initLogin(): array
    {
       $session = \Config\Services::session();

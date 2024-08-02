@@ -33,7 +33,7 @@ const Lists = () => {
          id_syarat: h.parse("id", row),
       };
 
-      const fetch = h.post(`/uploadlampiran`, formData, config, true);
+      const fetch = h.post(`/uploadlampiran`, formData, config);
       fetch.then((res) => {
          if (typeof res === "undefined") return;
 

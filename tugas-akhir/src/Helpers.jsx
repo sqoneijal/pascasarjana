@@ -648,12 +648,31 @@ export const form_password = (label, name, config = {}, required = false, errors
    const uniqueID = `${name}_${uid(32)}`;
 
    return (
-      <Form.Floating className="mb-2">
+      <Form.Floating className="mb-2 position-relative">
          <Form.Control type="password" title={label} placeholder={label} id={uniqueID} name={name} {...config} isInvalid={is_invalid(name, errors)} />
          <Form.Label htmlFor={uniqueID} className={required ? "required" : ""}>
             {label}
          </Form.Label>
          {msg_response(name, errors)}
+         <i
+            className={`ki-outline ki-eye position-absolute fs-2`}
+            id={`toggle-${uniqueID}`}
+            style={{ cursor: "pointer", right: 10, top: "50%", transform: "translateY(-50%)" }}
+            onClick={() => {
+               const passwordField = document.querySelector(`#${uniqueID}`);
+               const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+               passwordField.setAttribute("type", type);
+
+               const toggleEye = document.querySelector(`#toggle-${uniqueID}`);
+               if (passwordField.getAttribute("type") === "password") {
+                  toggleEye.classList.add("ki-eye");
+                  toggleEye.classList.remove("ki-eye-slash");
+               } else {
+                  toggleEye.classList.remove("ki-eye");
+                  toggleEye.classList.add("ki-eye-slash");
+               }
+            }}
+         />
       </Form.Floating>
    );
 };

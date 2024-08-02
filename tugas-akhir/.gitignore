@@ -3,3 +3,4 @@ app/Common.php
 app/Common.php.sample
 public/bundle
 writable
+vendor

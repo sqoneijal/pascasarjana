@@ -5,8 +5,11 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('init', 'Home::initLogin', ['filter' => 'Islogin']);
 $routes->get('logout', 'Home::logout');
+$routes->get('initregister', 'Home::initRegister');
 
 $routes->post('submit', 'Home::submit');
+$routes->post('carimahasiswa', 'Home::cariMahasiswa');
+$routes->post('submitdaftar', 'Home::submitDaftar');
 
 dosen($routes);
 function dosen(RouteCollection $routes): void
