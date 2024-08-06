@@ -234,7 +234,10 @@ class Home extends Common
          $data['judul_proposal_3'] = $post['judul_proposal_3'];
 
          $table = $this->db->table('tb_status_tugas_akhir');
-         $table->where('id', $post['id_status_tugas_akhir']);
+         $table->where('nim', $post['nim']);
+         $table->where('id_periode', function ($table) {
+            return $table->select('id')->from('tb_periode')->where('status', true);
+         });
          $table->update($data);
          return ['status' => true, 'msg_response' => 'Pendaftaran berhasil dilakukan.'];
       } catch (\Exception $e) {

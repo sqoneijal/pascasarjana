@@ -3,7 +3,7 @@
         'name' => 'codeigniter4/appstarter',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '1095f1dc010a508e23c9bd44d3ec26b004ce71dc',
+        'reference' => 'f497f1675e37565206257d1257005e51733f0f84',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'codeigniter4/appstarter' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '1095f1dc010a508e23c9bd44d3ec26b004ce71dc',
+            'reference' => 'f497f1675e37565206257d1257005e51733f0f84',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -38,8 +38,8 @@
             'dev_requirement' => false,
         ),
         'google/apiclient-services' => array(
-            'pretty_version' => 'v0.366.0',
-            'version' => '0.366.0.0',
+            'pretty_version' => 'v0.367.0',
+            'version' => '0.367.0.0',
             'reference' => 'edc08087aa3ca63d3b74f24d59f1d2caab39b5d9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../google/apiclient-services',

@@ -14,6 +14,7 @@ const Login = React.lazy(() => import("./login/Context"));
 const Admin = React.lazy(() => import("./admin/Context"));
 const Mahasiswa = React.lazy(() => import("./mahasiswa/Context"));
 const Dosen = React.lazy(() => import("./dosen/Context"));
+const Akademik = React.lazy(() => import("./akademik/Context"));
 
 const App = () => {
    // string
@@ -71,6 +72,9 @@ const App = () => {
             </Case>
             <Case value="dosen">
                <Dosen />
+            </Case>
+            <Case value="akademik">
+               <Akademik />
             </Case>
             <Default>
                <Login />

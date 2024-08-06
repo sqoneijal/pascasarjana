@@ -65,7 +65,7 @@ const Context = () => {
    const submitDaftarSeminarProposal = (e) => {
       e.preventDefault();
 
-      const formData = { id_status_tugas_akhir: module.statusTugasAkhir.id, status: h.parse("status", init) };
+      const formData = { nim: init.username, status: h.parse("status", init) };
       Object.keys(input).forEach((key) => (formData[key] = input[key]));
 
       setIsLoadingButton(true);

@@ -52,13 +52,15 @@ class Proposal extends Common
    private function handleUpdateStatusTugasAkhir(array $post): void
    {
       $check = $this->checkStatusSudahSeminar($post['id_status_tugas_akhir']);
-      $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], ($check ? 11 : $post['status_tesis']));
+      if ($check) {
+         $this->updateStatusTugasAkhir($post['id_status_tugas_akhir'], 11);
+      }
    }
 
    private function checkStatusSudahSeminar(int $id_status_tugas_akhir): bool
    {
       $table = $this->db->table('tb_pembimbing_seminar');
-      $table->select('count(*) filter (where sudah_seminar = true) as sudah_seminar, count(*) filter (where sudah_seminar != true) as belum_seminar');
+      $table->select('count(*) filter (where sudah_seminar = true) as sudah_seminar, count(*) filter (where sudah_seminar = false or sudah_seminar is null) as belum_seminar');
       $table->where('id_status_tugas_akhir', $id_status_tugas_akhir);
 
       $get = $table->get();

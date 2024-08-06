@@ -93,10 +93,32 @@ class Home extends Common
          $response['periode'] = $this->getPeriodeAktif();
          $response['syarat'] = $this->getDaftarSyarat();
          $response['daftar_periode'] = $this->getDaftarPeriode();
+
+         if ($data['role'] === '4') {
+            $this->checkRegisterStatusTugasAkhir($data['username']);
+         }
       }
 
       unset($response['password']);
       return $response;
+   }
+
+   private function checkRegisterStatusTugasAkhir(string $nim): void
+   {
+      $table = $this->db->table('tb_status_tugas_akhir');
+      $table->where('nim', $nim);
+      $table->where('id_periode', function ($table) {
+         return $table->select('id')->from('tb_periode')->where('status', true);
+      });
+
+      $found = $table->countAllResults() > 0;
+
+      if (!$found) {
+         $insert = $this->db->table('tb_status_tugas_akhir');
+         $insert->insert([
+            'nim' => $nim,
+         ]);
+      }
    }
 
    public function submit(array $post): array
