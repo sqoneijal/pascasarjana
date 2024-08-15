@@ -23,7 +23,7 @@ const Register = () => {
    const [errors, setErrors] = useState({});
 
    const handleClose = () => {
-      dispatch(setModule({ ...module, openFormsRegister: false }));
+      dispatch(setModule({ ...module, loginStatusPage: "login" }));
       setInput({});
       setErrors({});
       setShowCompleteForms(false);

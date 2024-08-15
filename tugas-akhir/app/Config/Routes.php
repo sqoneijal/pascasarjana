@@ -24,6 +24,9 @@ $routes->get('init', 'Home::initLogin', ['filter' => 'Islogin']);
 $routes->get('logout', 'Home::logout');
 $routes->get('initregister', 'Home::initRegister');
 
+$routes->post('submitlupapassword', 'Home::submitLupaPassword');
 $routes->post('submit', 'Home::submit');
 $routes->post('carimahasiswa', 'Home::cariMahasiswa');
 $routes->post('submitdaftar', 'Home::submitDaftar');
+$routes->post('validasitokenlupapassword', 'Home::validasiTokenLupaPassword');
+$routes->post('submitresetpassword', 'Home::submitResetPassword');

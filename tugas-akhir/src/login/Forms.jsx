@@ -78,7 +78,13 @@ const Forms = () => {
          )}
          <div className="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
             <div />
-            <a href="#" className="link-primary">
+            <a
+               href="#"
+               className="link-primary"
+               onClick={(e) => {
+                  e.preventDefault();
+                  dispatch(setModule({ ...module, loginStatusPage: "lupa_password" }));
+               }}>
                Lupa Password ?
             </a>
          </div>
@@ -96,7 +102,7 @@ const Forms = () => {
                className="link-primary"
                onClick={(e) => {
                   e.preventDefault();
-                  dispatch(setModule({ ...module, openFormsRegister: true }));
+                  dispatch(setModule({ ...module, loginStatusPage: "daftar" }));
                }}>
                Daftar disini
             </a>

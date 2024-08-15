@@ -5,6 +5,37 @@ namespace App\Validation;
 class Home
 {
 
+   public function submitResetPassword(): array
+   {
+      return [
+         'email' => [
+            'label' => 'Email',
+            'rules' => 'required|valid_email|is_not_unique[tb_users.email,email]'
+         ],
+         'password' => [
+            'label' => 'Password baru',
+            'rules' => 'required'
+         ],
+         'confirm_password' => [
+            'label' => 'Konfirmasi password baru',
+            'rules' => 'required|matches[password]'
+         ],
+      ];
+   }
+
+   public function submitLupaPassword(): array
+   {
+      return [
+         'email' => [
+            'label' => 'Email',
+            'rules' => 'required|valid_email|is_not_unique[tb_users.email,email]',
+            'errors' => [
+               'is_not_unique' => 'Email anda masukkan tidak terdaftar/ditemukan.'
+            ]
+         ]
+      ];
+   }
+
    public function submitDaftar(): array
    {
       return [

@@ -7,6 +7,40 @@ use CodeIgniter\Database\RawSql;
 class Home extends Common
 {
 
+   public function submitResetPassword(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_users');
+         $table->where('id', $post['id']);
+         $table->update([
+            'password' => password_hash($post['password'], PASSWORD_BCRYPT),
+            'modified' => new RawSql('now()')
+         ]);
+         return ['status' => true, 'msg_response' => 'Password berhasil diganti.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'msg_response' => $e->getMessage()];
+      }
+   }
+
+   public function getUserLupaPassword(string $email): array
+   {
+      $table = $this->db->table('tb_users');
+      $table->where('email', $email);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
    public function submitDaftar(array $post): array
    {
       try {
